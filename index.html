@@ -24,7 +24,6 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh}
-
 /* ── HEADER ── */
 .page-header{
   background:linear-gradient(135deg,#f8d0dc 0%,#fce4ec 50%,#fdf0f8 100%);
@@ -42,14 +41,11 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);fon
 .header-meta{display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap;}
 .meta-chip{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.7);color:var(--text2);font-size:11px;font-weight:600;padding:4px 12px;border-radius:99px;border:1px solid var(--border2);backdrop-filter:blur(4px);}
 #live-time{font-weight:700;color:var(--rose-dark)}
-
 /* ── CONTAINER ── */
 .container{max-width:960px;margin:0 auto;padding:2rem 1.5rem 4rem}
-
 /* ── SECTION TITLE ── */
 .section-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px;margin-top:8px;display:flex;align-items:center;gap:8px;}
 .section-title::after{content:'';flex:1;height:1px;background:var(--border)}
-
 /* ── STAT STRIP ── */
 .stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:2rem;}
 .stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.2rem;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:4px;}
@@ -60,14 +56,12 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);fon
 .sc-sky{border-left:3px solid #5aaced}.sc-sky .s-val{color:var(--sky-dark)}
 .sc-mint{border-left:3px solid #58c890}.sc-mint .s-val{color:var(--mint-dark)}
 .sc-gold{border-left:3px solid #e0b030}.sc-gold .s-val{color:var(--gold-dark)}
-
 /* ── MODULE GRID ── */
 .module-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:2rem;}
 .module-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem 1.6rem;box-shadow:var(--shadow);cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;}
 .module-card::before{content:'';position:absolute;top:0;right:0;width:80px;height:80px;border-radius:50%;transform:translate(30px,-30px);opacity:.12;transition:opacity .2s;}
 .module-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover)}
 .module-card:hover::before{opacity:.2}
-
 .mc-rose{border-top:3px solid var(--rose)}.mc-rose::before{background:var(--rose)}
 .mc-sky{border-top:3px solid #5aaced}.mc-sky::before{background:#5aaced}
 .mc-mint{border-top:3px solid #58c890}.mc-mint::before{background:#58c890}
@@ -76,7 +70,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);fon
 .mc-gold{border-top:3px solid #e0b030}.mc-gold::before{background:#e0b030}
 .mc-teal{border-top:3px solid var(--teal-mid)}.mc-teal::before{background:var(--teal-mid)}
 .mc-navy{border-top:3px solid #1a3a6b}.mc-navy::before{background:#1a3a6b}
-
 .mc-head{display:flex;align-items:flex-start;gap:12px}
 .mc-icon-box{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
 .mc-rose .mc-icon-box{background:var(--rose-light)}
@@ -87,7 +80,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);fon
 .mc-gold .mc-icon-box{background:var(--gold-light)}
 .mc-teal .mc-icon-box{background:var(--teal-light)}
 .mc-navy .mc-icon-box{background:#e8edf8}
-
 .mc-title{font-size:14px;font-weight:700;color:var(--text);line-height:1.3}
 .mc-desc{font-size:12px;color:var(--text2);line-height:1.5}
 .mc-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
@@ -103,30 +95,24 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);fon
 .tag-pass{background:#d4edda;color:#155724}
 .tag-fail{background:#f8d7da;color:#721c24}
 .tag-navy{background:#e8edf8;color:#1a3a6b}
-
 .mc-footer{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);}
 .mc-arrow{width:26px;height:26px;border-radius:50%;background:var(--blush);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:13px;transition:background .2s,transform .2s;}
 .module-card:hover .mc-arrow{background:var(--rose-light);transform:translateX(3px)}
 .mc-teal:hover .mc-arrow{background:var(--teal-light) !important}
 .mc-navy:hover .mc-arrow{background:#e8edf8 !important}
-
 .coming-soon{position:relative;pointer-events:none;opacity:.55;}
 .cs-badge{position:absolute;top:10px;right:10px;z-index:2;font-size:10px;font-weight:700;padding:3px 10px;border-radius:99px;background:#f0eded;color:#9a8a8e;border:1px solid #e0d8da;letter-spacing:.4px;}
-
 /* ── QUICK LINKS ── */
 .quick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:2rem}
 .qlink{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.8rem 1rem;display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);transition:background .18s,border-color .18s,transform .18s;box-shadow:0 1px 6px rgba(180,80,100,.05);}
 .qlink:hover{background:var(--rose-light);border-color:var(--rose-mid);transform:translateY(-2px)}
 .qlink-icon{font-size:18px;flex-shrink:0}
 .qlink-text{font-size:12px;font-weight:600;color:var(--text2);line-height:1.3}
-
 /* ── NOTICE ── */
 .notice{background:linear-gradient(135deg,var(--gold-light),#fffbf0);border:1px solid var(--gold-mid);border-radius:var(--radius-sm);padding:.9rem 1.2rem;display:flex;align-items:flex-start;gap:10px;margin-bottom:2rem;font-size:12.5px;color:var(--gold-dark);}
 .notice-icon{font-size:18px;flex-shrink:0;margin-top:1px}
-
 /* ── FOOTER ── */
 .page-footer{text-align:center;font-size:11px;color:var(--text3);padding:1.5rem;border-top:1px solid var(--border);background:var(--blush);}
-
 @media(max-width:640px){
   .stat-strip{grid-template-columns:1fr 1fr}
   .page-header{padding:1.4rem 1.2rem}
@@ -136,7 +122,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);fon
 </style>
 </head>
 <body>
-
 <div class="page-header">
   <div class="header-inner">
     <div class="header-top">
@@ -154,9 +139,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);fon
     </div>
   </div>
 </div>
-
 <div class="container">
-
   <div class="stat-strip">
     <div class="stat-card sc-rose">
       <div class="s-icon">🧬</div>
@@ -179,7 +162,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);fon
       <div class="s-lbl">ปีงบประมาณปัจจุบัน</div>
     </div>
   </div>
-
   <div class="notice">
     <span class="notice-icon">💡</span>
     <div>
@@ -187,11 +169,9 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);fon
       อัปเดตล่าสุด: มิ.ย. 2569 &nbsp;|&nbsp; หากพบปัญหาการใช้งานกรุณาแจ้ง IT ห้องแล็บ
     </div>
   </div>
-
   <!-- ── IQC ── -->
   <div class="section-title">📋 Internal Quality Control (IQC)</div>
   <div class="module-grid">
-
     <a href="IQC_cobas_HPV .html" class="module-card mc-rose">
       <div class="mc-head">
         <div class="mc-icon-box">🧬</div>
@@ -210,7 +190,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);fon
         <div class="mc-arrow">→</div>
       </div>
     </a>
-
     <a href="IQC_HIV_VL_Generator.html" class="module-card mc-sky">
       <div class="mc-head">
         <div class="mc-icon-box">🧫</div>
@@ -229,7 +208,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);fon
         <div class="mc-arrow">→</div>
       </div>
     </a>
-
     <!-- ★ แทนที่การ์ด Hematology ด้วย HPV IQC Dashboard ★ -->
     <a href="HPV_IQC_Dashboard.html" class="module-card mc-navy">
       <div class="mc-head">
@@ -249,13 +227,10 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);fon
         <div class="mc-arrow">→</div>
       </div>
     </a>
-
   </div>
-
   <!-- ── Inventory ── -->
   <div class="section-title">📦 Inventory & Reagent Management</div>
   <div class="module-grid">
-
     <a href="inventory.html" class="module-card mc-gold">
       <div class="mc-head">
         <div class="mc-icon-box">📦</div>
@@ -274,7 +249,6 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);fon
         <div class="mc-arrow">→</div>
       </div>
     </a>
-
     <div class="module-card mc-peach coming-soon">
       <span class="cs-badge">เร็วๆ นี้</span>
       <div class="mc-head">
@@ -290,13 +264,10 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);fon
       </div>
       <div class="mc-footer"><span>—</span><div class="mc-arrow">→</div></div>
     </div>
-
   </div>
-
   <!-- ── เอกสารและประกันคุณภาพ ── -->
   <div class="section-title">🗂️ เอกสารและประกันคุณภาพ</div>
   <div class="module-grid">
-
     <a href="Calibration_Dashboard.html" class="module-card mc-teal">
       <div class="mc-head">
         <div class="mc-icon-box">📊</div>
@@ -315,9 +286,7 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);fon
         <div class="mc-arrow">→</div>
       </div>
     </a>
-
-    <div class="module-card mc-purple coming-soon">
-      <span class="cs-badge">เร็วๆ นี้</span>
+    <a href="EQA_Summary.html" class="module-card mc-purple">
       <div class="mc-head">
         <div class="mc-icon-box">📊</div>
         <div>
@@ -328,27 +297,24 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);fon
       <div class="mc-tags">
         <span class="mc-tag tag-purple">EQA</span>
         <span class="mc-tag tag-purple">PT</span>
-        <span class="mc-tag tag-gray">Coming soon</span>
       </div>
       <div class="mc-footer"><span>—</span><div class="mc-arrow">→</div></div>
-    </div>
-
-    <a href="maintenance.html" class="module-card mc-sky">
+    </a>
+    <a href="FCP68030.html" class="module-card mc-sky">
       <div class="mc-head">
-        <div class="mc-icon-box">📝</div>
+        <div class="mc-icon-box">🔧</div>
         <div>
-          <div class="mc-title">Maintenance Log</div>
-          <div class="mc-desc">บันทึกการบำรุงรักษาเครื่องมือ<br>Preventive / Corrective Maintenance</div>
+          <div class="mc-title">Maintenance Log — cobas 6800</div>
+          <div class="mc-desc">F-CP-68030 บันทึกตารางบำรุงรักษา<br>cobas 6800 (Daily / Weekly)</div>
         </div>
       </div>
       <div class="mc-tags">
         <span class="mc-tag tag-sky">Maintenance</span>
+        <span class="mc-tag tag-sky">cobas 6800</span>
       </div>
-      <div class="mc-footer"><span>—</span><div class="mc-arrow">→</div></div>
+      <div class="mc-footer"><span>F-CP-68030</span><div class="mc-arrow">→</div></div>
     </a>
-
-    <div class="module-card mc-mint coming-soon">
-      <span class="cs-badge">เร็วๆ นี้</span>
+    <a href="sop.html" class="module-card mc-mint">
       <div class="mc-head">
         <div class="mc-icon-box">📄</div>
         <div>
@@ -359,13 +325,10 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);fon
       <div class="mc-tags">
         <span class="mc-tag tag-mint">SOP</span>
         <span class="mc-tag tag-mint">Documents</span>
-        <span class="mc-tag tag-gray">Coming soon</span>
       </div>
       <div class="mc-footer"><span>—</span><div class="mc-arrow">→</div></div>
-    </div>
-
+    </a>
   </div>
-
   <!-- ── Quick Access ── -->
   <div class="section-title">⚡ Quick Access</div>
   <div class="quick-grid">
@@ -394,14 +357,11 @@ body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);fon
       <span class="qlink-text">Calibration<br>Dashboard</span>
     </a>
   </div>
-
 </div>
-
 <div class="page-footer">
   ห้องปฏิบัติการเทคนิคการแพทย์ &nbsp;·&nbsp; โรงพยาบาลพระจอมเกล้า เพชรบุรี &nbsp;·&nbsp;
   Laboratory Dashboard v1.4 &nbsp;·&nbsp; 2026
 </div>
-
 <script>
 function updateClock(){
   const now = new Date();
