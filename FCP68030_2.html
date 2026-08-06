@@ -540,41 +540,74 @@ function exportJSON() {
 
 // ── SUBMIT ───────────────────────────────────────────────
 async function submitToSheets() {
-  const url=document.getElementById('sheetsUrl').value.trim();
-  if(!url){ showToast('❌ กรุณากรอก URL Google Apps Script ก่อน'); return; }
-  const {year,month}=months[curIdx];
-  const key=mk(year,month);
-  const d=getD(key);
-  const nDays=daysIn(year,month);
-  const payload={
-    sheetLabel: thaiShort(year,month),
-    month: TH_SHORT[month-1].replace(/\./g,''),
-    serialNo: d.serial||document.getElementById('globalSerial').value,
-    days: Array.from({length:nDays},(_,i)=>i+1),
-    tasks: TASK_ROWS.map(t=>({key:t.key,label:t.label})),
-    checks: d.checks,
-    notes: d.notes||[],
+  const url = document.getElementById('sheetsUrl').value.trim();
+  if (!url) {
+    showToast('❌ กรุณากรอก Web App URL ใน ⚙️ ตั้งค่า ก่อน', 4000);
+    document.getElementById('setupPanel').open = true;
+    return;
+  }
+  const {year,month} = months[curIdx];
+  const key = mk(year, month);
+  const d   = getD(key);
+  const nDays = daysIn(year, month);
+  const payload = {
+    sheetLabel: thaiShort(year, month),
+    month:      TH_SHORT[month-1].replace(/\./g,''),
+    serialNo:   d.serial || document.getElementById('globalSerial').value,
+    days:       Array.from({length:nDays},(_,i)=>i+1),
+    tasks:      TASK_ROWS.map(t=>({key:t.key, label:t.label})),
+    checks:     d.checks,
+    notes:      d.notes || [],
     submittedAt: new Date().toISOString()
   };
-  showToast('⏳ กำลังส่งข้อมูล...');
+
+  const gsStatus = document.getElementById('gsStatus');
+  gsStatus.innerHTML = '<span style="color:#1a73e8">⏳ กำลังส่ง...</span>';
+  showToast('⏳ กำลังส่งข้อมูล...', 30000);
+
+  // Abort after 30 seconds
+  const ctrl  = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 30000);
+
   try {
-    const r=await fetch(url,{method:'POST',body:JSON.stringify(payload)});
-    const j=await r.json();
-    if(j.status==='ok'){
-      showToast('✅ บันทึกลง Google Sheets สำเร็จ!');
-      document.getElementById('gsStatus').innerHTML='<span class="gs-ok">✅ ส่งสำเร็จ (sheet: '+j.sheet+') — '+new Date().toLocaleTimeString('th-TH')+'</span>';
-    } else throw new Error(j.message||'error');
+    const r = await fetch(url, {
+      method:  'POST',
+      body:    JSON.stringify(payload),
+      signal:  ctrl.signal
+    });
+    clearTimeout(timer);
+
+    // Apps Script อาจ return text ก่อน — parse ปลอดภัยกว่า
+    const text = await r.text();
+    let j;
+    try { j = JSON.parse(text); }
+    catch(pe) { throw new Error('ตอบกลับไม่ใช่ JSON: ' + text.slice(0,120)); }
+
+    if (j.status === 'ok') {
+      showToast('✅ บันทึกลง Google Sheets สำเร็จ!', 4000);
+      gsStatus.innerHTML = '<span class="gs-ok">✅ ส่งสำเร็จ — sheet: <b>' + j.sheet + '</b> (' + new Date().toLocaleTimeString('th-TH') + ')</span>';
+    } else {
+      throw new Error(j.message || 'Apps Script ตอบว่า error');
+    }
+
   } catch(err) {
-    showToast('❌ ส่งไม่สำเร็จ: '+err.message);
-    document.getElementById('gsStatus').innerHTML='<span class="gs-err">❌ '+err.message+'</span>';
+    clearTimeout(timer);
+    let msg = err.message;
+    if (err.name === 'AbortError') msg = 'หมดเวลา 30 วิ — Apps Script ไม่ตอบสนอง';
+    if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) {
+      msg = 'Failed to fetch — ตรวจสอบ: 1) URL ถูกต้อง 2) Deploy เป็น Anyone 3) เปิด Apps Script แล้ว Authorize';
+    }
+    showToast('❌ ' + msg, 6000);
+    gsStatus.innerHTML = '<span class="gs-err">❌ ' + msg + '</span>';
   }
 }
 
 // ── TOAST ────────────────────────────────────────────────
 let toastT;
-function showToast(msg) {
+function showToast(msg, ms) {
   const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
-  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2400);
+  clearTimeout(toastT);
+  if ((ms||0) < 30000) toastT=setTimeout(()=>t.classList.remove('show'), ms||2400);
 }
 
 // ── APPS SCRIPT CODE ─────────────────────────────────────
