@@ -2,437 +2,652 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dashboard — ห้องปฏิบัติการ ร.พ.พระจอมเกล้า เพชรบุรี</title>
-<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F-CP-68030 แบบบันทึกตารางบำรุงรักษา cobas 6800</title>
 <style>
-:root{
-  --rose:#c9687e;--rose-light:#fde8f0;--rose-mid:#f4a0b8;--rose-dark:#8b3a52;
-  --pink:#f2c4ce;--blush:#fdf6f8;
-  --mint:#d5f0e3;--mint-dark:#1e6b40;
-  --peach:#fdebd5;--peach-dark:#a05020;
-  --sky:#ddeeff;--sky-dark:#1a5a8a;
-  --purple-light:#f0ebff;--purple-dark:#5b3fa0;--purple-mid:#c5b0f0;
-  --gold-light:#fff8e0;--gold-dark:#8a6000;--gold-mid:#f0d060;
-  --teal-light:#e0f7f4;--teal-dark:#1a6b60;--teal-mid:#4db8aa;
-  --text:#2d2028;--text2:#7a606a;--text3:#b09aa0;
-  --bg:#fdf8f9;--card:#ffffff;
-  --border:#eedde4;--border2:#f4c8d4;
-  --radius:14px;--radius-sm:9px;
-  --shadow:0 2px 16px rgba(180,80,100,.08);
-  --shadow-hover:0 6px 28px rgba(180,80,100,.16);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'TH SarabunPSK', 'Sarabun', 'Tahoma', sans-serif; font-size: 13px; background: #f0f2f5; }
 
-.page-header{background:linear-gradient(135deg,#f8d0dc 0%,#fce4ec 50%,#fdf0f8 100%);padding:2rem 2.5rem 1.8rem;border-bottom:1px solid var(--border2);position:relative;overflow:hidden;}
-.page-header::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(201,104,126,.08);}
-.page-header::after{content:'';position:absolute;bottom:-40px;left:20%;width:140px;height:140px;border-radius:50%;background:rgba(244,160,184,.06);}
-.header-inner{position:relative;z-index:1;max-width:960px;margin:0 auto}
-.header-top{display:flex;align-items:center;gap:16px;margin-bottom:6px}
-.logo-wrap{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--rose),var(--rose-dark));display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;box-shadow:0 4px 14px rgba(139,58,82,.25);}
-.header-texts h1{font-size:20px;font-weight:700;color:var(--rose-dark);line-height:1.3}
-.header-texts .sub{font-size:12px;color:var(--rose);margin-top:2px}
-.header-meta{display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap;}
-.meta-chip{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.7);color:var(--text2);font-size:11px;font-weight:600;padding:4px 12px;border-radius:99px;border:1px solid var(--border2);backdrop-filter:blur(4px);}
-#live-time{font-weight:700;color:var(--rose-dark)}
+  /* ===== TOP BAR ===== */
+  .topbar {
+    background: #1a73e8; color: #fff; display: flex; align-items: center;
+    justify-content: space-between; padding: 8px 16px; position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 6px rgba(0,0,0,.25);
+  }
+  .topbar-title { font-size: 15px; font-weight: 600; }
+  .topbar-actions { display: flex; gap: 8px; }
+  .btn {
+    padding: 6px 14px; border-radius: 4px; border: none; cursor: pointer;
+    font-size: 13px; font-weight: 600; transition: background .2s;
+  }
+  .btn-white { background: #fff; color: #1a73e8; }
+  .btn-white:hover { background: #e8f0fe; }
+  .btn-green { background: #34a853; color: #fff; }
+  .btn-green:hover { background: #2d9248; }
+  .btn-outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.6); }
+  .btn-outline:hover { background: rgba(255,255,255,.12); }
 
-.container{max-width:960px;margin:0 auto;padding:2rem 1.5rem 4rem}
+  /* ===== PAGE ===== */
+  .page-wrap { max-width: 1200px; margin: 20px auto; padding: 0 12px 40px; }
+  .sheet {
+    background: #fff; border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.15); overflow: hidden;
+  }
 
-.section-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px;margin-top:8px;display:flex;align-items:center;gap:8px;}
-.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+  /* ===== HEADER ===== */
+  .doc-header {
+    padding: 12px 16px 8px; border-bottom: 2px solid #000;
+  }
+  .header-row1 { display: flex; justify-content: space-between; align-items: flex-start; }
+  .header-org { font-size: 20px; font-weight: 700; line-height: 1.3; }
+  .header-code { font-size: 18px; font-weight: 700; border: 2px solid #000; padding: 4px 10px; border-radius: 4px; }
+  .header-row2 { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
+  .header-title { font-size: 18px; font-weight: 700; }
+  .header-ver { font-size: 12px; color: #555; }
+  .header-row3 { display: flex; gap: 20px; margin-top: 6px; flex-wrap: wrap; }
+  .field-inline { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; }
+  .field-input {
+    border: none; border-bottom: 1.5px solid #333; min-width: 180px; padding: 2px 4px;
+    font-size: 14px; font-family: inherit; outline: none;
+  }
+  .field-input:focus { border-bottom-color: #1a73e8; }
 
-.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:2rem;}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.2rem;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:4px;}
-.stat-card .s-icon{font-size:24px;margin-bottom:4px}
-.stat-card .s-val{font-size:26px;font-weight:700;line-height:1}
-.stat-card .s-lbl{font-size:11px;color:var(--text3);font-weight:600;letter-spacing:.3px}
-.sc-rose{border-left:3px solid var(--rose)}.sc-rose .s-val{color:var(--rose-dark)}
-.sc-sky{border-left:3px solid #5aaced}.sc-sky .s-val{color:var(--sky-dark)}
-.sc-mint{border-left:3px solid #58c890}.sc-mint .s-val{color:var(--mint-dark)}
-.sc-gold{border-left:3px solid #e0b030}.sc-gold .s-val{color:var(--gold-dark)}
+  /* ===== TABLE ===== */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { border-collapse: collapse; width: 100%; min-width: 900px; }
+  th, td { border: 1px solid #333; text-align: center; padding: 0; vertical-align: middle; }
 
-.module-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-bottom:2rem;}
-.module-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem 1.6rem;box-shadow:var(--shadow);cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;}
-.module-card::before{content:'';position:absolute;top:0;right:0;width:80px;height:80px;border-radius:50%;transform:translate(30px,-30px);opacity:.12;transition:opacity .2s;}
-.module-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover)}
-.module-card:hover::before{opacity:.2}
+  /* Day header row */
+  .th-task { width: 240px; min-width: 200px; text-align: left; padding: 4px 8px; font-size: 11px; font-weight: 700; }
+  .th-day { width: 28px; font-size: 10px; font-weight: 700; padding: 3px 1px; }
 
-.mc-rose{border-top:3px solid var(--rose)}.mc-rose::before{background:var(--rose)}
-.mc-sky{border-top:3px solid #5aaced}.mc-sky::before{background:#5aaced}
-.mc-mint{border-top:3px solid #58c890}.mc-mint::before{background:#58c890}
-.mc-purple{border-top:3px solid #9b7ae0}.mc-purple::before{background:#9b7ae0}
-.mc-peach{border-top:3px solid #e8844a}.mc-peach::before{background:#e8844a}
-.mc-gold{border-top:3px solid #e0b030}.mc-gold::before{background:#e0b030}
-.mc-teal{border-top:3px solid var(--teal-mid)}.mc-teal::before{background:var(--teal-mid)}
-.mc-navy{border-top:3px solid #1a3a6b}.mc-navy::before{background:#1a3a6b}
+  /* Section header rows */
+  .row-section td { background: #d9e8ff; font-weight: 700; font-size: 12px; text-align: left; padding: 4px 8px; }
+  .row-subsection td { background: #eef4ff; font-size: 11px; text-align: left; padding: 3px 8px; font-weight: 600; }
 
-.mc-head{display:flex;align-items:flex-start;gap:12px}
-.mc-icon-box{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
-.mc-rose .mc-icon-box{background:var(--rose-light)}
-.mc-sky .mc-icon-box{background:var(--sky)}
-.mc-mint .mc-icon-box{background:var(--mint)}
-.mc-purple .mc-icon-box{background:var(--purple-light)}
-.mc-peach .mc-icon-box{background:var(--peach)}
-.mc-gold .mc-icon-box{background:var(--gold-light)}
-.mc-teal .mc-icon-box{background:var(--teal-light)}
-.mc-navy .mc-icon-box{background:#e8edf8}
+  /* Checkbox cells */
+  .cell-check {
+    cursor: pointer; font-size: 14px; font-weight: 700; height: 22px; width: 28px;
+    transition: background .15s; user-select: none; position: relative;
+  }
+  .cell-check:hover { background: #e8f0fe; }
+  .cell-check.checked { background: #c8e6c9; color: #1b5e20; }
+  .cell-check.checked::after { content: '/'; }
 
-.mc-title{font-size:14px;font-weight:700;color:var(--text);line-height:1.3}
-.mc-desc{font-size:12px;color:var(--text2);line-height:1.5}
-.mc-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
-.mc-tag{font-size:10px;font-weight:700;padding:2px 9px;border-radius:99px;letter-spacing:.3px;}
-.tag-rose{background:var(--rose-light);color:var(--rose-dark)}
-.tag-sky{background:var(--sky);color:var(--sky-dark)}
-.tag-mint{background:var(--mint);color:var(--mint-dark)}
-.tag-purple{background:var(--purple-light);color:var(--purple-dark)}
-.tag-peach{background:var(--peach);color:var(--peach-dark)}
-.tag-gold{background:var(--gold-light);color:var(--gold-dark)}
-.tag-gray{background:#f0eded;color:#7a7a8a}
-.tag-teal{background:var(--teal-light);color:var(--teal-dark)}
-.tag-pass{background:#d4edda;color:#155724}
-.tag-navy{background:#e8edf8;color:#1a3a6b}
+  /* Perform by row */
+  .row-perform .cell-sign {
+    cursor: pointer; height: 50px; width: 28px; padding: 0;
+    position: relative; overflow: hidden;
+    transition: background .15s;
+  }
+  .row-perform .cell-sign:hover { background: #fff8e1; }
+  .row-perform .cell-sign canvas { display: block; width: 100%; height: 100%; }
+  .row-perform .cell-sign.signed { background: #fffde7; }
+  .row-perform td:first-child { text-align: left; padding: 4px 8px; font-weight: 700; font-size: 12px; height: 50px; vertical-align: middle; }
 
-.mc-footer{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);}
-.mc-arrow{width:26px;height:26px;border-radius:50%;background:var(--blush);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:13px;transition:background .2s,transform .2s;}
-.module-card:hover .mc-arrow{background:var(--rose-light);transform:translateX(3px)}
-.mc-teal:hover .mc-arrow{background:var(--teal-light) !important}
-.mc-navy:hover .mc-arrow{background:#e8edf8 !important}
+  /* Additional note */
+  .note-section { padding: 12px 16px; border-top: 1px solid #ccc; }
+  .note-title { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .note-table { width: 100%; border-collapse: collapse; }
+  .note-table th { background: #f5f5f5; font-size: 12px; font-weight: 700; padding: 4px 8px; border: 1px solid #ccc; }
+  .note-table td { border: 1px solid #ccc; padding: 0; }
+  .note-table .note-num { text-align: center; width: 40px; font-size: 12px; padding: 4px; background: #fafafa; }
+  .note-table input[type=text] {
+    width: 100%; border: none; padding: 5px 8px; font-size: 13px;
+    font-family: inherit; outline: none; background: transparent;
+  }
+  .note-table input[type=text]:focus { background: #f0f7ff; }
+  .btn-addrow {
+    margin-top: 8px; background: #e8f0fe; color: #1a73e8; border: 1px dashed #1a73e8;
+    padding: 5px 14px; border-radius: 4px; cursor: pointer; font-size: 13px;
+    font-family: inherit; font-weight: 600; transition: background .15s;
+  }
+  .btn-addrow:hover { background: #c5d9fd; }
+  .btn-delrow {
+    background: none; border: none; color: #c62828; cursor: pointer; font-size: 16px;
+    padding: 2px 6px; border-radius: 3px; transition: background .15s; line-height: 1;
+  }
+  .btn-delrow:hover { background: #ffebee; }
 
-.coming-soon{position:relative;pointer-events:none;opacity:.55;}
-.cs-badge{position:absolute;top:10px;right:10px;z-index:2;font-size:10px;font-weight:700;padding:3px 10px;border-radius:99px;background:#f0eded;color:#9a8a8e;border:1px solid #e0d8da;letter-spacing:.4px;}
+  /* ===== SIGNATURE MODAL ===== */
+  .modal-overlay {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,.55); z-index: 200; align-items: center; justify-content: center;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: #fff; border-radius: 8px; padding: 20px; width: 360px; max-width: 95vw;
+    box-shadow: 0 8px 32px rgba(0,0,0,.3);
+  }
+  .modal-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .modal-subtitle { font-size: 12px; color: #666; margin-bottom: 12px; }
+  .sig-canvas {
+    display: block; border: 1.5px solid #999; border-radius: 4px;
+    width: 100%; height: 140px; cursor: crosshair; touch-action: none;
+    background: #fff;
+  }
+  .modal-actions { display: flex; gap: 8px; margin-top: 12px; justify-content: flex-end; }
+  .btn-clear { background: #fff; border: 1px solid #ccc; color: #333; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+  .btn-clear:hover { background: #f5f5f5; }
+  .btn-save-sig { background: #1a73e8; color: #fff; border: none; padding: 6px 16px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; }
+  .btn-save-sig:hover { background: #1557b0; }
+  .btn-cancel-sig { background: #fff; border: 1px solid #ccc; color: #333; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+  .btn-cancel-sig:hover { background: #f5f5f5; }
 
-.quick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:2rem}
-.qlink{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.8rem 1rem;display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);transition:background .18s,border-color .18s,transform .18s;box-shadow:0 1px 6px rgba(180,80,100,.05);}
-.qlink:hover{background:var(--rose-light);border-color:var(--rose-mid);transform:translateY(-2px)}
-.qlink-icon{font-size:18px;flex-shrink:0}
-.qlink-text{font-size:12px;font-weight:600;color:var(--text2);line-height:1.3}
+  /* ===== GAS INSTRUCTIONS PANEL ===== */
+  .gas-panel {
+    background: #fffde7; border: 1px solid #f9a825; border-radius: 6px;
+    margin: 20px 0; padding: 14px 18px;
+  }
+  .gas-panel h3 { color: #e65100; font-size: 14px; margin-bottom: 8px; }
+  .gas-panel p { font-size: 12px; line-height: 1.7; color: #333; }
+  .gas-panel code {
+    display: block; background: #fff8e1; border: 1px solid #ffe082; padding: 8px 10px;
+    border-radius: 4px; font-size: 11px; white-space: pre-wrap; margin: 8px 0;
+    font-family: 'Courier New', monospace; color: #1a237e;
+  }
+  .gas-url-field {
+    width: 100%; border: 1px solid #f9a825; border-radius: 4px; padding: 6px 10px;
+    font-size: 13px; font-family: inherit; outline: none; margin-top: 6px;
+    background: #fff;
+  }
+  .gas-url-field:focus { border-color: #1a73e8; }
 
-.notice{background:linear-gradient(135deg,var(--gold-light),#fffbf0);border:1px solid var(--gold-mid);border-radius:var(--radius-sm);padding:.9rem 1.2rem;display:flex;align-items:flex-start;gap:10px;margin-bottom:2rem;font-size:12.5px;color:var(--gold-dark);}
-.notice-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+  /* ===== SUCCESS / STATUS ===== */
+  .status-msg { display: none; padding: 10px 16px; border-radius: 4px; font-size: 13px; font-weight: 600; margin: 8px 0; }
+  .status-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+  .status-error   { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
 
-.page-footer{text-align:center;font-size:11px;color:var(--text3);padding:1.5rem;border-top:1px solid var(--border);background:var(--blush);}
-
-@media(max-width:640px){
-  .stat-strip{grid-template-columns:1fr 1fr}
-  .page-header{padding:1.4rem 1.2rem}
-  .header-texts h1{font-size:16px}
-  .container{padding:1.2rem 1rem 3rem}
-}
+  @media print {
+    .topbar, .gas-panel, .btn-addrow, .btn-delrow, .modal-overlay { display: none !important; }
+    body { background: #fff; }
+    .page-wrap { margin: 0; padding: 0; }
+    .sheet { box-shadow: none; border-radius: 0; }
+    @page { size: A3 landscape; margin: 1cm; }
+  }
 </style>
 </head>
 <body>
 
-<div class="page-header">
-  <div class="header-inner">
-    <div class="header-top">
-      <div class="logo-wrap">🏥</div>
-      <div class="header-texts">
-        <h1>ห้องปฏิบัติการเทคนิคการแพทย์</h1>
-        <div class="sub">โรงพยาบาลพระจอมเกล้า เพชรบุรี &nbsp;·&nbsp; Laboratory Information Dashboard</div>
-      </div>
-    </div>
-    <div class="header-meta">
-      <span class="meta-chip">📅 <span id="live-date">—</span></span>
-      <span class="meta-chip">⏰ <span id="live-time">—</span></span>
-      <span class="meta-chip">🔬 cobas® 6800 / SN1376</span>
-      <span class="meta-chip">📍 งานพยาธิวิทยาคลินิก</span>
-    </div>
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-title">📋 F-CP-68030 · แบบบันทึกตารางบำรุงรักษา cobas 6800</div>
+  <div class="topbar-actions">
+    <button class="btn btn-outline" onclick="window.print()">🖨️ พิมพ์</button>
+    <button class="btn btn-white" onclick="exportJSON()">⬇️ Export JSON</button>
+    <button class="btn btn-green" onclick="submitToSheets()">📤 บันทึกไป Google Sheets</button>
   </div>
 </div>
 
-<div class="container">
+<div class="page-wrap">
 
-  <div class="stat-strip">
-    <div class="stat-card sc-rose">
-      <div class="s-icon">🧬</div>
-      <div class="s-val">3</div>
-      <div class="s-lbl">แบบฟอร์ม IQC ที่ใช้งาน</div>
+  <!-- GOOGLE APPS SCRIPT SETUP PANEL -->
+  <div class="gas-panel" id="gasPanel">
+    <h3>⚙️ การตั้งค่า Google Sheets (ทำครั้งเดียว)</h3>
+    <p>เพื่อบันทึกข้อมูลไปยัง Google Sheets อัตโนมัติ ให้ทำตามขั้นตอนด้านล่าง:</p>
+    <ol style="font-size:12px;line-height:2;margin:6px 0 6px 18px;color:#333">
+      <li>เปิด <a href="https://script.google.com" target="_blank" style="color:#1a73e8">Google Apps Script</a> → สร้างโปรเจกต์ใหม่</li>
+      <li>วาง code ด้านล่างนี้ใน Code.gs แล้ว <b>บันทึก</b></li>
+      <li>คลิก <b>Deploy → New Deployment → Web App</b> → ตั้ง "Execute as: Me" และ "Who has access: Anyone" → <b>Deploy</b></li>
+      <li>คัดลอก Web App URL มาใส่ในช่องด้านล่าง</li>
+    </ol>
+    <code>// Google Apps Script — วางใน Code.gs
+function doPost(e) {
+  var data = JSON.parse(e.postData.contents);
+  var ss = SpreadsheetApp.openById('SPREADSHEET_ID_ของคุณ'); // ← ใส่ ID ของ Google Sheet
+  var sheet = ss.getSheetByName('F-CP-68030') || ss.insertSheet('F-CP-68030');
+
+  if (sheet.getLastRow() === 0) {
+    // สร้าง header
+    var headers = ['บันทึกเมื่อ','Serial NO','ประจำเดือน'].concat(
+      data.rows.map(function(r){ return r.label; })
+    ).concat(['Additional Note']);
+    sheet.appendRow(headers);
+  }
+
+  var now = new Date().toLocaleString('th-TH', {timeZone:'Asia/Bangkok'});
+  for (var d = 1; d <= 31; d++) {
+    var row = [now, data.serial, data.month, 'วันที่ ' + d];
+    data.rows.forEach(function(r){
+      row.push(r.days[d-1] ? '/' : '');
+    });
+    row.push(d === 1 ? data.notes.join(' | ') : '');
+    sheet.appendRow(row);
+  }
+
+  // ส่ง email แจ้งเตือน (ถ้าต้องการ)
+  // MailApp.sendEmail('your@gmail.com', 'บันทึกบำรุงรักษา cobas 6800', 'มีการบันทึกข้อมูลใหม่');
+
+  return ContentService.createTextOutput(JSON.stringify({status:'ok'}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doGet(e) {
+  return ContentService.createTextOutput('OK');
+}</code>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+      <label style="font-size:12px;font-weight:700;white-space:nowrap">Web App URL:</label>
+      <input type="text" id="gasUrl" class="gas-url-field"
+        placeholder="https://script.google.com/macros/s/AKfycb.../exec"
+        oninput="localStorage.setItem('fcp_gas_url', this.value)">
     </div>
-    <div class="stat-card sc-sky">
-      <div class="s-icon">📊</div>
-      <div class="s-val" style="font-size:18px">HPV/HIV</div>
-      <div class="s-lbl">การทดสอบที่ครอบคลุม</div>
-    </div>
-    <div class="stat-card sc-mint">
-      <div class="s-icon">✅</div>
-      <div class="s-val">cobas®</div>
-      <div class="s-lbl">ระบบ / Platform</div>
-    </div>
-    <div class="stat-card sc-gold">
-      <div class="s-icon">🏆</div>
-      <div class="s-val" id="year-stat">2569</div>
-      <div class="s-lbl">ปีงบประมาณปัจจุบัน</div>
+    <div style="margin-top:8px">
+      <button class="btn btn-outline" style="background:#e65100;color:#fff;border:none;padding:5px 12px;border-radius:4px;cursor:pointer;font-size:12px"
+        onclick="document.getElementById('gasPanel').style.display='none'">ซ่อนคำแนะนำ</button>
     </div>
   </div>
 
-  <div class="notice">
-    <span class="notice-icon">💡</span>
-    <div>
-      <strong>เลือกแบบฟอร์มหรือโมดูลที่ต้องการ</strong> — Dashboard นี้รวมทุกเครื่องมือที่ใช้ในงานประกันคุณภาพห้องปฏิบัติการ
-      อัปเดตล่าสุด: มิ.ย. 2569 &nbsp;|&nbsp; หากพบปัญหาการใช้งานกรุณาแจ้ง IT ห้องแล็บ
+  <div id="statusMsg" class="status-msg"></div>
+
+  <!-- DOCUMENT SHEET -->
+  <div class="sheet">
+
+    <!-- DOCUMENT HEADER -->
+    <div class="doc-header">
+      <div class="header-row1">
+        <div class="header-org">กลุ่มงานเทคนิคการแพทย์<br>โรงพยาบาลพระจอมเกล้า</div>
+        <div class="header-code">F-CP-68030</div>
+      </div>
+      <div class="header-row2">
+        <div class="header-title">แบบบันทึกตารางการบำรุงรักษาเครื่อง cobas 6800 V2.0 system</div>
+        <div class="header-ver">1/08/01/2569</div>
+      </div>
+      <div class="header-row3">
+        <div class="field-inline">
+          Serial NO.&nbsp;
+          <input type="text" class="field-input" id="serialNo" placeholder="…………………………">
+        </div>
+        <div class="field-inline">
+          ประจำเดือน&nbsp;
+          <input type="text" class="field-input" id="monthField" placeholder="…………………………">
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN TABLE -->
+    <div class="table-wrap">
+      <table id="mainTable">
+        <thead>
+          <tr>
+            <th class="th-task">รายการ</th>
+            <th class="th-day">1</th><th class="th-day">2</th><th class="th-day">3</th>
+            <th class="th-day">4</th><th class="th-day">5</th><th class="th-day">6</th>
+            <th class="th-day">7</th><th class="th-day">8</th><th class="th-day">9</th>
+            <th class="th-day">10</th><th class="th-day">11</th><th class="th-day">12</th>
+            <th class="th-day">13</th><th class="th-day">14</th><th class="th-day">15</th>
+            <th class="th-day">16</th><th class="th-day">17</th><th class="th-day">18</th>
+            <th class="th-day">19</th><th class="th-day">20</th><th class="th-day">21</th>
+            <th class="th-day">22</th><th class="th-day">23</th><th class="th-day">24</th>
+            <th class="th-day">25</th><th class="th-day">26</th><th class="th-day">27</th>
+            <th class="th-day">28</th><th class="th-day">29</th><th class="th-day">30</th>
+            <th class="th-day">31</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- rows injected by JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PERFORM BY ROW (signatures) -->
+    <div class="table-wrap">
+      <table style="border-collapse:collapse;width:100%;min-width:900px">
+        <tbody>
+          <tr class="row-perform" id="performRow">
+            <td style="width:240px;min-width:200px;border:1px solid #333;text-align:left;padding:4px 8px;font-weight:700;font-size:12px;height:55px;vertical-align:middle">
+              Perform by
+            </td>
+            <!-- 31 signature cells injected by JS -->
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /sheet -->
+
+  <!-- ADDITIONAL NOTE SECTION -->
+  <div class="sheet" style="margin-top:16px">
+    <div class="note-section">
+      <div class="note-title">📝 Additional Note :</div>
+      <table class="note-table" id="noteTable">
+        <thead>
+          <tr>
+            <th style="width:40px">#</th>
+            <th>บันทึกเพิ่มเติม</th>
+            <th style="width:40px"></th>
+          </tr>
+        </thead>
+        <tbody id="noteBody">
+          <tr>
+            <td class="note-num">1</td>
+            <td><input type="text" placeholder="พิมพ์บันทึกเพิ่มเติม…"></td>
+            <td style="text-align:center"><button class="btn-delrow" onclick="delNote(this)">×</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <button class="btn-addrow" onclick="addNote()">+ เพิ่มบรรทัด</button>
     </div>
   </div>
 
-  <!-- ── IQC ── -->
-  <div class="section-title">📋 Internal Quality Control (IQC)</div>
-  <div class="module-grid">
+</div><!-- /page-wrap -->
 
-    <a href="IQC_cobas_HPV .html" class="module-card mc-rose">
-      <div class="mc-head">
-        <div class="mc-icon-box">🧬</div>
-        <div>
-          <div class="mc-title">IQC — HPV DNA Test</div>
-          <div class="mc-desc">บันทึกผล Internal QC สำหรับ cobas® HPV<br>ทั้ง Positive Control และ Negative Control</div>
-        </div>
-      </div>
-      <div class="mc-tags">
-        <span class="mc-tag tag-rose">cobas® 6800</span>
-        <span class="mc-tag tag-rose">HPV 16/18/Other HR</span>
-        <span class="mc-tag tag-gray">F-CP-68040</span>
-      </div>
-      <div class="mc-footer">
-        <span>บันทึกผลทุก Batch run</span>
-        <div class="mc-arrow">→</div>
-      </div>
-    </a>
-
-    <a href="IQC_HIV_VL_Generator.html" class="module-card mc-sky">
-      <div class="mc-head">
-        <div class="mc-icon-box">🧫</div>
-        <div>
-          <div class="mc-title">IQC — HIV Viral Load</div>
-          <div class="mc-desc">บันทึกผล Internal QC สำหรับ cobas® HIV-1<br>Viral Load · High &amp; Low Control</div>
-        </div>
-      </div>
-      <div class="mc-tags">
-        <span class="mc-tag tag-sky">cobas® 6800</span>
-        <span class="mc-tag tag-sky">HIV-1 VL</span>
-        <span class="mc-tag tag-gray">F-CP-68041</span>
-      </div>
-      <div class="mc-footer">
-        <span>บันทึกผลทุก Batch run</span>
-        <div class="mc-arrow">→</div>
-      </div>
-    </a>
-
-    <!-- HPV IQC Dashboard แทนที่ Hematology -->
-    <a href="HPV_IQC_Dashboard.html" class="module-card mc-navy">
-      <div class="mc-head">
-        <div class="mc-icon-box">📈</div>
-        <div>
-          <div class="mc-title">HPV IQC Dashboard</div>
-          <div class="mc-desc">กราฟ Levey-Jennings &amp; Westgard Multi-Rule<br>วิเคราะห์ QC trend แบบ interactive</div>
-        </div>
-      </div>
-      <div class="mc-tags">
-        <span class="mc-tag tag-navy">Levey-Jennings</span>
-        <span class="mc-tag tag-navy">Westgard Rules</span>
-        <span class="mc-tag tag-pass">IQC Analytics</span>
-      </div>
-      <div class="mc-footer">
-        <span>ดู trend &amp; violations รายเดือน</span>
-        <div class="mc-arrow">→</div>
-      </div>
-    </a>
-
-    <a href="https://docs.google.com/spreadsheets/d/1HcPNn4n5Imz9nz2r2H5lXi9W31yHwCpc/edit?usp=sharing&ouid=117419804945157904320&rtpof=true&sd=true" target="_blank" rel="noopener" class="module-card mc-purple">
-      <div class="mc-head">
-        <div class="mc-icon-box">🧪</div>
-        <div>
-          <div class="mc-title">IQC — HIV-1</div>
-          <div class="mc-desc">บันทึกผล Internal QC สำหรับ HIV-1<br>ผ่าน Google Sheets</div>
-        </div>
-      </div>
-      <div class="mc-tags">
-        <span class="mc-tag tag-purple">HIV-1</span>
-        <span class="mc-tag tag-gray">Google Sheets</span>
-      </div>
-      <div class="mc-footer">
-        <span>บันทึกผลทุก Batch run</span>
-        <div class="mc-arrow">→</div>
-      </div>
-    </a>
-
-  </div>
-
-  <!-- ── Inventory ── -->
-  <div class="section-title">📦 Inventory & Reagent Management</div>
-  <div class="module-grid">
-
-    <a href="inventory.html" class="module-card mc-gold">
-      <div class="mc-head">
-        <div class="mc-icon-box">📦</div>
-        <div>
-          <div class="mc-title">Inventory 2026</div>
-          <div class="mc-desc">ระบบควบคุมสต็อกน้ำยา สารเคมี และวัสดุสิ้นเปลือง<br>รองรับ Import/Export Excel · บันทึกรายเดือน</div>
-        </div>
-      </div>
-      <div class="mc-tags">
-        <span class="mc-tag tag-gold">Reagent Stock</span>
-        <span class="mc-tag tag-gold">2026 / 2569</span>
-        <span class="mc-tag tag-gray">Web App</span>
-      </div>
-      <div class="mc-footer">
-        <span>อัปเดตสต็อกน้ำยาและวัสดุ</span>
-        <div class="mc-arrow">→</div>
-      </div>
-    </a>
-
-    <div class="module-card mc-peach coming-soon">
-      <span class="cs-badge">เร็วๆ นี้</span>
-      <div class="mc-head">
-        <div class="mc-icon-box">📅</div>
-        <div>
-          <div class="mc-title">Reagent Expiry Tracker</div>
-          <div class="mc-desc">ติดตามวันหมดอายุของน้ำยาและสารควบคุม<br>แจ้งเตือนล่วงหน้า 30 วัน</div>
-        </div>
-      </div>
-      <div class="mc-tags">
-        <span class="mc-tag tag-peach">Expiry Alert</span>
-        <span class="mc-tag tag-gray">Coming soon</span>
-      </div>
-      <div class="mc-footer"><span>—</span><div class="mc-arrow">→</div></div>
+<!-- SIGNATURE MODAL -->
+<div class="modal-overlay" id="sigModal">
+  <div class="modal">
+    <div class="modal-title">✍️ ลายเซ็น — Perform by</div>
+    <div class="modal-subtitle" id="sigDay"></div>
+    <canvas class="sig-canvas" id="sigCanvas" width="320" height="140"></canvas>
+    <div class="modal-actions">
+      <button class="btn-cancel-sig" onclick="closeSigModal()">ยกเลิก</button>
+      <button class="btn-clear" onclick="clearSig()">ล้างลายเซ็น</button>
+      <button class="btn-save-sig" onclick="saveSig()">บันทึก</button>
     </div>
-
   </div>
-
-  <!-- ── เอกสารและประกันคุณภาพ ── -->
-  <div class="section-title">🗂️ เอกสารและประกันคุณภาพ</div>
-  <div class="module-grid">
-
-    <a href="Calibration_Dashboard.html" class="module-card mc-teal">
-      <div class="mc-head">
-        <div class="mc-icon-box">📊</div>
-        <div>
-          <div class="mc-title">Calibration Dashboard</div>
-          <div class="mc-desc">สรุปผลการสอบเทียบเครื่องมือ งานอณูชีวโมเลกุล<br>Work Order No. 25/1390</div>
-        </div>
-      </div>
-      <div class="mc-tags">
-        <span class="mc-tag tag-teal">38 เครื่องมือ</span>
-        <span class="mc-tag tag-pass">PASS 94.7%</span>
-        <span class="mc-tag tag-gray">Oct–Nov 2025</span>
-      </div>
-      <div class="mc-footer">
-        <span>Crystal Calibration · TIS 17025</span>
-        <div class="mc-arrow">→</div>
-      </div>
-    </a>
-
-    <!-- EQA การ์ดที่ user บอกว่าหาย — ใส่กลับ -->
-    <a href="EQA_index.html" class="module-card mc-purple">
-      <div class="mc-head">
-        <div class="mc-icon-box">📊</div>
-        <div>
-          <div class="mc-title">EQA / PT Summary</div>
-          <div class="mc-desc">สรุปผล External Quality Assessment<br>และ Proficiency Testing รายปี</div>
-        </div>
-      </div>
-      <div class="mc-tags">
-        <span class="mc-tag tag-purple">EQA</span>
-        <span class="mc-tag tag-purple">PT</span>
-        <span class="mc-tag tag-pass">Excellent 100%</span>
-        <span class="mc-tag tag-gray">สวส. · QCMD · 2566–2569</span>
-      </div>
-      <div class="mc-footer">
-        <span>สรุปผลทุกปี</span>
-        <div class="mc-arrow">→</div>
-      </div>
-    </a>
-
-    <a href="maintenance.html" class="module-card mc-sky">
-      <div class="mc-head">
-        <div class="mc-icon-box">📝</div>
-        <div>
-          <div class="mc-title">Maintenance Log</div>
-          <div class="mc-desc">บันทึกการบำรุงรักษาเครื่องมือ<br>Preventive / Corrective Maintenance</div>
-        </div>
-      </div>
-      <div class="mc-tags">
-        <span class="mc-tag tag-sky">Maintenance</span>
-      </div>
-      <div class="mc-footer"><span>—</span><div class="mc-arrow">→</div></div>
-    </a>
-
-    <!-- SOP การ์ดที่ user บอกว่าหาย — ใส่กลับ -->
-    <a href="reagent_msds_index.html" class="module-card mc-mint">
-      <div class="mc-head">
-        <div class="mc-icon-box">📋</div>
-        <div>
-          <div class="mc-title">MSDS & Reagent Documents</div>
-          <div class="mc-desc">รายการ MSDS และ Package Insert<br>Flow Cytometry · cobas Molecular · COVID-19</div>
-        </div>
-      </div>
-      <div class="mc-tags">
-        <span class="mc-tag tag-mint">MSDS</span>
-        <span class="mc-tag tag-mint">Reagent PI</span>
-        <span class="mc-tag tag-gray">16 เอกสาร</span>
-      </div>
-      <div class="mc-footer">
-        <span>ลิงก์ PDF ผ่าน Google Drive</span>
-        <div class="mc-arrow">→</div>
-      </div>
-    </a>
-
-  </div>
-
-  <!-- ── Quick Access ── -->
-  <div class="section-title">⚡ Quick Access</div>
-  <div class="quick-grid">
-    <a href="IQC_cobas_HPV .html" class="qlink">
-      <span class="qlink-icon">🧬</span>
-      <span class="qlink-text">IQC HPV<br>บันทึกผลใหม่</span>
-    </a>
-    <a href="HPV_IQC_Dashboard.html" class="qlink">
-      <span class="qlink-icon">📈</span>
-      <span class="qlink-text">HPV IQC Dashboard<br>Levey-Jennings</span>
-    </a>
-    <a href="IQC_COBAS_HPV.xlsx" class="qlink">
-      <span class="qlink-icon">📊</span>
-      <span class="qlink-text">IQC HPV<br>ข้อมูล Excel</span>
-    </a>
-    <a href="IQC_HIV_VL_Generator.html" class="qlink">
-      <span class="qlink-icon">🧫</span>
-      <span class="qlink-text">IQC HIV VL<br>บันทึกผลใหม่</span>
-    </a>
-    <a href="inventory.html" class="qlink">
-      <span class="qlink-icon">📦</span>
-      <span class="qlink-text">Inventory<br>2026</span>
-    </a>
-    <a href="EQA_index.html" class="qlink">
-      <span class="qlink-icon">📊</span>
-      <span class="qlink-text">EQA / PT<br>Summary</span>
-    </a>
-    <a href="reagent_msds_index.html" class="qlink">
-      <span class="qlink-icon">📋</span>
-      <span class="qlink-text">MSDS &amp;<br>Reagent Docs</span>
-    </a>
-    <a href="Calibration_Dashboard.html" class="qlink">
-      <span class="qlink-icon">🔬</span>
-      <span class="qlink-text">Calibration<br>Dashboard</span>
-    </a>
-  </div>
-
-</div>
-
-<div class="page-footer">
-  ห้องปฏิบัติการเทคนิคการแพทย์ &nbsp;·&nbsp; โรงพยาบาลพระจอมเกล้า เพชรบุรี &nbsp;·&nbsp;
-  Laboratory Dashboard v1.4 &nbsp;·&nbsp; 2026
 </div>
 
 <script>
-function updateClock(){
-  const now = new Date();
-  const th = new Intl.DateTimeFormat('th-TH',{weekday:'short',day:'numeric',month:'short',year:'numeric',calendar:'buddhist'});
-  const tm = now.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  document.getElementById('live-date').textContent = th.format(now);
-  document.getElementById('live-time').textContent = tm;
-  const be = now.getFullYear() + 543;
-  document.getElementById('year-stat').textContent = be;
+// ===== ROW DEFINITIONS =====
+const ROWS = [
+  { type: 'section',    label: 'Daily' },
+  { type: 'subsection', label: 'START OF DAY :' },
+  { type: 'check',      id: 'c1', label: '- Replace and load consumable, reagent and control' },
+  { type: 'subsection', label: 'END OF DAY :' },
+  { type: 'check',      id: 'c2', label: '- Empty the liquid waste, solid waste and replace wash reagent' },
+  { type: 'check',      id: 'c3', label: '- Replace specimen diluent and lysis' },
+  { type: 'check',      id: 'c4', label: '- (Optional) Unload reagent and control before shutdown system' },
+  { type: 'check',      id: 'c5', label: '- (Optional) Turn Off Sample Supply Module' },
+  { type: 'section',    label: 'Clean instrument (weekly)' },
+  { type: 'subsection', label: 'Clean part of instrument with DW following by 70%EtOH' },
+  { type: 'check',      id: 'c6',  label: '- Transfer module drawer and Processing module drawer' },
+  { type: 'check',      id: 'c7',  label: '- Lysis / diluent drawer' },
+  { type: 'check',      id: 'c8',  label: '- Wash / waste drawer' },
+  { type: 'check',      id: 'c9',  label: '- Amplification plate waste drawer' },
+  { type: 'check',      id: 'c10', label: '- Transfer module and Processing module' },
+  { type: 'check',      id: 'c11', label: '- Sample supply module' },
+  { type: 'check',      id: 'c12', label: '- (Optional) All cover and doors' },
+  { type: 'section',    label: 'Sample transfer head teaching and tightness check (weekly)' },
+  { type: 'check',      id: 'c13', label: '- Click to perform Tightness check at the software' },
+];
+
+// State: checkmarks[rowId][day(0-30)] = true/false
+const state = {};
+ROWS.filter(r => r.type === 'check').forEach(r => { state[r.id] = new Array(31).fill(false); });
+
+// Signature images per day [0-30]
+const signatures = new Array(31).fill(null);
+
+// ===== BUILD TABLE ROWS =====
+function buildTable() {
+  const tbody = document.getElementById('tableBody');
+  ROWS.forEach(row => {
+    const tr = document.createElement('tr');
+    if (row.type === 'section') {
+      tr.className = 'row-section';
+      const td = document.createElement('td');
+      td.colSpan = 32;
+      td.textContent = row.label;
+      tr.appendChild(td);
+    } else if (row.type === 'subsection') {
+      tr.className = 'row-subsection';
+      const td = document.createElement('td');
+      td.colSpan = 32;
+      td.textContent = row.label;
+      tr.appendChild(td);
+    } else {
+      // Task label cell
+      const tdLabel = document.createElement('td');
+      tdLabel.style.cssText = 'text-align:left;padding:3px 8px;font-size:11px;height:22px';
+      tdLabel.textContent = row.label;
+      tr.appendChild(tdLabel);
+      // 31 day cells
+      for (let d = 0; d < 31; d++) {
+        const td = document.createElement('td');
+        td.className = 'cell-check';
+        td.dataset.rid = row.id;
+        td.dataset.day = d;
+        td.title = 'คลิกเพื่อใส่ / หรือเว้นว่าง';
+        td.addEventListener('click', toggleCheck);
+        tr.appendChild(td);
+      }
+    }
+    tbody.appendChild(tr);
+  });
 }
-updateClock();
-setInterval(updateClock,1000);
+
+function toggleCheck(e) {
+  const td = e.currentTarget;
+  const rid = td.dataset.rid;
+  const day = parseInt(td.dataset.day);
+  state[rid][day] = !state[rid][day];
+  td.classList.toggle('checked', state[rid][day]);
+}
+
+// ===== BUILD PERFORM BY CELLS =====
+function buildPerformRow() {
+  const tr = document.getElementById('performRow');
+  for (let d = 0; d < 31; d++) {
+    const td = document.createElement('td');
+    td.className = 'cell-sign';
+    td.style.cssText = 'width:28px;border:1px solid #333;cursor:pointer;height:55px;vertical-align:middle';
+    td.title = 'คลิกเพื่อลงลายเซ็น วันที่ ' + (d + 1);
+    td.dataset.day = d;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 56;
+    canvas.height = 110;
+    canvas.style.cssText = 'display:block;width:100%;height:100%';
+    td.appendChild(canvas);
+
+    td.addEventListener('click', openSigModal);
+    tr.appendChild(td);
+  }
+}
+
+// ===== SIGNATURE MODAL =====
+let currentSigDay = null;
+let sigDrawing = false;
+let sigCtx = null;
+let sigLastX = 0, sigLastY = 0;
+
+function getPos(e, canvas) {
+  const rect = canvas.getBoundingClientRect();
+  if (e.touches) {
+    return { x: (e.touches[0].clientX - rect.left) * (canvas.width / rect.width),
+             y: (e.touches[0].clientY - rect.top)  * (canvas.height / rect.height) };
+  }
+  return { x: (e.clientX - rect.left) * (canvas.width / rect.width),
+           y: (e.clientY - rect.top)  * (canvas.height / rect.height) };
+}
+
+function initSigCanvas() {
+  const canvas = document.getElementById('sigCanvas');
+  sigCtx = canvas.getContext('2d');
+  canvas.width = 320; canvas.height = 140;
+  sigCtx.clearRect(0, 0, 320, 140);
+  sigCtx.strokeStyle = '#1a237e';
+  sigCtx.lineWidth = 2;
+  sigCtx.lineCap = 'round';
+  sigCtx.lineJoin = 'round';
+
+  // If day already has signature, show it
+  if (currentSigDay !== null && signatures[currentSigDay]) {
+    const img = new Image();
+    img.src = signatures[currentSigDay];
+    img.onload = () => sigCtx.drawImage(img, 0, 0, 320, 140);
+  }
+
+  function onStart(e) {
+    e.preventDefault();
+    sigDrawing = true;
+    const pos = getPos(e, canvas);
+    sigLastX = pos.x; sigLastY = pos.y;
+    sigCtx.beginPath();
+    sigCtx.moveTo(sigLastX, sigLastY);
+  }
+  function onMove(e) {
+    if (!sigDrawing) return;
+    e.preventDefault();
+    const pos = getPos(e, canvas);
+    sigCtx.lineTo(pos.x, pos.y);
+    sigCtx.stroke();
+    sigLastX = pos.x; sigLastY = pos.y;
+  }
+  function onEnd(e) { sigDrawing = false; }
+
+  // Remove old listeners by cloning
+  const newCanvas = canvas.cloneNode(false);
+  newCanvas.id = 'sigCanvas'; newCanvas.className = 'sig-canvas';
+  canvas.parentNode.replaceChild(newCanvas, canvas);
+  sigCtx = newCanvas.getContext('2d');
+  sigCtx.clearRect(0, 0, 320, 140);
+  sigCtx.strokeStyle = '#1a237e'; sigCtx.lineWidth = 2;
+  sigCtx.lineCap = 'round'; sigCtx.lineJoin = 'round';
+
+  if (currentSigDay !== null && signatures[currentSigDay]) {
+    const img = new Image();
+    img.src = signatures[currentSigDay];
+    img.onload = () => sigCtx.drawImage(img, 0, 0, 320, 140);
+  }
+
+  newCanvas.addEventListener('mousedown', onStart);
+  newCanvas.addEventListener('mousemove', onMove);
+  newCanvas.addEventListener('mouseup', onEnd);
+  newCanvas.addEventListener('mouseleave', onEnd);
+  newCanvas.addEventListener('touchstart', onStart, { passive: false });
+  newCanvas.addEventListener('touchmove', onMove, { passive: false });
+  newCanvas.addEventListener('touchend', onEnd);
+}
+
+function openSigModal(e) {
+  currentSigDay = parseInt(e.currentTarget.dataset.day);
+  document.getElementById('sigDay').textContent = 'วันที่ ' + (currentSigDay + 1);
+  document.getElementById('sigModal').classList.add('active');
+  initSigCanvas();
+}
+
+function closeSigModal() {
+  document.getElementById('sigModal').classList.remove('active');
+  currentSigDay = null;
+}
+
+function clearSig() {
+  const canvas = document.getElementById('sigCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function saveSig() {
+  const canvas = document.getElementById('sigCanvas');
+  const dataUrl = canvas.toDataURL('image/png');
+
+  // Save to state
+  signatures[currentSigDay] = dataUrl;
+
+  // Render thumbnail to cell
+  const cells = document.querySelectorAll('#performRow .cell-sign');
+  const cell = cells[currentSigDay];
+  const cellCanvas = cell.querySelector('canvas');
+  const ctx = cellCanvas.getContext('2d');
+  ctx.clearRect(0, 0, cellCanvas.width, cellCanvas.height);
+  const img = new Image();
+  img.onload = () => ctx.drawImage(img, 0, 0, cellCanvas.width, cellCanvas.height);
+  img.src = dataUrl;
+  cell.classList.add('signed');
+
+  closeSigModal();
+}
+
+// Click outside modal to close
+document.getElementById('sigModal').addEventListener('click', function(e) {
+  if (e.target === this) closeSigModal();
+});
+
+// ===== ADDITIONAL NOTE =====
+function addNote() {
+  const tbody = document.getElementById('noteBody');
+  const n = tbody.rows.length + 1;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td class="note-num">${n}</td>
+    <td><input type="text" placeholder="พิมพ์บันทึกเพิ่มเติม…"></td>
+    <td style="text-align:center"><button class="btn-delrow" onclick="delNote(this)">×</button></td>`;
+  tbody.appendChild(tr);
+}
+
+function delNote(btn) {
+  const tr = btn.closest('tr');
+  const tbody = document.getElementById('noteBody');
+  if (tbody.rows.length <= 1) { tr.querySelector('input').value = ''; return; }
+  tr.remove();
+  // Renumber
+  Array.from(tbody.rows).forEach((r, i) => { r.cells[0].textContent = i + 1; });
+}
+
+// ===== COLLECT DATA =====
+function collectData() {
+  const serial = document.getElementById('serialNo').value.trim();
+  const month  = document.getElementById('monthField').value.trim();
+  const rows = ROWS.filter(r => r.type === 'check').map(r => ({
+    id: r.id,
+    label: r.label.replace(/^-\s*/, ''),
+    days: state[r.id].slice()
+  }));
+  const notes = Array.from(document.querySelectorAll('#noteBody input[type=text]'))
+                     .map(i => i.value.trim()).filter(v => v);
+  return { serial, month, rows, notes, timestamp: new Date().toISOString() };
+}
+
+// ===== EXPORT JSON =====
+function exportJSON() {
+  const data = collectData();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'FCP68030_' + (data.month || 'export') + '.json';
+  a.click();
+}
+
+// ===== SUBMIT TO GOOGLE SHEETS =====
+async function submitToSheets() {
+  const url = document.getElementById('gasUrl').value.trim()
+            || localStorage.getItem('fcp_gas_url') || '';
+  if (!url || !url.startsWith('https://script.google.com')) {
+    showStatus('⚠️ กรุณากรอก Web App URL ของ Google Apps Script ก่อน', 'error');
+    return;
+  }
+  const data = collectData();
+  const btn = document.querySelector('.btn-green');
+  btn.disabled = true; btn.textContent = '⏳ กำลังบันทึก…';
+  try {
+    // Use no-cors mode (Apps Script requires this from external pages)
+    await fetch(url, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    showStatus('✅ บันทึกข้อมูลไปยัง Google Sheets เรียบร้อยแล้ว!', 'success');
+  } catch (err) {
+    showStatus('❌ เกิดข้อผิดพลาด: ' + err.message, 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = '📤 บันทึกไป Google Sheets';
+  }
+}
+
+function showStatus(msg, type) {
+  const el = document.getElementById('statusMsg');
+  el.className = 'status-msg status-' + type;
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 5000);
+}
+
+// ===== PERSIST GAS URL =====
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('fcp_gas_url');
+  if (saved) document.getElementById('gasUrl').value = saved;
+  buildTable();
+  buildPerformRow();
+});
 </script>
 </body>
 </html>
