@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F-CP-68030 แบบบันทึกตารางบำรุงรักษา cobas 6800</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'TH SarabunPSK', 'Sarabun', 'Tahoma', sans-serif; font-size: 13px; background: #f0f2f5; }
+
+  /* ===== TOP BAR ===== */
+  .topbar {
+    background: #1a73e8; color: #fff; display: flex; align-items: center;
+    justify-content: space-between; padding: 8px 16px; position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 6px rgba(0,0,0,.25);
+  }
+  .topbar-title { font-size: 15px; font-weight: 600; }
+  .topbar-actions { display: flex; gap: 8px; }
+  .btn {
+    padding: 6px 14px; border-radius: 4px; border: none; cursor: pointer;
+    font-size: 13px; font-weight: 600; transition: background .2s;
+  }
+  .btn-white { background: #fff; color: #1a73e8; }
+  .btn-white:hover { background: #e8f0fe; }
+  .btn-green { background: #34a853; color: #fff; }
+  .btn-green:hover { background: #2d9248; }
+  .btn-outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.6); }
+  .btn-outline:hover { background: rgba(255,255,255,.12); }
+
+  /* ===== PAGE ===== */
+  .page-wrap { max-width: 1200px; margin: 20px auto; padding: 0 12px 40px; }
+  .sheet {
+    background: #fff; border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.15); overflow: hidden;
+  }
+
+  /* ===== HEADER ===== */
+  .doc-header {
+    padding: 12px 16px 8px; border-bottom: 2px solid #000;
+  }
+  .header-row1 { display: flex; justify-content: space-between; align-items: flex-start; }
+  .header-org { font-size: 20px; font-weight: 700; line-height: 1.3; }
+  .header-code { font-size: 18px; font-weight: 700; border: 2px solid #000; padding: 4px 10px; border-radius: 4px; }
+  .header-row2 { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
+  .header-title { font-size: 18px; font-weight: 700; }
+  .header-ver { font-size: 12px; color: #555; }
+  .header-row3 { display: flex; gap: 20px; margin-top: 6px; flex-wrap: wrap; }
+  .field-inline { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; }
+  .field-input {
+    border: none; border-bottom: 1.5px solid #333; min-width: 180px; padding: 2px 4px;
+    font-size: 14px; font-family: inherit; outline: none;
+  }
+  .field-input:focus { border-bottom-color: #1a73e8; }
+
+  /* ===== TABLE ===== */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { border-collapse: collapse; width: 100%; min-width: 900px; }
+  th, td { border: 1px solid #333; text-align: center; padding: 0; vertical-align: middle; }
+
+  /* Day header row */
+  .th-task { width: 240px; min-width: 200px; text-align: left; padding: 4px 8px; font-size: 11px; font-weight: 700; }
+  .th-day { width: 28px; font-size: 10px; font-weight: 700; padding: 3px 1px; }
+
+  /* Section header rows */
+  .row-section td { background: #d9e8ff; font-weight: 700; font-size: 12px; text-align: left; padding: 4px 8px; }
+  .row-subsection td { background: #eef4ff; font-size: 11px; text-align: left; padding: 3px 8px; font-weight: 600; }
+
+  /* Checkbox cells */
+  .cell-check {
+    cursor: pointer; font-size: 14px; font-weight: 700; height: 22px; width: 28px;
+    transition: background .15s; user-select: none; position: relative;
+  }
+  .cell-check:hover { background: #e8f0fe; }
+  .cell-check.checked { background: #c8e6c9; color: #1b5e20; }
+  .cell-check.checked::after { content: '/'; }
+
+  /* Perform by row */
+  .row-perform .cell-sign {
+    cursor: pointer; height: 50px; width: 28px; padding: 0;
+    position: relative; overflow: hidden;
+    transition: background .15s;
+  }
+  .row-perform .cell-sign:hover { background: #fff8e1; }
+  .row-perform .cell-sign canvas { display: block; width: 100%; height: 100%; }
+  .row-perform .cell-sign.signed { background: #fffde7; }
+  .row-perform td:first-child { text-align: left; padding: 4px 8px; font-weight: 700; font-size: 12px; height: 50px; vertical-align: middle; }
+
+  /* Additional note */
+  .note-section { padding: 12px 16px; border-top: 1px solid #ccc; }
+  .note-title { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .note-table { width: 100%; border-collapse: collapse; }
+  .note-table th { background: #f5f5f5; font-size: 12px; font-weight: 700; padding: 4px 8px; border: 1px solid #ccc; }
+  .note-table td { border: 1px solid #ccc; padding: 0; }
+  .note-table .note-num { text-align: center; width: 40px; font-size: 12px; padding: 4px; background: #fafafa; }
+  .note-table input[type=text] {
+    width: 100%; border: none; padding: 5px 8px; font-size: 13px;
+    font-family: inherit; outline: none; background: transparent;
+  }
+  .note-table input[type=text]:focus { background: #f0f7ff; }
+  .btn-addrow {
+    margin-top: 8px; background: #e8f0fe; color: #1a73e8; border: 1px dashed #1a73e8;
+    padding: 5px 14px; border-radius: 4px; cursor: pointer; font-size: 13px;
+    font-family: inherit; font-weight: 600; transition: background .15s;
+  }
+  .btn-addrow:hover { background: #c5d9fd; }
+  .btn-delrow {
+    background: none; border: none; color: #c62828; cursor: pointer; font-size: 16px;
+    padding: 2px 6px; border-radius: 3px; transition: background .15s; line-height: 1;
+  }
+  .btn-delrow:hover { background: #ffebee; }
+
+  /* ===== SIGNATURE MODAL ===== */
+  .modal-overlay {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,.55); z-index: 200; align-items: center; justify-content: center;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: #fff; border-radius: 8px; padding: 20px; width: 360px; max-width: 95vw;
+    box-shadow: 0 8px 32px rgba(0,0,0,.3);
+  }
+  .modal-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .modal-subtitle { font-size: 12px; color: #666; margin-bottom: 12px; }
+  .sig-canvas {
+    display: block; border: 1.5px solid #999; border-radius: 4px;
+    width: 100%; height: 140px; cursor: crosshair; touch-action: none;
+    background: #fff;
+  }
+  .modal-actions { display: flex; gap: 8px; margin-top: 12px; justify-content: flex-end; }
+  .btn-clear { background: #fff; border: 1px solid #ccc; color: #333; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+  .btn-clear:hover { background: #f5f5f5; }
+  .btn-save-sig { background: #1a73e8; color: #fff; border: none; padding: 6px 16px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; }
+  .btn-save-sig:hover { background: #1557b0; }
+  .btn-cancel-sig { background: #fff; border: 1px solid #ccc; color: #333; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+  .btn-cancel-sig:hover { background: #f5f5f5; }
+
+  /* ===== GAS INSTRUCTIONS PANEL ===== */
+  .gas-panel {
+    background: #fffde7; border: 1px solid #f9a825; border-radius: 6px;
+    margin: 20px 0; padding: 14px 18px;
+  }
+  .gas-panel h3 { color: #e65100; font-size: 14px; margin-bottom: 8px; }
+  .gas-panel p { font-size: 12px; line-height: 1.7; color: #333; }
+  .gas-panel code {
+    display: block; background: #fff8e1; border: 1px solid #ffe082; padding: 8px 10px;
+    border-radius: 4px; font-size: 11px; white-space: pre-wrap; margin: 8px 0;
+    font-family: 'Courier New', monospace; color: #1a237e;
+  }
+  .gas-url-field {
+    width: 100%; border: 1px solid #f9a825; border-radius: 4px; padding: 6px 10px;
+    font-size: 13px; font-family: inherit; outline: none; margin-top: 6px;
+    background: #fff;
+  }
+  .gas-url-field:focus { border-color: #1a73e8; }
+
+  /* ===== SUCCESS / STATUS ===== */
+  .status-msg { display: none; padding: 10px 16px; border-radius: 4px; font-size: 13px; font-weight: 600; margin: 8px 0; }
+  .status-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+  .status-error   { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+
+  @media print {
+    .topbar, .gas-panel, .btn-addrow, .btn-delrow, .modal-overlay { display: none !important; }
+    body { background: #fff; }
+    .page-wrap { margin: 0; padding: 0; }
+    .sheet { box-shadow: none; border-radius: 0; }
+    @page { size: A3 landscape; margin: 1cm; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-title">📋 F-CP-68030 · แบบบันทึกตารางบำรุงรักษา cobas 6800</div>
+  <div class="topbar-actions">
+    <button class="btn btn-outline" onclick="window.print()">🖨️ พิมพ์</button>
+    <button class="btn btn-white" onclick="exportJSON()">⬇️ Export JSON</button>
+    <button class="btn btn-green" onclick="submitToSheets()">📤 บันทึกไป Google Sheets</button>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <!-- GOOGLE APPS SCRIPT SETUP PANEL -->
+  <div class="gas-panel" id="gasPanel">
+    <h3>⚙️ การตั้งค่า Google Sheets (ทำครั้งเดียว)</h3>
+    <p>เพื่อบันทึกข้อมูลไปยัง Google Sheets อัตโนมัติ ให้ทำตามขั้นตอนด้านล่าง:</p>
+    <ol style="font-size:12px;line-height:2;margin:6px 0 6px 18px;color:#333">
+      <li>เปิด <a href="https://script.google.com" target="_blank" style="color:#1a73e8">Google Apps Script</a> → สร้างโปรเจกต์ใหม่</li>
+      <li>วาง code ด้านล่างนี้ใน Code.gs แล้ว <b>บันทึก</b></li>
+      <li>คลิก <b>Deploy → New Deployment → Web App</b> → ตั้ง "Execute as: Me" และ "Who has access: Anyone" → <b>Deploy</b></li>
+      <li>คัดลอก Web App URL มาใส่ในช่องด้านล่าง</li>
+    </ol>
+    <code>// Google Apps Script — วางใน Code.gs
+function doPost(e) {
+  var data = JSON.parse(e.postData.contents);
+  var ss = SpreadsheetApp.openById('SPREADSHEET_ID_ของคุณ'); // ← ใส่ ID ของ Google Sheet
+  var sheet = ss.getSheetByName('F-CP-68030') || ss.insertSheet('F-CP-68030');
+
+  if (sheet.getLastRow() === 0) {
+    // สร้าง header
+    var headers = ['บันทึกเมื่อ','Serial NO','ประจำเดือน'].concat(
+      data.rows.map(function(r){ return r.label; })
+    ).concat(['Additional Note']);
+    sheet.appendRow(headers);
+  }
+
+  var now = new Date().toLocaleString('th-TH', {timeZone:'Asia/Bangkok'});
+  for (var d = 1; d <= 31; d++) {
+    var row = [now, data.serial, data.month, 'วันที่ ' + d];
+    data.rows.forEach(function(r){
+      row.push(r.days[d-1] ? '/' : '');
+    });
+    row.push(d === 1 ? data.notes.join(' | ') : '');
+    sheet.appendRow(row);
+  }
+
+  // ส่ง email แจ้งเตือน (ถ้าต้องการ)
+  // MailApp.sendEmail('your@gmail.com', 'บันทึกบำรุงรักษา cobas 6800', 'มีการบันทึกข้อมูลใหม่');
+
+  return ContentService.createTextOutput(JSON.stringify({status:'ok'}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doGet(e) {
+  return ContentService.createTextOutput('OK');
+}</code>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+      <label style="font-size:12px;font-weight:700;white-space:nowrap">Web App URL:</label>
+      <input type="text" id="gasUrl" class="gas-url-field"
+        placeholder="https://script.google.com/macros/s/AKfycb.../exec"
+        oninput="localStorage.setItem('fcp_gas_url', this.value)">
+    </div>
+    <div style="margin-top:8px">
+      <button class="btn btn-outline" style="background:#e65100;color:#fff;border:none;padding:5px 12px;border-radius:4px;cursor:pointer;font-size:12px"
+        onclick="document.getElementById('gasPanel').style.display='none'">ซ่อนคำแนะนำ</button>
+    </div>
+  </div>
+
+  <div id="statusMsg" class="status-msg"></div>
+
+  <!-- DOCUMENT SHEET -->
+  <div class="sheet">
+
+    <!-- DOCUMENT HEADER -->
+    <div class="doc-header">
+      <div class="header-row1">
+        <div class="header-org">กลุ่มงานเทคนิคการแพทย์<br>โรงพยาบาลพระจอมเกล้า</div>
+        <div class="header-code">F-CP-68030</div>
+      </div>
+      <div class="header-row2">
+        <div class="header-title">แบบบันทึกตารางการบำรุงรักษาเครื่อง cobas 6800 V2.0 system</div>
+        <div class="header-ver">1/08/01/2569</div>
+      </div>
+      <div class="header-row3">
+        <div class="field-inline">
+          Serial NO.&nbsp;
+          <input type="text" class="field-input" id="serialNo" placeholder="…………………………">
+        </div>
+        <div class="field-inline">
+          ประจำเดือน&nbsp;
+          <input type="text" class="field-input" id="monthField" placeholder="…………………………">
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN TABLE -->
+    <div class="table-wrap">
+      <table id="mainTable">
+        <thead>
+          <tr>
+            <th class="th-task">รายการ</th>
+            <th class="th-day">1</th><th class="th-day">2</th><th class="th-day">3</th>
+            <th class="th-day">4</th><th class="th-day">5</th><th class="th-day">6</th>
+            <th class="th-day">7</th><th class="th-day">8</th><th class="th-day">9</th>
+            <th class="th-day">10</th><th class="th-day">11</th><th class="th-day">12</th>
+            <th class="th-day">13</th><th class="th-day">14</th><th class="th-day">15</th>
+            <th class="th-day">16</th><th class="th-day">17</th><th class="th-day">18</th>
+            <th class="th-day">19</th><th class="th-day">20</th><th class="th-day">21</th>
+            <th class="th-day">22</th><th class="th-day">23</th><th class="th-day">24</th>
+            <th class="th-day">25</th><th class="th-day">26</th><th class="th-day">27</th>
+            <th class="th-day">28</th><th class="th-day">29</th><th class="th-day">30</th>
+            <th class="th-day">31</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- rows injected by JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PERFORM BY ROW (signatures) -->
+    <div class="table-wrap">
+      <table style="border-collapse:collapse;width:100%;min-width:900px">
+        <tbody>
+          <tr class="row-perform" id="performRow">
+            <td style="width:240px;min-width:200px;border:1px solid #333;text-align:left;padding:4px 8px;font-weight:700;font-size:12px;height:55px;vertical-align:middle">
+              Perform by
+            </td>
+            <!-- 31 signature cells injected by JS -->
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /sheet -->
+
+  <!-- ADDITIONAL NOTE SECTION -->
+  <div class="sheet" style="margin-top:16px">
+    <div class="note-section">
+      <div class="note-title">📝 Additional Note :</div>
+      <table class="note-table" id="noteTable">
+        <thead>
+          <tr>
+            <th style="width:40px">#</th>
+            <th>บันทึกเพิ่มเติม</th>
+            <th style="width:40px"></th>
+          </tr>
+        </thead>
+        <tbody id="noteBody">
+          <tr>
+            <td class="note-num">1</td>
+            <td><input type="text" placeholder="พิมพ์บันทึกเพิ่มเติม…"></td>
+            <td style="text-align:center"><button class="btn-delrow" onclick="delNote(this)">×</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <button class="btn-addrow" onclick="addNote()">+ เพิ่มบรรทัด</button>
+    </div>
+  </div>
+
+</div><!-- /page-wrap -->
+
+<!-- SIGNATURE MODAL -->
+<div class="modal-overlay" id="sigModal">
+  <div class="modal">
+    <div class="modal-title">✍️ ลายเซ็น — Perform by</div>
+    <div class="modal-subtitle" id="sigDay"></div>
+    <canvas class="sig-canvas" id="sigCanvas" width="320" height="140"></canvas>
+    <div class="modal-actions">
+      <button class="btn-cancel-sig" onclick="closeSigModal()">ยกเลิก</button>
+      <button class="btn-clear" onclick="clearSig()">ล้างลายเซ็น</button>
+      <button class="btn-save-sig" onclick="saveSig()">บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== ROW DEFINITIONS =====
+const ROWS = [
+  { type: 'section',    label: 'Daily' },
+  { type: 'subsection', label: 'START OF DAY :' },
+  { type: 'check',      id: 'c1', label: '- Replace and load consumable, reagent and control' },
+  { type: 'subsection', label: 'END OF DAY :' },
+  { type: 'check',      id: 'c2', label: '- Empty the liquid waste, solid waste and replace wash reagent' },
+  { type: 'check',      id: 'c3', label: '- Replace specimen diluent and lysis' },
+  { type: 'check',      id: 'c4', label: '- (Optional) Unload reagent and control before shutdown system' },
+  { type: 'check',      id: 'c5', label: '- (Optional) Turn Off Sample Supply Module' },
+  { type: 'section',    label: 'Clean instrument (weekly)' },
+  { type: 'subsection', label: 'Clean part of instrument with DW following by 70%EtOH' },
+  { type: 'check',      id: 'c6',  label: '- Transfer module drawer and Processing module drawer' },
+  { type: 'check',      id: 'c7',  label: '- Lysis / diluent drawer' },
+  { type: 'check',      id: 'c8',  label: '- Wash / waste drawer' },
+  { type: 'check',      id: 'c9',  label: '- Amplification plate waste drawer' },
+  { type: 'check',      id: 'c10', label: '- Transfer module and Processing module' },
+  { type: 'check',      id: 'c11', label: '- Sample supply module' },
+  { type: 'check',      id: 'c12', label: '- (Optional) All cover and doors' },
+  { type: 'section',    label: 'Sample transfer head teaching and tightness check (weekly)' },
+  { type: 'check',      id: 'c13', label: '- Click to perform Tightness check at the software' },
+];
+
+// State: checkmarks[rowId][day(0-30)] = true/false
+const state = {};
+ROWS.filter(r => r.type === 'check').forEach(r => { state[r.id] = new Array(31).fill(false); });
+
+// Signature images per day [0-30]
+const signatures = new Array(31).fill(null);
+
+// ===== BUILD TABLE ROWS =====
+function buildTable() {
+  const tbody = document.getElementById('tableBody');
+  ROWS.forEach(row => {
+    const tr = document.createElement('tr');
+    if (row.type === 'section') {
+      tr.className = 'row-section';
+      const td = document.createElement('td');
+      td.colSpan = 32;
+      td.textContent = row.label;
+      tr.appendChild(td);
+    } else if (row.type === 'subsection') {
+      tr.className = 'row-subsection';
+      const td = document.createElement('td');
+      td.colSpan = 32;
+      td.textContent = row.label;
+      tr.appendChild(td);
+    } else {
+      // Task label cell
+      const tdLabel = document.createElement('td');
+      tdLabel.style.cssText = 'text-align:left;padding:3px 8px;font-size:11px;height:22px';
+      tdLabel.textContent = row.label;
+      tr.appendChild(tdLabel);
+      // 31 day cells
+      for (let d = 0; d < 31; d++) {
+        const td = document.createElement('td');
+        td.className = 'cell-check';
+        td.dataset.rid = row.id;
+        td.dataset.day = d;
+        td.title = 'คลิกเพื่อใส่ / หรือเว้นว่าง';
+        td.addEventListener('click', toggleCheck);
+        tr.appendChild(td);
+      }
+    }
+    tbody.appendChild(tr);
+  });
+}
+
+function toggleCheck(e) {
+  const td = e.currentTarget;
+  const rid = td.dataset.rid;
+  const day = parseInt(td.dataset.day);
+  state[rid][day] = !state[rid][day];
+  td.classList.toggle('checked', state[rid][day]);
+}
+
+// ===== BUILD PERFORM BY CELLS =====
+function buildPerformRow() {
+  const tr = document.getElementById('performRow');
+  for (let d = 0; d < 31; d++) {
+    const td = document.createElement('td');
+    td.className = 'cell-sign';
+    td.style.cssText = 'width:28px;border:1px solid #333;cursor:pointer;height:55px;vertical-align:middle';
+    td.title = 'คลิกเพื่อลงลายเซ็น วันที่ ' + (d + 1);
+    td.dataset.day = d;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 56;
+    canvas.height = 110;
+    canvas.style.cssText = 'display:block;width:100%;height:100%';
+    td.appendChild(canvas);
+
+    td.addEventListener('click', openSigModal);
+    tr.appendChild(td);
+  }
+}
+
+// ===== SIGNATURE MODAL =====
+let currentSigDay = null;
+let sigDrawing = false;
+let sigCtx = null;
+let sigLastX = 0, sigLastY = 0;
+
+function getPos(e, canvas) {
+  const rect = canvas.getBoundingClientRect();
+  if (e.touches) {
+    return { x: (e.touches[0].clientX - rect.left) * (canvas.width / rect.width),
+             y: (e.touches[0].clientY - rect.top)  * (canvas.height / rect.height) };
+  }
+  return { x: (e.clientX - rect.left) * (canvas.width / rect.width),
+           y: (e.clientY - rect.top)  * (canvas.height / rect.height) };
+}
+
+function initSigCanvas() {
+  const canvas = document.getElementById('sigCanvas');
+  sigCtx = canvas.getContext('2d');
+  canvas.width = 320; canvas.height = 140;
+  sigCtx.clearRect(0, 0, 320, 140);
+  sigCtx.strokeStyle = '#1a237e';
+  sigCtx.lineWidth = 2;
+  sigCtx.lineCap = 'round';
+  sigCtx.lineJoin = 'round';
+
+  // If day already has signature, show it
+  if (currentSigDay !== null && signatures[currentSigDay]) {
+    const img = new Image();
+    img.src = signatures[currentSigDay];
+    img.onload = () => sigCtx.drawImage(img, 0, 0, 320, 140);
+  }
+
+  function onStart(e) {
+    e.preventDefault();
+    sigDrawing = true;
+    const pos = getPos(e, canvas);
+    sigLastX = pos.x; sigLastY = pos.y;
+    sigCtx.beginPath();
+    sigCtx.moveTo(sigLastX, sigLastY);
+  }
+  function onMove(e) {
+    if (!sigDrawing) return;
+    e.preventDefault();
+    const pos = getPos(e, canvas);
+    sigCtx.lineTo(pos.x, pos.y);
+    sigCtx.stroke();
+    sigLastX = pos.x; sigLastY = pos.y;
+  }
+  function onEnd(e) { sigDrawing = false; }
+
+  // Remove old listeners by cloning
+  const newCanvas = canvas.cloneNode(false);
+  newCanvas.id = 'sigCanvas'; newCanvas.className = 'sig-canvas';
+  canvas.parentNode.replaceChild(newCanvas, canvas);
+  sigCtx = newCanvas.getContext('2d');
+  sigCtx.clearRect(0, 0, 320, 140);
+  sigCtx.strokeStyle = '#1a237e'; sigCtx.lineWidth = 2;
+  sigCtx.lineCap = 'round'; sigCtx.lineJoin = 'round';
+
+  if (currentSigDay !== null && signatures[currentSigDay]) {
+    const img = new Image();
+    img.src = signatures[currentSigDay];
+    img.onload = () => sigCtx.drawImage(img, 0, 0, 320, 140);
+  }
+
+  newCanvas.addEventListener('mousedown', onStart);
+  newCanvas.addEventListener('mousemove', onMove);
+  newCanvas.addEventListener('mouseup', onEnd);
+  newCanvas.addEventListener('mouseleave', onEnd);
+  newCanvas.addEventListener('touchstart', onStart, { passive: false });
+  newCanvas.addEventListener('touchmove', onMove, { passive: false });
+  newCanvas.addEventListener('touchend', onEnd);
+}
+
+function openSigModal(e) {
+  currentSigDay = parseInt(e.currentTarget.dataset.day);
+  document.getElementById('sigDay').textContent = 'วันที่ ' + (currentSigDay + 1);
+  document.getElementById('sigModal').classList.add('active');
+  initSigCanvas();
+}
+
+function closeSigModal() {
+  document.getElementById('sigModal').classList.remove('active');
+  currentSigDay = null;
+}
+
+function clearSig() {
+  const canvas = document.getElementById('sigCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function saveSig() {
+  const canvas = document.getElementById('sigCanvas');
+  const dataUrl = canvas.toDataURL('image/png');
+
+  // Save to state
+  signatures[currentSigDay] = dataUrl;
+
+  // Render thumbnail to cell
+  const cells = document.querySelectorAll('#performRow .cell-sign');
+  const cell = cells[currentSigDay];
+  const cellCanvas = cell.querySelector('canvas');
+  const ctx = cellCanvas.getContext('2d');
+  ctx.clearRect(0, 0, cellCanvas.width, cellCanvas.height);
+  const img = new Image();
+  img.onload = () => ctx.drawImage(img, 0, 0, cellCanvas.width, cellCanvas.height);
+  img.src = dataUrl;
+  cell.classList.add('signed');
+
+  closeSigModal();
+}
+
+// Click outside modal to close
+document.getElementById('sigModal').addEventListener('click', function(e) {
+  if (e.target === this) closeSigModal();
+});
+
+// ===== ADDITIONAL NOTE =====
+function addNote() {
+  const tbody = document.getElementById('noteBody');
+  const n = tbody.rows.length + 1;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td class="note-num">${n}</td>
+    <td><input type="text" placeholder="พิมพ์บันทึกเพิ่มเติม…"></td>
+    <td style="text-align:center"><button class="btn-delrow" onclick="delNote(this)">×</button></td>`;
+  tbody.appendChild(tr);
+}
+
+function delNote(btn) {
+  const tr = btn.closest('tr');
+  const tbody = document.getElementById('noteBody');
+  if (tbody.rows.length <= 1) { tr.querySelector('input').value = ''; return; }
+  tr.remove();
+  // Renumber
+  Array.from(tbody.rows).forEach((r, i) => { r.cells[0].textContent = i + 1; });
+}
+
+// ===== COLLECT DATA =====
+function collectData() {
+  const serial = document.getElementById('serialNo').value.trim();
+  const month  = document.getElementById('monthField').value.trim();
+  const rows = ROWS.filter(r => r.type === 'check').map(r => ({
+    id: r.id,
+    label: r.label.replace(/^-\s*/, ''),
+    days: state[r.id].slice()
+  }));
+  const notes = Array.from(document.querySelectorAll('#noteBody input[type=text]'))
+                     .map(i => i.value.trim()).filter(v => v);
+  return { serial, month, rows, notes, timestamp: new Date().toISOString() };
+}
+
+// ===== EXPORT JSON =====
+function exportJSON() {
+  const data = collectData();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'FCP68030_' + (data.month || 'export') + '.json';
+  a.click();
+}
+
+// ===== SUBMIT TO GOOGLE SHEETS =====
+async function submitToSheets() {
+  const url = document.getElementById('gasUrl').value.trim()
+            || localStorage.getItem('fcp_gas_url') || '';
+  if (!url || !url.startsWith('https://script.google.com')) {
+    showStatus('⚠️ กรุณากรอก Web App URL ของ Google Apps Script ก่อน', 'error');
+    return;
+  }
+  const data = collectData();
+  const btn = document.querySelector('.btn-green');
+  btn.disabled = true; btn.textContent = '⏳ กำลังบันทึก…';
+  try {
+    // Use no-cors mode (Apps Script requires this from external pages)
+    await fetch(url, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    showStatus('✅ บันทึกข้อมูลไปยัง Google Sheets เรียบร้อยแล้ว!', 'success');
+  } catch (err) {
+    showStatus('❌ เกิดข้อผิดพลาด: ' + err.message, 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = '📤 บันทึกไป Google Sheets';
+  }
+}
+
+function showStatus(msg, type) {
+  const el = document.getElementById('statusMsg');
+  el.className = 'status-msg status-' + type;
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 5000);
+}
+
+// ===== PERSIST GAS URL =====
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('fcp_gas_url');
+  if (saved) document.getElementById('gasUrl').value = saved;
+  buildTable();
+  buildPerformRow();
+});
+</script>
+</body>
+</html>
