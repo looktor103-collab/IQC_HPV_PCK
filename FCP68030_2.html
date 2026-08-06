@@ -162,44 +162,8 @@ pre.gs-code{display:none}
 <!-- MAIN -->
 <div class="page-wrap">
 
-  <!-- SETUP -->
-  <details class="setup-panel" id="setupPanel">
-    <summary>⚙️ ตั้งค่าเชื่อมต่อ Google Sheet F-CP-68030</summary>
-    <div class="setup-body">
-
-      <!-- Step guide -->
-      <div style="background:#e8f0fe;border-radius:8px;padding:12px 14px;font-size:12.5px;line-height:2;color:#1a3c6e;margin-bottom:4px">
-        <b>ขั้นตอนการตั้งค่า (ทำครั้งแรกครั้งเดียว):</b><br>
-        <b>1.</b> เปิด Google Sheet <b>F-CP-68030</b> ที่มีอยู่แล้ว<br>
-        <b>2.</b> เมนู <b>ส่วนเสริม → Apps Script</b> (หรือ Extensions → Apps Script)<br>
-        <b>3.</b> ลบโค้ดเดิมออก → กด <b>📋 Copy Code</b> ด้านล่าง → วางโค้ด → 💾 บันทึก<br>
-        <b>4.</b> กด <b>Deploy → New deployment → Web App</b><br>
-        &nbsp;&nbsp;&nbsp;&nbsp;— Execute as: <b>Me</b> &nbsp;|&nbsp; Who has access: <b>Anyone</b><br>
-        <b>5.</b> คัดลอก <b>Web app URL</b> มาวางในช่องด้านล่าง → กด ✅ บันทึก
-      </div>
-
-      <div class="setup-field">
-        <label>Web App URL</label>
-        <input type="url" id="sheetsUrl" placeholder="https://script.google.com/macros/s/.../exec" oninput="saveConfig()">
-      </div>
-      <div class="setup-field">
-        <label>Serial No.</label>
-        <input type="text" id="globalSerial" placeholder="Serial number เครื่อง cobas 6800" oninput="saveConfig()">
-      </div>
-      <div id="gsStatus" class="gs-status"></div>
-
-      <div style="margin-top:8px;padding:12px;background:#e6f4ea;border-radius:8px;border:1px solid #b7dfbf">
-        <div style="font-size:13px;font-weight:700;color:#1a6b36;margin-bottom:8px">📥 ขั้นตอนที่ 3 — รับโค้ด Apps Script</div>
-        <button onclick="downloadGs()" style="background:#34a853;color:#fff;border:none;border-radius:7px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px">
-          ⬇️ ดาวน์โหลด Code.gs
-        </button>
-        <span style="font-size:12px;color:#1a6b36;margin-left:10px">→ นำไปวางใน Apps Script แทนโค้ดเดิม</span>
-        <div style="font-size:11.5px;color:#5f6368;margin-top:8px;line-height:1.8">
-          หลังดาวน์โหลด: เปิดไฟล์ Code.gs ด้วย Notepad → คัดลอกทั้งหมด (Ctrl+A, Ctrl+C) → วางใน Apps Script
-        </div>
-      </div>
-    </div>
-  </details>
+  <!-- hidden status only -->
+  <div id="gsStatus" class="gs-status" style="display:none"></div>
 
   <!-- SHEET HEADER -->
   <div class="sheet-header">
@@ -337,7 +301,7 @@ function renderForm() {
   const nDays = daysIn(year, month);
 
   document.getElementById('badgeMonth').textContent = thaiLong(year, month);
-  document.getElementById('serialNo').value = data.serial || document.getElementById('globalSerial').value || '';
+  document.getElementById('serialNo').value = data.serial || '';
 
   // Build table
   const wrap = document.getElementById('tableWrap');
@@ -516,18 +480,6 @@ function saveSig() {
   setD(sigMk,d); closeSig(); renderForm(); showToast('✅ บันทึกลายเซ็นแล้ว');
 }
 
-// ── CONFIG ───────────────────────────────────────────────
-function loadConfig() {
-  const c=JSON.parse(localStorage.getItem('fcp_config')||'{}');
-  if(c.url)    document.getElementById('sheetsUrl').value=c.url;
-  if(c.serial) document.getElementById('globalSerial').value=c.serial;
-}
-function saveConfig() {
-  localStorage.setItem('fcp_config', JSON.stringify({
-    url:    document.getElementById('sheetsUrl').value,
-    serial: document.getElementById('globalSerial').value
-  }));
-}
 
 // ── EXPORT ───────────────────────────────────────────────
 function exportJSON() {
@@ -538,14 +490,12 @@ function exportJSON() {
   a.download='FCP68030_'+TH_SHORT[month-1].replace(/\./g,'')+(year+543)+'.json'; a.click();
 }
 
+// ── APPS SCRIPT URL (ฝังตรงนี้ — ไม่แสดงในหน้าเว็บ) ──────
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzprUlLZMlGztJhY5lIm3LDYmJh5bXsL6l65mxrlv1IoJNaYzz9PiFgl1XUVLiRHDHrdA/exec';
+
 // ── SUBMIT ───────────────────────────────────────────────
 async function submitToSheets() {
-  const url = document.getElementById('sheetsUrl').value.trim();
-  if (!url) {
-    showToast('❌ กรุณากรอก Web App URL ใน ⚙️ ตั้งค่า ก่อน', 4000);
-    document.getElementById('setupPanel').open = true;
-    return;
-  }
+  const url = SHEETS_URL;
   const {year,month} = months[curIdx];
   const key = mk(year, month);
   const d   = getD(key);
@@ -553,7 +503,7 @@ async function submitToSheets() {
   const payload = {
     sheetLabel: thaiShort(year, month),
     month:      TH_SHORT[month-1].replace(/\./g,''),
-    serialNo:   d.serial || document.getElementById('globalSerial').value,
+    serialNo:   d.serial || document.getElementById('serialNo').value,
     days:       Array.from({length:nDays},(_,i)=>i+1),
     tasks:      TASK_ROWS.map(t=>({key:t.key, label:t.label})),
     checks:     d.checks,
@@ -738,11 +688,9 @@ function downloadGs() {
 }
 
 // ── INIT ─────────────────────────────────────────────────
-loadConfig();
 initMonths();
 renderTabs();
 renderForm();
-initGsCode();
 
 document.getElementById('sigModalBg').addEventListener('click', function(e){
   if(e.target===this) closeSig();
