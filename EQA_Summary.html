@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EQA Summary — ห้องปฏิบัติการ ร.พ.พระจอมเกล้า เพชรบุรี</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f8fd; --card:#ffffff; --border:#dde2ef; --text:#2b3140; --muted:#6b7280;
+  --primary:#4f46e5; --primary-soft:#eef2ff; --success:#16a34a; --alert:#dc2626;
+  --radius:16px; --radius-sm:10px; --shadow:0 16px 40px rgba(15,23,42,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.page-wrap{max-width:1080px;margin:0 auto;padding:24px 18px 36px}
+.header{display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px;align-items:center;margin-bottom:24px}
+.header h1{font-size:28px;line-height:1.1;margin-bottom:6px}
+.header p{font-size:14px;color:var(--muted);max-width:720px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:999px;text-decoration:none;font-weight:700;border:1px solid transparent;transition:all .2s}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-outline{background:#fff;color:var(--primary);border-color:var(--primary)}
+.section{margin-top:20px}
+.section-title{display:flex;align-items:center;gap:10px;margin-bottom:18px;font-size:16px;font-weight:700;color:var(--text)}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:16px}
+.card h2{font-size:18px;margin-bottom:6px}
+.card p{color:var(--muted);line-height:1.75;font-size:14px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;font-size:12px;font-weight:700}
+.badge-primary{background:var(--primary-soft);color:var(--primary)}
+.badge-success{background:#dcfce7;color:var(--166534)}
+.badge-alert{background:#fee2e2;color:var(--alert)}
+.btn-link{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:1px solid var(--border);color:var(--primary);text-decoration:none;font-weight:700}
+.btn-link:hover{background:var(--primary-soft)}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:12px 14px;text-align:left;border-bottom:1px solid #eef2f6}
+th{background:#f3f4ff;color:var(--primary);font-weight:700}
+.tr-alt{background:#fbfbff}
+@media(max-width:760px){.header{flex-direction:column;align-items:flex-start}.card-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+  <div class="header">
+    <div>
+      <h1>📊 EQA Summary</h1>
+      <p>สรุปผลการประเมินคุณภาพภายนอก (External Quality Assessment) ของห้องปฏิบัติการ โรงพยาบาลพระจอมเกล้า เพชรบุรี</p>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <a href="index.html" class="btn btn-outline">← กลับ Dashboard</a>
+      <a href="EQA/HPV/EQA_index.html" class="btn btn-primary">ดู EQA Module เต็ม</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="card">
+      <h2>ภาพรวม EQA</h2>
+      <p>หน้า EQA Summary นี้นำข้อมูลหลักจากเอกสารและหน้า EQA ที่มีอยู่แล้วในโฟลเดอร์ <code>EQA</code> มาแสดง เพื่อให้สามารถเข้าถึงผลการประเมินและรายละเอียดได้ทันทีจากหน้าหลักของเว็บไซต์.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;">
+        <div class="card" style="background:#eef2ff;border-color:#dbe4ff;padding:16px;box-shadow:none">
+          <div class="badge badge-primary">3 โปรแกรม EQA</div>
+          <p>HIV Viral Load, HPV DNA Test และ COVID-19</p>
+        </div>
+        <div class="card" style="background:#ecfdf5;border-color:#d1fae5;padding:16px;box-shadow:none">
+          <div class="badge badge-success">QCMD &amp; สวส.</div>
+          <p>ข้อมูลจาก QCMD (Glasgow) และ สวส. กรมวิทยาศาสตร์การแพทย์</p>
+        </div>
+        <div class="card" style="background:#fef2f2;border-color:#fee2e2;padding:16px;box-shadow:none">
+          <div class="badge badge-alert">2566–2569</div>
+          <p>ข้อมูล EQA ล่าสุดในระบบ ครอบคลุมปี พ.ศ. 2566 ถึง 2569</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🧬 สรุปผลหลัก</div>
+    <div class="card-grid">
+      <div class="card">
+        <h2>EQA HIV Viral Load</h2>
+        <p>สรุปผลประเมิน EQA HIV-1 Viral Load จาก สวส. และ QCMD มีข้อมูลรอบต่าง ๆ ตั้งแต่ปี 2566 ถึง 2569</p>
+        <div style="display:grid;gap:10px;">
+          <span class="badge badge-primary">Lab ID: 00031 / 00039 / 00044</span>
+          <span class="badge badge-success">คะแนนล่าสุด: 20/20, 19/20, 20/20</span>
+          <span class="badge badge-alert">พบ 1 รอบ FAIL</span>
+        </div>
+        <div class="table-wrap" style="margin-top:18px;">
+          <table>
+            <thead><tr><th>รอบ</th><th>ปี</th><th>ผล</th><th>คะแนน</th><th>หมายเหตุ</th></tr></thead>
+            <tbody>
+              <tr><td>C1</td><td>2569</td><td>PASS</td><td>20/20</td><td>สวส. / QCMD</td></tr>
+              <tr class="tr-alt"><td>C1</td><td>2568</td><td>PASS</td><td>20/20</td><td>สวส.</td></tr>
+              <tr><td>C2</td><td>2568</td><td>PASS</td><td>19/20</td><td>สวส. (z=−2.50)</td></tr>
+              <tr class="tr-alt"><td>C1</td><td>2567</td><td>PASS</td><td>20/20</td><td>สวส.</td></tr>
+              <tr><td>C2</td><td>2567</td><td>PASS</td><td>20/20</td><td>สวส.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <a href="EQA/EQA_HIV_VL.html" class="btn btn-primary">ดูรายละเอียด HIV VL</a>
+      </div>
+
+      <div class="card">
+        <h2>EQA HPV DNA Test</h2>
+        <p>สรุปผล EQA HPV สำหรับ cobas HPV (PreservCyt) โดย QCMD QAV094130 และ TH193 ครอบคลุม 5 Challenges</p>
+        <div style="display:grid;gap:10px;">
+          <span class="badge badge-success">5/5 PASS</span>
+          <span class="badge badge-primary">Sensitivity 100%</span>
+          <span class="badge badge-primary">Specificity 100%</span>
+        </div>
+        <div class="table-wrap" style="margin-top:18px;">
+          <table>
+            <thead><tr><th>โปรแกรม</th><th>ปี</th><th>Challenges</th><th>สถานะ</th><th>คะแนน</th></tr></thead>
+            <tbody>
+              <tr><td>QCMD</td><td>2567</td><td>C1</td><td>PASS</td><td>0</td></tr>
+              <tr class="tr-alt"><td>QCMD</td><td>2567</td><td>C2</td><td>PASS</td><td>0</td></tr>
+              <tr><td>QCMD</td><td>2568</td><td>C1</td><td>PASS</td><td>0</td></tr>
+              <tr class="tr-alt"><td>QCMD</td><td>2568</td><td>C2</td><td>PASS</td><td>0</td></tr>
+              <tr><td>QCMD</td><td>2569</td><td>C1</td><td>PASS</td><td>0</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <a href="EQA/HPV/EQA_HPV_HPV.html" class="btn btn-primary">ดูรายละเอียด HPV</a>
+      </div>
+
+      <div class="card">
+        <h2>EQA COVID-19</h2>
+        <p>สรุปผล EQA SARS-CoV-2 สำหรับห้องปฏิบัติการ ด้วยข้อมูลจาก QCMD และ สวส. ระหว่างปี 2566–2569</p>
+        <div style="display:grid;gap:10px;">
+          <span class="badge badge-success">COVID EQA</span>
+          <span class="badge badge-primary">SARS-CoV-2</span>
+          <span class="badge badge-primary">QCMD + สวส.</span>
+        </div>
+        <div class="table-wrap" style="margin-top:18px;">
+          <table>
+            <thead><tr><th>โปรแกรม</th><th>ปี</th><th>รอบ</th><th>ผล</th><th>คะแนน</th></tr></thead>
+            <tbody>
+              <tr><td>QCMD</td><td>2566</td><td>C1</td><td>PASS</td><td>ข้อมูลเบื้องต้น</td></tr>
+              <tr class="tr-alt"><td>QCMD</td><td>2567</td><td>C1</td><td>PASS</td><td>ข้อมูลเบื้องต้น</td></tr>
+              <tr><td>QCMD</td><td>2568</td><td>C1</td><td>PASS</td><td>ข้อมูลเบื้องต้น</td></tr>
+              <tr class="tr-alt"><td>สวส.</td><td>2569</td><td>C1</td><td>PASS</td><td>ข้อมูลเบื้องต้น</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <a href="EQA/covid/EQA_SARS-CoV-2_Dashboard.html" class="btn btn-primary">ดูรายละเอียด COVID</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="card">
+      <h2>ข้อมูลเพิ่มเติม</h2>
+      <p>หน้า EQA Summary นี้เชื่อมต่อไปยังรายละเอียดเพิ่มเติม และใช้ข้อมูลจริงจากโฟลเดอร์ <code>EQA</code> ที่มีอยู่แล้วใน repository.</p>
+      <ul style="margin-top:12px;padding-left:20px;color:var(--muted);line-height:1.75;">
+        <li>โปรแกรม HIV Viral Load: <strong>EQA/EQA_HIV_VL.html</strong></li>
+        <li>โปรแกรม HPV DNA Test: <strong>EQA/HPV/EQA_HPV_HPV.html</strong></li>
+        <li>โปรแกรม COVID-19: <strong>EQA/covid/EQA_SARS-CoV-2_Dashboard.html</strong></li>
+        <li>หน้า EQA Module เต็ม: <strong>EQA/HPV/EQA_index.html</strong></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</body>
+</html>

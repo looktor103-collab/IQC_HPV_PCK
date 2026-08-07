@@ -1,0 +1,761 @@
+# Build combined QCMD + สวส. HPV EQA Dashboard
+
+html = '''<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EQA HPV Dashboard — HB16305 | QCMD + สวส.</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --navy:#1B3A5C;--navy2:#154360;--teal:#006D77;--teal2:#2A9D8F;
+  --lteal:#E8F5F5;--lblue:#D6EAF8;--white:#FFFFFF;
+  --green:#1A7A41;--dgreen:#145A32;--lgreen:#D5F5E3;
+  --red:#922B21;--lred:#FADBD8;--gold:#9A7D0A;--lgold:#FEF9E7;
+  --lgray:#F4F6F7;--mgray:#BDC3C7;--dgray:#2C3E50;
+  --orange:#CA6F1E;--purple:#6C3483;--lpurple:#E8DAEF;
+  --bg:#F0F4F8;--indigo:#3730a3;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:var(--bg);color:var(--dgray);font-size:13px}
+
+/* BACK NAV */
+.back-nav{background:rgba(0,0,0,.22);padding:7px 36px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.1)}
+.back-btn{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:99px;padding:4px 14px;font-size:11px;font-weight:700;text-decoration:none;transition:background .15s}
+.back-btn:hover{background:rgba(255,255,255,.28)}
+.back-sep{color:rgba(255,255,255,.45);font-size:11px}
+.back-crumb{color:rgba(255,255,255,.65);font-size:11px}
+
+/* HEADER */
+.header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 60%,var(--teal) 100%);color:#fff;padding:0}
+.header-main{padding:22px 36px 12px;display:flex;align-items:center;gap:18px}
+.header-icon{font-size:2.6rem}
+.header-title h1{font-size:1.65rem;font-weight:700}
+.header-title p{font-size:.8rem;opacity:.85;margin-top:3px}
+.header-sub{background:rgba(0,0,0,.22);padding:7px 36px;font-size:.75rem;opacity:.9;display:flex;gap:24px;flex-wrap:wrap}
+.header-sub span::before{content:"▸";margin-right:4px}
+
+/* NAV */
+.nav{background:var(--navy2);display:flex;overflow-x:auto;padding:0 24px}
+.ntab{padding:10px 18px;cursor:pointer;color:rgba(255,255,255,.55);font-weight:700;font-size:.78rem;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.ntab:hover{color:#fff;background:rgba(255,255,255,.07)}
+.ntab.active{color:#fff;border-bottom-color:#2A9D8F}
+.ntab .badge-fail{background:#e74c3c;color:#fff;font-size:.6rem;padding:1px 6px;border-radius:99px;margin-left:4px}
+
+/* SECTIONS */
+.sec{display:none}.sec.active{display:block}
+.pad{padding:18px 24px}
+
+/* KPI GRIDS */
+.kpi4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kpi3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.kcard{border-radius:10px;padding:15px;color:#fff}
+.kcard.nv{background:var(--navy)}.kcard.gn{background:var(--green)}
+.kcard.tl{background:var(--teal)}.kcard.bl{background:var(--navy2)}
+.kcard.rd{background:#c0392b}.kcard.or{background:#e67e22}
+.kbig{font-size:2rem;font-weight:800;line-height:1;color:#fff}
+.klbl{font-size:.7rem;opacity:.9;margin-top:4px;color:#fff}
+.ksub{font-size:.62rem;opacity:.65;margin-top:2px;color:#fff}
+
+/* PROGRAM CARDS */
+.prog-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+.prog-card{border-radius:10px;overflow:hidden;border:1.5px solid var(--mgray)}
+.prog-hdr{padding:10px 16px;color:#fff;font-weight:700;font-size:.9rem}
+.prog-hdr.qcmd{background:var(--teal)}.prog-hdr.svs{background:#6c3483}
+.prog-body{padding:14px 16px;background:#fff}
+.prog-stat{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:.5px solid var(--lgray);font-size:.78rem}
+.prog-stat:last-child{border:0}
+.pval{font-weight:700;color:var(--navy)}
+.pval.ok{color:var(--dgreen)}.pval.fail{color:var(--red)}
+
+/* STITLE */
+.stitle{font-size:.68rem;font-weight:700;color:#9aa;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;padding-bottom:5px;border-bottom:.5px solid #dde}
+
+/* TABLE WRAP */
+.twrap{background:#fff;border-radius:10px;border:.5px solid #dde;overflow:hidden;margin-bottom:18px}
+.thead2{background:var(--navy);color:#fff;padding:10px 16px;font-size:.8rem;font-weight:700;display:flex;align-items:center;justify-content:space-between}
+.tscroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.77rem}
+thead th{background:var(--navy);color:#fff;padding:8px 10px;text-align:center;font-weight:600;font-size:.7rem}
+tbody tr:nth-child(even){background:var(--lgray)}
+tbody tr:hover{background:#e8f4ff}
+td{padding:7px 10px;text-align:center;border-bottom:.5px solid #eee;color:var(--dgray)}
+
+/* BADGES */
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.66rem;font-weight:700}
+.bp{background:#D5F5E3;color:#145A32}.bn{background:#f0f0f0;color:#555}
+.bpass{background:#D5F5E3;color:#145A32}.bfail{background:#FADBD8;color:#922B21}
+.b16{background:#D6EAF8;color:#154360}.b18{background:#D5F5E3;color:#145A32}
+.b45{background:#E8DAEF;color:#6C3483}.b1618{background:#FEF9E7;color:#9A7D0A}
+.bnhr{background:#fdebd0;color:#784212}.bs0{background:#D5F5E3;color:#145A32}
+.bcore{background:#D6EAF8;color:#154360}.bedu{background:#FEF9E7;color:#9A7D0A}
+.bexcl{background:#f5eef8;color:#6c3483}
+
+/* CHALLENGE BLOCKS */
+.chblk{margin-bottom:22px}
+.chdr{border-radius:8px 8px 0 0;padding:11px 16px;color:#fff;font-size:.9rem;font-weight:700;display:flex;align-items:center;justify-content:space-between}
+.chdr.c1{background:var(--teal)}.chdr.c2{background:var(--navy2)}
+.chdr.sv1{background:#5b3fa0}.chdr.sv2{background:#3d2680}
+.chdr.fail-hdr{background:#c0392b}
+.cmeta{display:flex;background:#fff;border:.5px solid #dde;border-top:0}
+.cmi{flex:1;text-align:center;padding:8px 6px;border-right:.5px solid #eee;font-size:.7rem}
+.cmi:last-child{border:0}
+.cmv{font-weight:700;font-size:.9rem;color:var(--navy)}
+.css2{display:grid;grid-template-columns:repeat(4,1fr);background:var(--lgreen);border:.5px solid #dde;border-top:0}
+.csi{text-align:center;padding:6px;border-right:.5px solid rgba(0,0,0,.06);font-size:.7rem;color:var(--dgreen);font-weight:600}
+.csi:last-child{border:0}
+.css2.fail-ss{background:#FADBD8}
+.csi.fail-ss{color:var(--red)}
+
+/* ALERT BOX */
+.alert-box{border-radius:8px;padding:10px 16px;margin-bottom:14px;display:flex;align-items:flex-start;gap:10px;font-size:.78rem}
+.alert-box.warn{background:#FADBD8;border-left:4px solid #e74c3c;color:#7b241c}
+.alert-box.info{background:#EBF5FB;border-left:4px solid #2980b9;color:#1a5276}
+.alert-icon{font-size:1.1rem;flex-shrink:0;margin-top:1px}
+
+/* CHARTS */
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.ccrd{background:#fff;border-radius:10px;border:.5px solid #dde;padding:14px}
+.ccrd.full{grid-column:1/-1}
+.ctit{font-size:.73rem;font-weight:700;color:var(--navy);margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #e8f5f5}
+canvas{max-height:230px}
+
+/* GENO */
+.ggrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
+.gcard{background:#fff;border-radius:10px;padding:12px;text-align:center;border:.5px solid #dde;border-top:5px solid}
+.gc16{border-color:#2196F3}.gc18{border-color:#4CAF50}.gc45{border-color:#9C27B0}
+.gc1618{border-color:#FF9800}.gcn{border-color:#9E9E9E}.gcnhr{border-color:#FF5722}
+.gcnt{font-size:1.7rem;font-weight:800;color:var(--navy)}
+.gcnm{font-size:.78rem;font-weight:700;margin:3px 0}.gcsb{font-size:.66rem;color:#888}
+
+/* SRCH */
+.srch{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.srch input,.srch select{padding:6px 11px;border:.5px solid #ccc;border-radius:8px;font-size:.77rem;font-family:Arial;background:#fff}
+.rct{font-size:.7rem;color:#888;align-self:center}
+
+/* PBAR */
+.pbar-w{display:flex;align-items:center;gap:7px}
+.pbar{flex:1;height:11px;background:#eee;border-radius:6px;overflow:hidden}
+.pbar-f{height:100%;border-radius:6px}
+.pbar-f.ok{background:#27ae60}.pbar-f.warn{background:#e67e22}.pbar-f.bad{background:#e74c3c}
+.pval2{font-size:.73rem;font-weight:700;width:38px;text-align:right}
+
+.ct-hi{color:var(--orange);font-weight:700}
+.peer-lo{color:var(--gold);font-weight:700}
+
+/* YEAR TABS */
+.ytabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.ytab{padding:6px 16px;border-radius:99px;cursor:pointer;font-size:.75rem;font-weight:700;border:1.5px solid #dde;background:#fff;color:#666;transition:all .15s}
+.ytab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.ytab.fail-tab{border-color:#e74c3c;color:#c0392b}
+.ytab.fail-tab.active{background:#c0392b;color:#fff}
+
+.foot{background:var(--navy);color:rgba(255,255,255,.6);text-align:center;padding:10px;font-size:.66rem;margin-top:6px}
+@media(max-width:600px){.kpi4,.kpi3,.ggrid,.prog-grid,.cgrid{grid-template-columns:1fr 1fr}.css2{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="back-nav">
+    <a href="index.html" class="back-btn">🏥 Dashboard หลัก</a>
+    <span class="back-sep">›</span>
+    <a href="EQA_index.html" class="back-btn">📊 EQA</a>
+    <span class="back-sep">›</span>
+    <span class="back-crumb">🦠 HPV DNA Test</span>
+  </div>
+  <div class="header-main">
+    <div class="header-icon">🦠</div>
+    <div class="header-title">
+      <h1>EQA HPV DNA Test — HB16305</h1>
+      <p>ห้องปฏิบัติการ โรงพยาบาลพระจอมเกล้า เพชรบุรี &nbsp;|&nbsp; cobas® HPV (Roche Cobas 5800/6800/8800) &nbsp;|&nbsp; 2567–2569</p>
+    </div>
+  </div>
+  <div class="header-sub">
+    <span>QCMD: QAV094130 · TH193 · 5 challenges</span>
+    <span>สวส.กรมวิทย์: HB16305 · 5 rounds</span>
+    <span>Method: Cobas HPV (v4) · HPV16, 18 and Other types</span>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="ntab active" onclick="showTab(\'db\',this)">📊 Dashboard</div>
+  <div class="ntab" onclick="showTab(\'qcmd\',this)">🌐 QCMD</div>
+  <div class="ntab" onclick="showTab(\'svs\',this)">🏛️ สวส.กรมวิทย์<span class="badge-fail">1 FAIL</span></div>
+  <div class="ntab" onclick="showTab(\'geno\',this)">🧬 Genotype</div>
+  <div class="ntab" onclick="showTab(\'raw\',this)">📋 Raw Data</div>
+</div>
+
+<!-- ═══════════════════════════════════ DASHBOARD ═══════════════════════════════════ -->
+<div id="tab-db" class="sec active pad">
+  <p class="stitle" style="margin-top:4px">Combined EQA summary — HB16305</p>
+
+  <div class="prog-grid">
+    <!-- QCMD -->
+    <div class="prog-card">
+      <div class="prog-hdr qcmd">🌐 QCMD — QAV094130 (TH193)</div>
+      <div class="prog-body">
+        <div class="prog-stat"><span>Challenges completed</span><span class="pval">5</span></div>
+        <div class="prog-stat"><span>EQA Result</span><span class="pval ok">5/5 PASS ✅</span></div>
+        <div class="prog-stat"><span>Core Panel Score</span><span class="pval ok">0 (Highly Satisfactory)</span></div>
+        <div class="prog-stat"><span>Overall Sensitivity</span><span class="pval ok">100%</span></div>
+        <div class="prog-stat"><span>Overall Specificity</span><span class="pval ok">100%</span></div>
+        <div class="prog-stat"><span>Avg peer % correct</span><span class="pval">98.4%</span></div>
+        <div class="prog-stat"><span>Period</span><span class="pval">2024 C1&C2, 2025 C1&C2, 2026 C1</span></div>
+      </div>
+    </div>
+    <!-- สวส. -->
+    <div class="prog-card">
+      <div class="prog-hdr svs">🏛️ สวส.กรมวิทยาศาสตร์การแพทย์</div>
+      <div class="prog-body">
+        <div class="prog-stat"><span>รอบประเมิน</span><span class="pval">5 รอบ</span></div>
+        <div class="prog-stat"><span>ผลการประเมิน</span><span class="pval fail">4/5 PASS ⚠️ 1 FAIL</span></div>
+        <div class="prog-stat"><span>รอบที่ไม่ผ่าน</span><span class="pval fail">2568 C1 (80%) — HPV66 → Negative</span></div>
+        <div class="prog-stat"><span>Overall Sensitivity</span><span class="pval fail">93.8% (15/16)</span></div>
+        <div class="prog-stat"><span>Overall Specificity</span><span class="pval ok">100% (7/7)</span></div>
+        <div class="prog-stat"><span>คะแนนรวม</span><span class="pval">46/50 (92%)</span></div>
+        <div class="prog-stat"><span>ช่วงเวลา</span><span class="pval">2567 C1&C2, 2568 C1&C2, 2569 C1</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert-box warn">
+    <span class="alert-icon">⚠️</span>
+    <div><strong>สวส. 2568 ครั้งที่ 1 — ไม่ผ่านเกณฑ์</strong><br>
+    ตัวอย่าง HPV-01 (HPV 66 — Non-16,18): ห้องปฏิบัติการรายงานผล Negative แทน HPV Non-16,18<br>
+    คะแนน: 8/10 (80%) &nbsp;|&nbsp; เกณฑ์ยอมรับ: 100% &nbsp;|&nbsp; ผลที่ได้: ไม่ผ่าน (FN rate สำหรับ Non-16,18 = 1/1 = 100%)</div>
+  </div>
+
+  <p class="stitle">Challenge comparison — both programs</p>
+  <div class="twrap">
+    <div class="tscroll"><table>
+      <thead><tr><th>Program</th><th>ปี/Year</th><th>รอบ</th><th>วันที่</th><th>คะแนน/Score</th><th>ผล/Result</th><th>Sensitivity</th><th>Specificity</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge" style="background:#e0f7f4;color:#006D77">QCMD</span></td><td>2567/2024</td><td>C1</td><td>พ.ค. 67</td><td>Score: 0</td><td><span class="badge bpass">PASS</span></td><td><b style="color:var(--dgreen)">100%</b></td><td><b style="color:var(--dgreen)">100%</b></td></tr>
+        <tr><td><span class="badge" style="background:#e0f7f4;color:#006D77">QCMD</span></td><td>2567/2024</td><td>C2</td><td>ต.ค. 67</td><td>Score: 0</td><td><span class="badge bpass">PASS</span></td><td><b style="color:var(--dgreen)">100%</b></td><td><b style="color:var(--dgreen)">100%</b></td></tr>
+        <tr><td><span class="badge" style="background:#f0ebff;color:#5b3fa0">สวส.</span></td><td>2567</td><td>C1</td><td>พ.ค. 67</td><td>8/8 (100%)*</td><td><span class="badge bpass">PASS</span></td><td><b style="color:var(--dgreen)">100%</b></td><td><b style="color:var(--dgreen)">100%</b></td></tr>
+        <tr><td><span class="badge" style="background:#f0ebff;color:#5b3fa0">สวส.</span></td><td>2567</td><td>C2</td><td>ก.ย. 67</td><td>10/10 (100%)</td><td><span class="badge bpass">PASS</span></td><td><b style="color:var(--dgreen)">100%</b></td><td><b style="color:var(--dgreen)">100%</b></td></tr>
+        <tr><td><span class="badge" style="background:#e0f7f4;color:#006D77">QCMD</span></td><td>2568/2025</td><td>C1</td><td>พ.ค. 68</td><td>Score: 0</td><td><span class="badge bpass">PASS</span></td><td><b style="color:var(--dgreen)">100%</b></td><td><b style="color:var(--dgreen)">100%</b></td></tr>
+        <tr><td><span class="badge" style="background:#e0f7f4;color:#006D77">QCMD</span></td><td>2568/2025</td><td>C2</td><td>ต.ค. 68</td><td>Score: 0</td><td><span class="badge bpass">PASS</span></td><td><b style="color:var(--dgreen)">100%</b></td><td><b style="color:var(--dgreen)">100%</b></td></tr>
+        <tr style="background:#FADBD8"><td><span class="badge" style="background:#f0ebff;color:#5b3fa0">สวส.</span></td><td>2568</td><td>C1</td><td>ก.พ. 68</td><td><b style="color:var(--red)">8/10 (80%)</b></td><td><span class="badge bfail">FAIL ⚠️</span></td><td><b style="color:var(--red)">75% (3/4)</b></td><td><b style="color:var(--dgreen)">100%</b></td></tr>
+        <tr><td><span class="badge" style="background:#f0ebff;color:#5b3fa0">สวส.</span></td><td>2568</td><td>C2</td><td>ก.ค. 68</td><td>10/10 (100%)*</td><td><span class="badge bpass">PASS</span></td><td><b style="color:var(--dgreen)">100%</b></td><td><b style="color:var(--dgreen)">100%</b></td></tr>
+        <tr><td><span class="badge" style="background:#e0f7f4;color:#006D77">QCMD</span></td><td>2569/2026</td><td>C1</td><td>พ.ค. 69</td><td>Score: 0</td><td><span class="badge bpass">PASS</span></td><td><b style="color:var(--dgreen)">100%</b></td><td><b style="color:var(--dgreen)">100%</b></td></tr>
+        <tr><td><span class="badge" style="background:#f0ebff;color:#5b3fa0">สวส.</span></td><td>2569</td><td>C1</td><td>ก.พ. 69</td><td>10/10 (100%)</td><td><span class="badge bpass">PASS</span></td><td><b style="color:var(--dgreen)">100%</b></td><td><b style="color:var(--dgreen)">100%</b></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <p style="font-size:.68rem;color:#888;margin-top:-12px;margin-bottom:16px">* ไม่นับตัวอย่างที่ค่าพ้องกลุ่มไม่ผ่านเกณฑ์</p>
+
+  <div class="cgrid">
+    <div class="ccrd"><div class="ctit">Sensitivity per challenge — both programs</div><canvas id="cSens"></canvas></div>
+    <div class="ccrd"><div class="ctit">QCMD avg peer % correct (CORE)</div><canvas id="cPeer"></canvas></div>
+    <div class="ccrd"><div class="ctit">สวส. คะแนนรวมแต่ละรอบ</div><canvas id="cSvsScore"></canvas></div>
+    <div class="ccrd"><div class="ctit">QCMD CT trend — all positive samples</div><canvas id="cCTAll"></canvas></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ QCMD TAB ═══════════════════════════════════ -->
+<div id="tab-qcmd" class="sec pad">
+  <p class="stitle" style="margin-top:4px">QCMD HPV PreservCyt — QAV094130 · TH193 · Roche Cobas HPV (v4)</p>
+  <div class="kpi4" style="margin-bottom:14px">
+    <div class="kcard nv"><div class="kbig">5</div><div class="klbl">Challenges (2024–2026)</div></div>
+    <div class="kcard gn"><div class="kbig">5/5</div><div class="klbl">PASS — Core Score: 0</div></div>
+    <div class="kcard tl"><div class="kbig">100%</div><div class="klbl">Sensitivity (24 CORE+)</div></div>
+    <div class="kcard bl"><div class="kbig">100%</div><div class="klbl">Specificity (5 CORE−)</div></div>
+  </div>
+
+  <!-- 2024 C1 -->
+  <div class="chblk">
+    <div class="chdr c1">QCMD 2024 C1 — May 2024 (พ.ค. 2567) <span class="badge bpass">PASS · Score: 0</span></div>
+    <div class="cmeta">
+      <div class="cmi"><div class="cmv">191</div><div>Datasets</div></div>
+      <div class="cmi"><div class="cmv">30</div><div>Countries</div></div>
+      <div class="cmi"><div class="cmv" style="color:var(--dgreen)">0</div><div>Core score</div></div>
+      <div class="cmi"><div class="cmv">99.1%</div><div>Avg peer %</div></div>
+    </div>
+    <div class="css2">
+      <div class="csi">Sensitivity: <b>100%</b> (4/4)</div>
+      <div class="csi">Specificity: <b>100%</b> (1/1)</div>
+      <div class="csi">CORE: 5 · EDU: 1</div>
+      <div class="csi">Date: 10/05/2024</div>
+    </div>
+    <div class="tscroll"><table>
+      <thead><tr><th>Sample</th><th>Content</th><th>Type</th><th>Status</th><th>Expected</th><th>Result</th><th>Score</th><th>CT</th><th>Peer%</th></tr></thead>
+      <tbody>
+        <tr><td>HPVPRES24C1-01</td><td>HPV18 (Hela)</td><td><span class="badge b18">HPV18</span></td><td><span class="badge bcore">CORE</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>29.70</td><td>99.0%</td></tr>
+        <tr><td>HPVPRES24C1-02</td><td>HPV16 (Caski)</td><td><span class="badge b16">HPV16</span></td><td><span class="badge bcore">CORE</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>26.44</td><td>99.5%</td></tr>
+        <tr><td>HPVPRES24C1-03</td><td>HPV18 (Hela)</td><td><span class="badge b18">HPV18</span></td><td><span class="badge bcore">CORE</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>26.53</td><td>99.0%</td></tr>
+        <tr><td>HPVPRES24C1-04</td><td>HPV18 (Hela)</td><td><span class="badge b18">HPV18</span></td><td><span class="badge bcore">CORE</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>23.51</td><td>99.0%</td></tr>
+        <tr style="background:#fef9e7"><td>HPVPRES24C1-05</td><td>HPV16 (Caski)</td><td><span class="badge b16">HPV16</span></td><td><span class="badge bedu">EDU</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td class="ct-hi">31.05</td><td class="peer-lo">84.8% ⚠</td></tr>
+        <tr><td>HPVPRES24C1-06</td><td>Negative</td><td><span class="badge bn">Neg</span></td><td><span class="badge bcore">CORE</span></td><td>Neg</td><td><span class="badge bn">Neg ✓</span></td><td><span class="badge bs0">0</span></td><td>—</td><td>99.0%</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 2024 C2 -->
+  <div class="chblk">
+    <div class="chdr c2">QCMD 2024 C2 — October 2024 (ต.ค. 2567) <span class="badge bpass">PASS · Score: 0</span></div>
+    <div class="cmeta">
+      <div class="cmi"><div class="cmv">196</div><div>Datasets</div></div>
+      <div class="cmi"><div class="cmv">30</div><div>Countries</div></div>
+      <div class="cmi"><div class="cmv" style="color:var(--dgreen)">0</div><div>Core score</div></div>
+      <div class="cmi"><div class="cmv">98.5%</div><div>Avg peer %</div></div>
+    </div>
+    <div class="css2">
+      <div class="csi">Sensitivity: <b>100%</b> (5/5)</div>
+      <div class="csi">Specificity: <b>100%</b> (1/1)</div>
+      <div class="csi">CORE: 6 · EDU: 0</div>
+      <div class="csi">Date: 04/10/2024</div>
+    </div>
+    <div class="tscroll"><table>
+      <thead><tr><th>Sample</th><th>Content</th><th>Type</th><th>Status</th><th>Expected</th><th>Result</th><th>Score</th><th>CT</th><th>Peer%</th></tr></thead>
+      <tbody>
+        <tr><td>HPVPRES24C2-01</td><td>HPV16 (Caski)</td><td><span class="badge b16">HPV16</span></td><td><span class="badge bcore">CORE</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>25.49</td><td>98.5%</td></tr>
+        <tr><td>HPVPRES24C2-02</td><td>HPV45 (CC10b)</td><td><span class="badge b45">HPV45</span></td><td><span class="badge bcore">CORE</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>26.63</td><td>99.0%</td></tr>
+        <tr><td>HPVPRES24C2-03</td><td>Negative</td><td><span class="badge bn">Neg</span></td><td><span class="badge bcore">CORE</span></td><td>Neg</td><td><span class="badge bn">Neg ✓</span></td><td><span class="badge bs0">0</span></td><td>—</td><td>98.0%</td></tr>
+        <tr><td>HPVPRES24C2-04</td><td>HPV45 (CC10b)</td><td><span class="badge b45">HPV45</span></td><td><span class="badge bcore">CORE</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>26.54</td><td>98.5%</td></tr>
+        <tr><td>HPVPRES24C2-05</td><td>HPV18 (Hela)</td><td><span class="badge b18">HPV18</span></td><td><span class="badge bcore">CORE</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>26.75</td><td>98.0%</td></tr>
+        <tr><td>HPVPRES24C2-06</td><td>HPV16+HPV18</td><td><span class="badge b1618">HPV16+18</span></td><td><span class="badge bcore">CORE</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>27.16</td><td>99.0%</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 2025 C1 -->
+  <div class="chblk">
+    <div class="chdr c1">QCMD 2025 C1 — May 2025 (พ.ค. 2568) <span class="badge bpass">PASS · Score: 0</span></div>
+    <div class="cmeta">
+      <div class="cmi"><div class="cmv">256</div><div>Datasets</div></div>
+      <div class="cmi"><div class="cmv">29</div><div>Countries</div></div>
+      <div class="cmi"><div class="cmv" style="color:var(--dgreen)">0</div><div>Core score</div></div>
+      <div class="cmi"><div class="cmv">98.5%</div><div>Avg peer %</div></div>
+    </div>
+    <div class="css2">
+      <div class="csi">Sensitivity: <b>100%</b> (5/5)</div>
+      <div class="csi">Specificity: <b>100%</b> (1/1)</div>
+      <div class="csi">CORE: 6 · EDU: 0</div>
+      <div class="csi">Date: 05/2025</div>
+    </div>
+    <div class="tscroll"><table>
+      <thead><tr><th>Sample</th><th>Content</th><th>Type</th><th>Expected</th><th>Result</th><th>Score</th><th>CT</th><th>Peer%</th></tr></thead>
+      <tbody>
+        <tr><td>HPVPRES25C1-01</td><td>HPV16 (Caski)</td><td><span class="badge b16">HPV16</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>27.26</td><td>100.0%</td></tr>
+        <tr><td>HPVPRES25C1-02</td><td>HPV18 (Hela)</td><td><span class="badge b18">HPV18</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>27.37</td><td>98.8%</td></tr>
+        <tr><td>HPVPRES25C1-03</td><td>HPV18 (Hela)</td><td><span class="badge b18">HPV18</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>23.43</td><td>99.6%</td></tr>
+        <tr><td>HPVPRES25C1-04</td><td>HPV16 (Caski)</td><td><span class="badge b16">HPV16</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>27.21</td><td>99.6%</td></tr>
+        <tr><td>HPVPRES25C1-05</td><td>Negative</td><td><span class="badge bn">Neg</span></td><td>Neg</td><td><span class="badge bn">Neg ✓</span></td><td><span class="badge bs0">0</span></td><td>—</td><td>98.0%</td></tr>
+        <tr><td>HPVPRES25C1-06</td><td>HPV18 low (Hela)</td><td><span class="badge b18">HPV18</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td class="ct-hi">30.15</td><td class="peer-lo">94.9% ⚠</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 2025 C2 -->
+  <div class="chblk">
+    <div class="chdr c2">QCMD 2025 C2 — October 2025 (ต.ค. 2568) <span class="badge bpass">PASS · Score: 0</span></div>
+    <div class="cmeta">
+      <div class="cmi"><div class="cmv">253</div><div>Datasets</div></div>
+      <div class="cmi"><div class="cmv">29</div><div>Countries</div></div>
+      <div class="cmi"><div class="cmv" style="color:var(--dgreen)">0</div><div>Core score</div></div>
+      <div class="cmi"><div class="cmv">98.7%</div><div>Avg peer %</div></div>
+    </div>
+    <div class="css2">
+      <div class="csi">Sensitivity: <b>100%</b> (5/5)</div>
+      <div class="csi">Specificity: <b>100%</b> (1/1)</div>
+      <div class="csi">CORE: 6 · EDU: 0</div>
+      <div class="csi">Date: 10/2025</div>
+    </div>
+    <div class="tscroll"><table>
+      <thead><tr><th>Sample</th><th>Content</th><th>Type</th><th>Expected</th><th>Result</th><th>Score</th><th>CT</th><th>Peer%</th></tr></thead>
+      <tbody>
+        <tr><td>HPVPRES25C2-01</td><td>HPV16 (Caski)</td><td><span class="badge b16">HPV16</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>25.39</td><td>99.2%</td></tr>
+        <tr><td>HPVPRES25C2-02</td><td>HPV45 (CC10b)</td><td><span class="badge b45">HPV45</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>27.70</td><td>98.4%</td></tr>
+        <tr><td>HPVPRES25C2-03</td><td>HPV18 (Hela)</td><td><span class="badge b18">HPV18</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>26.48</td><td>98.0%</td></tr>
+        <tr><td>HPVPRES25C2-04</td><td>Negative</td><td><span class="badge bn">Neg</span></td><td>Neg</td><td><span class="badge bn">Neg ✓</span></td><td><span class="badge bs0">0</span></td><td>—</td><td>98.8%</td></tr>
+        <tr><td>HPVPRES25C2-05</td><td>HPV45 (CC10b)</td><td><span class="badge b45">HPV45</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>27.55</td><td>98.4%</td></tr>
+        <tr><td>HPVPRES25C2-06</td><td>HPV16 (Caski)</td><td><span class="badge b16">HPV16</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>24.91</td><td>99.2%</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 2026 C1 -->
+  <div class="chblk">
+    <div class="chdr c1">QCMD 2026 C1 — May 2026 (พ.ค. 2569) <span class="badge bpass">PASS · Score: 0</span></div>
+    <div class="cmeta">
+      <div class="cmi"><div class="cmv">225</div><div>Datasets</div></div>
+      <div class="cmi"><div class="cmv">31</div><div>Countries</div></div>
+      <div class="cmi"><div class="cmv" style="color:var(--dgreen)">0</div><div>Core score</div></div>
+      <div class="cmi"><div class="cmv">98.2%</div><div>Avg peer %</div></div>
+    </div>
+    <div class="css2">
+      <div class="csi">Sensitivity: <b>100%</b> (5/5)</div>
+      <div class="csi">Specificity: <b>100%</b> (1/1)</div>
+      <div class="csi">CORE: 6 · EDU: 0</div>
+      <div class="csi">Date: 05/2026</div>
+    </div>
+    <div class="tscroll"><table>
+      <thead><tr><th>Sample</th><th>Content</th><th>Type</th><th>Expected</th><th>Result</th><th>Score</th><th>CT</th><th>Peer%</th></tr></thead>
+      <tbody>
+        <tr><td>HPVPRES26C1-01</td><td>HPV16 (Caski)</td><td><span class="badge b16">HPV16</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>28.41</td><td class="peer-lo">96.9% ⚠</td></tr>
+        <tr><td>HPVPRES26C1-02</td><td>HPV16 (Caski)</td><td><span class="badge b16">HPV16</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>25.63</td><td>99.1%</td></tr>
+        <tr><td>HPVPRES26C1-03</td><td>HPV16 (Caski)</td><td><span class="badge b16">HPV16</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>26.16</td><td>99.1%</td></tr>
+        <tr><td>HPVPRES26C1-04</td><td>HPV45 (CC10b)</td><td><span class="badge b45">HPV45</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td>26.64</td><td>98.7%</td></tr>
+        <tr><td>HPVPRES26C1-05</td><td>HPV16 (Caski)</td><td><span class="badge b16">HPV16</span></td><td>Pos</td><td><span class="badge bp">Pos ✓</span></td><td><span class="badge bs0">0</span></td><td class="ct-hi">29.99</td><td class="peer-lo">97.3% ⚠</td></tr>
+        <tr><td>HPVPRES26C1-06</td><td>Negative</td><td><span class="badge bn">Neg</span></td><td>Neg</td><td><span class="badge bn">Neg ✓</span></td><td><span class="badge bs0">0</span></td><td>—</td><td>98.2%</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ สวส. TAB ═══════════════════════════════════ -->
+<div id="tab-svs" class="sec pad">
+  <p class="stitle" style="margin-top:4px">สวส.กรมวิทยาศาสตร์การแพทย์ — HPV DNA · HB16305 · cobas® HPV</p>
+  <div class="kpi4" style="margin-bottom:14px">
+    <div class="kcard" style="background:#5b3fa0"><div class="kbig">5</div><div class="klbl">รอบประเมิน (2567–2569)</div></div>
+    <div class="kcard or"><div class="kbig">4/5</div><div class="klbl">PASS · 1 FAIL (2568 C1)</div></div>
+    <div class="kcard or"><div class="kbig">93.8%</div><div class="klbl">Overall Sensitivity (15/16)</div></div>
+    <div class="kcard gn"><div class="kbig">100%</div><div class="klbl">Overall Specificity (7/7)</div></div>
+  </div>
+
+  <div class="alert-box warn">
+    <span class="alert-icon">⚠️</span>
+    <div><strong>2568 ครั้งที่ 1 — ผลไม่ผ่านเกณฑ์ (FAIL)</strong><br>
+    HPV-01: ค่ากำหนด HPV 66 (Non-16,18) → ห้องปฏิบัติการรายงาน Negative → คะแนน 0/2<br>
+    ผล: 8/10 คะแนน (80%) | เกณฑ์ยอมรับ: 100% | <b>ไม่ผ่าน</b><br>
+    Sensitivity รอบนี้: 3/4 = <b style="color:var(--red)">75%</b> (ตรวจไม่พบ HPV Non-16,18 ที่ CT สูง)</div>
+  </div>
+
+  <!-- 2567 C1 -->
+  <div class="chblk">
+    <div class="chdr sv1">สวส. 2567 ครั้งที่ 1 — พฤษภาคม 2567 (หมายเลขรายงาน 67-021-146) <span class="badge bpass">PASS</span></div>
+    <div class="cmeta">
+      <div class="cmi"><div class="cmv">8/8</div><div>คะแนน (100%)</div></div>
+      <div class="cmi"><div class="cmv">4</div><div>ตัวอย่างประเมิน</div></div>
+      <div class="cmi"><div class="cmv">1</div><div>ตัวอย่างยกเว้น (HPV05)</div></div>
+      <div class="cmi"><div class="cmv" style="color:var(--dgreen)">ผ่าน</div><div>ผลการประเมิน</div></div>
+    </div>
+    <div class="css2">
+      <div class="csi">Sensitivity: <b>100%</b> (2/2)</div>
+      <div class="csi">Specificity: <b>100%</b> (2/2)</div>
+      <div class="csi">วันที่ออกรายงาน: 10/05/2567</div>
+      <div class="csi">น้ำยา: cobas® HPV</div>
+    </div>
+    <div class="tscroll"><table>
+      <thead><tr><th>รหัสตัวอย่าง</th><th>ค่ากำหนด</th><th>ประเมิน</th><th>ผลห้องฯ</th><th>คะแนน</th><th>หมายเหตุ</th></tr></thead>
+      <tbody>
+        <tr><td>HPV-01</td><td>HPV 52 (Non-16,18)</td><td><span class="badge bcore">ประเมิน</span></td><td><span class="badge bp">HPV Non-16,18 ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td><td>—</td></tr>
+        <tr><td>HPV-02</td><td>Negative</td><td><span class="badge bcore">ประเมิน</span></td><td><span class="badge bn">Negative ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td><td>—</td></tr>
+        <tr><td>HPV-03</td><td>HPV 16 + HPV 66</td><td><span class="badge bcore">ประเมิน</span></td><td><span class="badge bp">HPV 16 + Non-16,18 ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td><td>—</td></tr>
+        <tr><td>HPV-04</td><td>Negative</td><td><span class="badge bcore">ประเมิน</span></td><td><span class="badge bn">Negative ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td><td>—</td></tr>
+        <tr style="opacity:.6"><td>HPV-05</td><td>HPV 58 + HPV 39</td><td><span class="badge bexcl">ยกเว้น</span></td><td>HPV Non-16,18</td><td>—</td><td>ค่าพ้องกลุ่มไม่เป็นไปตามเกณฑ์</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 2567 C2 -->
+  <div class="chblk">
+    <div class="chdr sv2">สวส. 2567 ครั้งที่ 2 — กันยายน 2567 (หมายเลขรายงาน 67-022-146) <span class="badge bpass">PASS</span></div>
+    <div class="cmeta">
+      <div class="cmi"><div class="cmv">10/10</div><div>คะแนน (100%)</div></div>
+      <div class="cmi"><div class="cmv">5</div><div>ตัวอย่างประเมิน</div></div>
+      <div class="cmi"><div class="cmv">0</div><div>ตัวอย่างยกเว้น</div></div>
+      <div class="cmi"><div class="cmv" style="color:var(--dgreen)">ผ่าน</div><div>ผลการประเมิน</div></div>
+    </div>
+    <div class="css2">
+      <div class="csi">Sensitivity: <b>100%</b> (3/3)</div>
+      <div class="csi">Specificity: <b>100%</b> (2/2)</div>
+      <div class="csi">วันที่ออกรายงาน: 04/09/2567</div>
+      <div class="csi">น้ำยา: cobas® HPV</div>
+    </div>
+    <div class="tscroll"><table>
+      <thead><tr><th>รหัสตัวอย่าง</th><th>ค่ากำหนด</th><th>ประเมิน</th><th>ผลห้องฯ</th><th>คะแนน</th></tr></thead>
+      <tbody>
+        <tr><td>HPV-01</td><td>HPV 16</td><td><span class="badge bcore">ประเมิน</span></td><td><span class="badge bp">HPV 16 ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td></tr>
+        <tr><td>HPV-02</td><td>HPV 52 (Non-16,18)</td><td><span class="badge bcore">ประเมิน</span></td><td><span class="badge bp">HPV Non-16,18 ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td></tr>
+        <tr><td>HPV-03</td><td>Negative</td><td><span class="badge bcore">ประเมิน</span></td><td><span class="badge bn">Negative ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td></tr>
+        <tr><td>HPV-04</td><td>HPV 68 (Non-16,18)</td><td><span class="badge bcore">ประเมิน</span></td><td><span class="badge bp">HPV Non-16,18 ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td></tr>
+        <tr><td>HPV-05</td><td>Negative</td><td><span class="badge bcore">ประเมิน</span></td><td><span class="badge bn">Negative ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 2568 C1 FAIL -->
+  <div class="chblk">
+    <div class="chdr fail-hdr">สวส. 2568 ครั้งที่ 1 — กุมภาพันธ์ 2568 (หมายเลขรายงาน 68-021-063) <span class="badge bfail">❌ FAIL</span></div>
+    <div class="cmeta">
+      <div class="cmi"><div class="cmv" style="color:var(--red)">8/10</div><div>คะแนน (80%)</div></div>
+      <div class="cmi"><div class="cmv">5</div><div>ตัวอย่างประเมิน</div></div>
+      <div class="cmi"><div class="cmv" style="color:var(--red)">1 FN</div><div>HPV-01 พลาด</div></div>
+      <div class="cmi"><div class="cmv" style="color:var(--red)">ไม่ผ่าน</div><div>ผลการประเมิน</div></div>
+    </div>
+    <div class="css2 fail-ss">
+      <div class="csi fail-ss">Sensitivity: <b style="color:var(--red)">75%</b> (3/4)</div>
+      <div class="csi fail-ss">Specificity: <b>100%</b> (1/1)</div>
+      <div class="csi fail-ss">วันที่ออกรายงาน: 24/02/2568</div>
+      <div class="csi fail-ss">เกณฑ์: ต้องถูก 100%</div>
+    </div>
+    <div class="tscroll"><table>
+      <thead><tr><th>รหัสตัวอย่าง</th><th>ค่ากำหนด</th><th>ผลห้องฯ</th><th>คะแนน</th><th>หมายเหตุ</th></tr></thead>
+      <tbody>
+        <tr style="background:#FADBD8"><td><b>HPV-01</b></td><td><b>HPV 66 (Non-16,18)</b></td><td><span class="badge bfail">Negative ✗ FN</span></td><td><b style="color:var(--red)">0/2</b></td><td><b style="color:var(--red)">⚠️ ตรวจไม่พบ HPV66</b></td></tr>
+        <tr><td>HPV-02</td><td>Negative</td><td><span class="badge bn">Negative ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td><td>TN ✓</td></tr>
+        <tr><td>HPV-03</td><td>HPV 16</td><td><span class="badge bp">HPV 16 ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td><td>TP ✓</td></tr>
+        <tr><td>HPV-04</td><td>HPV 18</td><td><span class="badge bp">HPV 18 ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td><td>TP ✓</td></tr>
+        <tr><td>HPV-05</td><td>HPV 18</td><td><span class="badge bp">HPV 18 ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td><td>TP ✓</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 2568 C2 -->
+  <div class="chblk">
+    <div class="chdr sv1">สวส. 2568 ครั้งที่ 2 — กรกฎาคม 2568 (หมายเลขรายงาน 68-022-164) <span class="badge bpass">PASS</span></div>
+    <div class="cmeta">
+      <div class="cmi"><div class="cmv">10/10</div><div>คะแนน (100%)</div></div>
+      <div class="cmi"><div class="cmv">4</div><div>ตัวอย่างประเมิน</div></div>
+      <div class="cmi"><div class="cmv">1</div><div>ตัวอย่างยกเว้น (HPV04)</div></div>
+      <div class="cmi"><div class="cmv" style="color:var(--dgreen)">ผ่าน</div><div>ผลการประเมิน</div></div>
+    </div>
+    <div class="css2">
+      <div class="csi">Sensitivity: <b>100%</b> (3/3)</div>
+      <div class="csi">Specificity: <b>100%</b> (1/1)</div>
+      <div class="csi">วันที่ออกรายงาน: 22/07/2568</div>
+      <div class="csi">น้ำยา: cobas® HPV</div>
+    </div>
+    <div class="tscroll"><table>
+      <thead><tr><th>รหัสตัวอย่าง</th><th>ค่ากำหนด</th><th>ประเมิน</th><th>ผลห้องฯ</th><th>คะแนน</th><th>หมายเหตุ</th></tr></thead>
+      <tbody>
+        <tr><td>HPV-01</td><td>HPV 52 (Non-16,18)</td><td><span class="badge bcore">ประเมิน</span></td><td><span class="badge bp">HPV Non-16,18 ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td><td>—</td></tr>
+        <tr><td>HPV-02</td><td>HPV 18</td><td><span class="badge bcore">ประเมิน</span></td><td><span class="badge bp">HPV 18 ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td><td>—</td></tr>
+        <tr><td>HPV-03</td><td>Negative</td><td><span class="badge bcore">ประเมิน</span></td><td><span class="badge bn">Negative ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td><td>—</td></tr>
+        <tr style="opacity:.6"><td>HPV-04</td><td>HPV 58 (Non-16,18)</td><td><span class="badge bexcl">ยกเว้น</span></td><td>Negative</td><td>—</td><td>ค่าพ้องกลุ่มไม่เป็นไปตามเกณฑ์</td></tr>
+        <tr><td>HPV-05</td><td>HPV 18</td><td><span class="badge bcore">ประเมิน</span></td><td><span class="badge bp">HPV 18 ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td><td>—</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 2569 C1 -->
+  <div class="chblk">
+    <div class="chdr sv1">สวส. 2569 ครั้งที่ 1 — กุมภาพันธ์ 2569 (หมายเลขรายงาน 69-021-120) <span class="badge bpass">PASS</span></div>
+    <div class="cmeta">
+      <div class="cmi"><div class="cmv">10/10</div><div>คะแนน (100%)</div></div>
+      <div class="cmi"><div class="cmv">5</div><div>ตัวอย่างประเมิน</div></div>
+      <div class="cmi"><div class="cmv">0</div><div>ตัวอย่างยกเว้น</div></div>
+      <div class="cmi"><div class="cmv" style="color:var(--dgreen)">ผ่าน</div><div>ผลการประเมิน</div></div>
+    </div>
+    <div class="css2">
+      <div class="csi">Sensitivity: <b>100%</b> (4/4)</div>
+      <div class="csi">Specificity: <b>100%</b> (1/1)</div>
+      <div class="csi">วันที่ออกรายงาน: 20/02/2569</div>
+      <div class="csi">Lab Code: 00125</div>
+    </div>
+    <div class="tscroll"><table>
+      <thead><tr><th>รหัสตัวอย่าง</th><th>ค่ากำหนด</th><th>ประเมิน</th><th>ผลห้องฯ</th><th>คะแนน</th></tr></thead>
+      <tbody>
+        <tr><td>HPV-01</td><td>HPV 16</td><td><span class="badge bcore">ประเมิน</span></td><td><span class="badge bp">HPV 16 ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td></tr>
+        <tr><td>HPV-02</td><td>Negative</td><td><span class="badge bcore">ประเมิน</span></td><td><span class="badge bn">Negative ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td></tr>
+        <tr><td>HPV-03</td><td>HPV 18</td><td><span class="badge bcore">ประเมิน</span></td><td><span class="badge bp">HPV 18 ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td></tr>
+        <tr><td>HPV-04</td><td>HPV 52 (Non-16,18)</td><td><span class="badge bcore">ประเมิน</span></td><td><span class="badge bp">HPV Non-16,18 ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td></tr>
+        <tr><td>HPV-05</td><td>HPV 18</td><td><span class="badge bcore">ประเมิน</span></td><td><span class="badge bp">HPV 18 ✓</span></td><td><b style="color:var(--dgreen)">2/2</b></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ GENOTYPE TAB ═══════════════════════════════════ -->
+<div id="tab-geno" class="sec pad">
+  <p class="stitle" style="margin-top:4px">HPV Genotype analysis — QCMD 2024–2026</p>
+  <div class="ggrid">
+    <div class="gcard gc16"><div class="gcnt">13</div><div class="gcnm">HPV16</div><div class="gcsb">QCMD only · CT 24.9–31.1</div></div>
+    <div class="gcard gc18"><div class="gcnt">9</div><div class="gcnm">HPV18</div><div class="gcsb">QCMD only · CT 23.4–30.2</div></div>
+    <div class="gcard gc45"><div class="gcnt">5</div><div class="gcnm">HPV45</div><div class="gcsb">QCMD only · CT 26.5–27.7</div></div>
+    <div class="gcard gc1618"><div class="gcnt">1</div><div class="gcnm">HPV16+18</div><div class="gcsb">QCMD 2024 C2 only</div></div>
+    <div class="gcard gcn"><div class="gcnt">5</div><div class="gcnm">Negative</div><div class="gcsb">QCMD · 1 per challenge</div></div>
+  </div>
+
+  <p class="stitle">สวส. genotype distribution (2567–2569)</p>
+  <div class="twrap">
+    <div class="tscroll"><table>
+      <thead><tr><th>รอบ</th><th>HPV 16</th><th>HPV 18</th><th>HPV Non-16,18 (Other)</th><th>Negative</th><th>ยกเว้น</th></tr></thead>
+      <tbody>
+        <tr><td><b>2567 C1</b></td><td>HPV16 (HPV-03)</td><td>—</td><td>HPV52(01), HPV66(03mix)</td><td>HPV-02, HPV-04</td><td>HPV-05 (HPV58+39)</td></tr>
+        <tr><td><b>2567 C2</b></td><td>HPV16 (HPV-01)</td><td>—</td><td>HPV52(02), HPV68(04)</td><td>HPV-03, HPV-05</td><td>—</td></tr>
+        <tr style="background:#FADBD8"><td><b>2568 C1 ⚠️</b></td><td>HPV16 (HPV-03)</td><td>HPV18 (HPV-04,05)</td><td>HPV66(01) — FN!</td><td>HPV-02</td><td>—</td></tr>
+        <tr><td><b>2568 C2</b></td><td>—</td><td>HPV18 (HPV-02,05)</td><td>HPV52(01)</td><td>HPV-03</td><td>HPV-04 (HPV58)</td></tr>
+        <tr><td><b>2569 C1</b></td><td>HPV16 (HPV-01)</td><td>HPV18 (HPV-03,05)</td><td>HPV52(04)</td><td>HPV-02</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="cgrid">
+    <div class="ccrd"><div class="ctit">QCMD — genotype distribution</div><canvas id="cGenoD"></canvas></div>
+    <div class="ccrd"><div class="ctit">สวส. — sensitivity by HPV category</div><canvas id="cSvsGeno"></canvas></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ RAW DATA TAB ═══════════════════════════════════ -->
+<div id="tab-raw" class="sec pad">
+  <p class="stitle" style="margin-top:4px">Raw data — ทั้งสองโปรแกรม</p>
+  <div class="srch">
+    <input type="text" id="sbox" placeholder="ค้นหา sample, genotype…" oninput="filt()" style="width:200px">
+    <select id="fprog" onchange="filt()"><option value="">ทุก Program</option><option value="QCMD">QCMD</option><option value="สวส.">สวส.กรมวิทย์</option></select>
+    <select id="fyr" onchange="filt()"><option value="">ทุกปี</option><option value="2567">2567</option><option value="2568">2568</option><option value="2569">2569</option></select>
+    <select id="fres" onchange="filt()"><option value="">ทุกผล</option><option value="PASS">PASS</option><option value="FAIL">FAIL</option></select>
+    <span id="rct" class="rct">— rows</span>
+  </div>
+  <div class="twrap"><div class="tscroll">
+    <table id="rtbl">
+      <thead><tr><th>Program</th><th>ปี</th><th>รอบ</th><th>รหัสตัวอย่าง</th><th>ค่ากำหนด</th><th>ผลห้องฯ</th><th>คะแนน</th><th>ผลรอบ</th><th>หมายเหตุ</th></tr></thead>
+      <tbody id="rbody"></tbody>
+    </table>
+  </div></div>
+</div>
+
+<div class="foot">EQA HPV Dashboard · HB16305 · ร.พ.พระจอมเกล้า เพชรบุรี · QCMD (TH193) + สวส.กรมวิทย์ · 2567–2569 · cobas® HPV (Roche)</div>
+
+<script>
+function showTab(id,el){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  el.classList.add('active');
+}
+
+// Raw data combined
+const RAWS=[
+  // QCMD
+  ['QCMD','2567','C1','HPVPRES24C1-01','HPV18 (Hela)','HPV18 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2567','C1','HPVPRES24C1-02','HPV16 (Caski)','HPV16 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2567','C1','HPVPRES24C1-03','HPV18 (Hela)','HPV18 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2567','C1','HPVPRES24C1-04','HPV18 (Hela)','HPV18 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2567','C1','HPVPRES24C1-05','HPV16 (Caski)','HPV16 Pos','Score:0','PASS','EDU — CT 31.05'],
+  ['QCMD','2567','C1','HPVPRES24C1-06','Negative','Negative','Score:0','PASS','CORE'],
+  ['QCMD','2567','C2','HPVPRES24C2-01','HPV16 (Caski)','HPV16 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2567','C2','HPVPRES24C2-02','HPV45 (CC10b)','HPV45 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2567','C2','HPVPRES24C2-03','Negative','Negative','Score:0','PASS','CORE'],
+  ['QCMD','2567','C2','HPVPRES24C2-04','HPV45 (CC10b)','HPV45 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2567','C2','HPVPRES24C2-05','HPV18 (Hela)','HPV18 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2567','C2','HPVPRES24C2-06','HPV16+HPV18','HPV16+18 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2568','C1','HPVPRES25C1-01','HPV16 (Caski)','HPV16 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2568','C1','HPVPRES25C1-02','HPV18 (Hela)','HPV18 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2568','C1','HPVPRES25C1-03','HPV18 (Hela)','HPV18 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2568','C1','HPVPRES25C1-04','HPV16 (Caski)','HPV16 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2568','C1','HPVPRES25C1-05','Negative','Negative','Score:0','PASS','CORE'],
+  ['QCMD','2568','C1','HPVPRES25C1-06','HPV18 low','HPV18 Pos','Score:0','PASS','CORE — CT 30.15'],
+  ['QCMD','2568','C2','HPVPRES25C2-01','HPV16 (Caski)','HPV16 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2568','C2','HPVPRES25C2-02','HPV45 (CC10b)','HPV45 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2568','C2','HPVPRES25C2-03','HPV18 (Hela)','HPV18 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2568','C2','HPVPRES25C2-04','Negative','Negative','Score:0','PASS','CORE'],
+  ['QCMD','2568','C2','HPVPRES25C2-05','HPV45 (CC10b)','HPV45 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2568','C2','HPVPRES25C2-06','HPV16 (Caski)','HPV16 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2569','C1','HPVPRES26C1-01','HPV16 (Caski)','HPV16 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2569','C1','HPVPRES26C1-02','HPV16 (Caski)','HPV16 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2569','C1','HPVPRES26C1-03','HPV16 (Caski)','HPV16 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2569','C1','HPVPRES26C1-04','HPV45 (CC10b)','HPV45 Pos','Score:0','PASS','CORE'],
+  ['QCMD','2569','C1','HPVPRES26C1-05','HPV16 (Caski)','HPV16 Pos','Score:0','PASS','CORE — CT 29.99'],
+  ['QCMD','2569','C1','HPVPRES26C1-06','Negative','Negative','Score:0','PASS','CORE'],
+  // สวส.
+  ['สวส.','2567','C1','HPV-01','HPV 52 (Non-16,18)','HPV Non-16,18','2/2','PASS','ประเมิน'],
+  ['สวส.','2567','C1','HPV-02','Negative','Negative','2/2','PASS','ประเมิน'],
+  ['สวส.','2567','C1','HPV-03','HPV16+HPV66','HPV16+Non-16,18','2/2','PASS','ประเมิน'],
+  ['สวส.','2567','C1','HPV-04','Negative','Negative','2/2','PASS','ประเมิน'],
+  ['สวส.','2567','C1','HPV-05','HPV58+HPV39','HPV Non-16,18','—','PASS','ยกเว้น (consensus)'],
+  ['สวส.','2567','C2','HPV-01','HPV 16','HPV 16','2/2','PASS','ประเมิน'],
+  ['สวส.','2567','C2','HPV-02','HPV 52 (Non-16,18)','HPV Non-16,18','2/2','PASS','ประเมิน'],
+  ['สวส.','2567','C2','HPV-03','Negative','Negative','2/2','PASS','ประเมิน'],
+  ['สวส.','2567','C2','HPV-04','HPV 68 (Non-16,18)','HPV Non-16,18','2/2','PASS','ประเมิน'],
+  ['สวส.','2567','C2','HPV-05','Negative','Negative','2/2','PASS','ประเมิน'],
+  ['สวส.','2568','C1','HPV-01','HPV 66 (Non-16,18)','Negative — FN!','0/2','FAIL','⚠️ False Negative'],
+  ['สวส.','2568','C1','HPV-02','Negative','Negative','2/2','FAIL','TN ✓'],
+  ['สวส.','2568','C1','HPV-03','HPV 16','HPV 16','2/2','FAIL','TP ✓'],
+  ['สวส.','2568','C1','HPV-04','HPV 18','HPV 18','2/2','FAIL','TP ✓'],
+  ['สวส.','2568','C1','HPV-05','HPV 18','HPV 18','2/2','FAIL','TP ✓'],
+  ['สวส.','2568','C2','HPV-01','HPV 52 (Non-16,18)','HPV Non-16,18','2/2','PASS','ประเมิน'],
+  ['สวส.','2568','C2','HPV-02','HPV 18','HPV 18','2/2','PASS','ประเมิน'],
+  ['สวส.','2568','C2','HPV-03','Negative','Negative','2/2','PASS','ประเมิน'],
+  ['สวส.','2568','C2','HPV-04','HPV 58 (Non-16,18)','Negative','—','PASS','ยกเว้น (consensus)'],
+  ['สวส.','2568','C2','HPV-05','HPV 18','HPV 18','2/2','PASS','ประเมิน'],
+  ['สวส.','2569','C1','HPV-01','HPV 16','HPV 16','2/2','PASS','ประเมิน'],
+  ['สวส.','2569','C1','HPV-02','Negative','Negative','2/2','PASS','ประเมิน'],
+  ['สวส.','2569','C1','HPV-03','HPV 18','HPV 18','2/2','PASS','ประเมิน'],
+  ['สวส.','2569','C1','HPV-04','HPV 52 (Non-16,18)','HPV Non-16,18','2/2','PASS','ประเมิน'],
+  ['สวส.','2569','C1','HPV-05','HPV 18','HPV 18','2/2','PASS','ประเมิน'],
+];
+
+function buildRaw(rows){
+  const b=document.getElementById('rbody');b.innerHTML='';
+  rows.forEach((r,i)=>{
+    const isFail=r[7]==='FAIL';const isFN=r[8].includes('FN');
+    const bg=isFN?'background:#FADBD8':isFail?'background:#fff5f5':i%2?'background:#f8f9fa':'';
+    const pc=r[0]==='QCMD'?'badge" style="background:#e0f7f4;color:#006D77':'badge" style="background:#f0ebff;color:#5b3fa0';
+    const rc=r[7]==='PASS'?'badge bpass':'badge bfail';
+    const sc=r[6]==='0/2'?'style="color:#c0392b;font-weight:700"':'style="color:#1a7a41;font-weight:700"';
+    b.innerHTML+=`<tr style="${bg}"><td><span class="${pc}">${r[0]}</span></td><td>${r[1]}</td><td>${r[2]}</td><td style="font-size:.7rem">${r[3]}</td><td style="text-align:left;font-size:.75rem">${r[4]}</td><td style="text-align:left;font-size:.75rem">${r[5]}</td><td ${sc}>${r[6]}</td><td><span class="${rc}">${r[7]}</span></td><td style="font-size:.68rem;color:#666">${r[8]}</td></tr>`;
+  });
+  document.getElementById('rct').textContent=rows.length+' rows';
+}
+function filt(){
+  const q=document.getElementById('sbox').value.toLowerCase();
+  const prog=document.getElementById('fprog').value;
+  const yr=document.getElementById('fyr').value;
+  const res=document.getElementById('fres').value;
+  buildRaw(RAWS.filter(r=>{
+    const mq=!q||r.some(v=>String(v).toLowerCase().includes(q));
+    return mq&&(!prog||r[0]===prog)&&(!yr||r[1]===yr)&&(!res||r[7]===res);
+  }));
+}
+buildRaw(RAWS);
+
+// Charts
+const opts=(yl,mn,mx,leg)=>({responsive:true,maintainAspectRatio:true,
+  plugins:{legend:{display:leg!==false,labels:{font:{family:'Arial',size:9}}}},
+  scales:{x:{ticks:{font:{family:'Arial',size:8}}},y:{min:mn,max:mx,ticks:{font:{family:'Arial',size:9}}}}});
+
+// Sensitivity chart — both programs
+new Chart(document.getElementById('cSens'),{type:'bar',
+  data:{labels:['QCMD\\n24C1','QCMD\\n24C2','สวส.\\n67C1','สวส.\\n67C2','QCMD\\n25C1','QCMD\\n25C2','สวส.\\n68C1','สวส.\\n68C2','QCMD\\n26C1','สวส.\\n69C1'],
+  datasets:[{label:'Sensitivity %',data:[100,100,100,100,100,100,75,100,100,100],
+    backgroundColor:['#27ae60','#27ae60','#9b59b6','#9b59b6','#27ae60','#27ae60','#e74c3c','#9b59b6','#27ae60','#9b59b6'],borderRadius:4}]},
+  options:{...opts(null,50,105,false),plugins:{legend:{display:false}}}});
+
+// Peer % QCMD
+new Chart(document.getElementById('cPeer'),{type:'bar',
+  data:{labels:['2024 C1','2024 C2','2025 C1','2025 C2','2026 C1'],
+  datasets:[{label:'Avg peer %',data:[99.1,98.5,98.5,98.7,98.2],backgroundColor:'rgba(0,109,119,.7)',borderRadius:4},
+    {label:'HB16305',data:[100,100,100,100,100],backgroundColor:'rgba(26,122,65,.7)',borderRadius:4}]},
+  options:opts(null,80,101)});
+
+// สวส. score
+new Chart(document.getElementById('cSvsScore'),{type:'bar',
+  data:{labels:['2567 C1','2567 C2','2568 C1','2568 C2','2569 C1'],
+  datasets:[{label:'คะแนนที่ได้',data:[8,10,8,10,10],
+    backgroundColor:['#27ae60','#27ae60','#e74c3c','#27ae60','#27ae60'],borderRadius:4},
+    {label:'คะแนนเต็ม',data:[8,10,10,10,10],backgroundColor:'rgba(200,200,200,.3)',borderRadius:4}]},
+  options:opts(null,0,12)});
+
+// CT trend QCMD
+const ctL=['24C1-01','24C1-02','24C1-03','24C1-04','24C1-05','24C2-01','24C2-02','24C2-04','24C2-05','24C2-06','25C1-01','25C1-02','25C1-03','25C1-04','25C1-06','25C2-01','25C2-02','25C2-03','25C2-05','25C2-06','26C1-01','26C1-02','26C1-03','26C1-04','26C1-05'];
+const ctV=[29.70,26.44,26.53,23.51,31.05,25.49,26.63,26.54,26.75,27.16,27.26,27.37,23.43,27.21,30.15,25.39,27.70,26.48,27.55,24.91,28.41,25.63,26.16,26.64,29.99];
+new Chart(document.getElementById('cCTAll'),{type:'line',
+  data:{labels:ctL,datasets:[{label:'CT value',data:ctV,borderColor:'#1B3A5C',backgroundColor:'rgba(27,58,92,.07)',
+    pointBackgroundColor:ctV.map(v=>v>=30?'#CA6F1E':'#006D77'),pointRadius:4,tension:.3,fill:true,borderWidth:2}]},
+  options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false}},
+    scales:{x:{ticks:{font:{size:7},maxRotation:60}},y:{min:20,max:34,ticks:{font:{size:9}}}}}});
+
+// Geno doughnut
+new Chart(document.getElementById('cGenoD'),{type:'doughnut',
+  data:{labels:['HPV16','HPV18','HPV45','HPV16+18','Negative'],
+  datasets:[{data:[13,9,5,1,5],backgroundColor:['#2196F3','#4CAF50','#9C27B0','#FF9800','#9E9E9E'],borderWidth:2,hoverOffset:5}]},
+  options:{responsive:true,plugins:{legend:{position:'right',labels:{font:{family:'Arial',size:10}}}}}});
+
+// สวส. geno sensitivity
+new Chart(document.getElementById('cSvsGeno'),{type:'bar',
+  data:{labels:['HPV16','HPV18','HPV Non-16,18','Negative (Spec)'],
+  datasets:[{label:'Sensitivity / Specificity %',data:[100,100,80,100],
+    backgroundColor:['#2196F3','#4CAF50','#e74c3c','#9E9E9E'],borderRadius:4}]},
+  options:{...opts(null,0,110,false),plugins:{legend:{display:false}}}});
+</script>
+</body>
+</html>'''
+
+with open('/sessions/intelligent-amazing-feynman/mnt/outputs/EQA_HPV_HPV.html','w',encoding='utf-8') as f:
+    f.write(html)
+print(f"Done: {len(html):,} bytes")

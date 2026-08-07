@@ -1,0 +1,9 @@
+# Windows Explorer metadata
+desktop.ini
+
+# LibreOffice/Office lock files
+.~lock.*#
+
+# Redundant archives (source files already extracted in "reagenet & MSDS/reagent and MSDS/")
+reagenet & MSDS/reagent and MSDS.rar
+reagenet & MSDS/reagent and MSDS.zip

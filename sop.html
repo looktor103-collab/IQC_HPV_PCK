@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOP & Document Library</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#f4f6fb;--card:#fff;--border:#d8e2ef;--text:#1f2937;--muted:#4b5563;--accent:#2563eb;--accent-light:#dbeafe;--radius:16px;}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    .page-wrap{max-width:1080px;margin:0 auto;padding:24px 18px}
+    .topbar{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:center;margin-bottom:24px}
+    .topbar h1{font-size:24px;font-weight:700}
+    .topbar p{font-size:14px;color:var(--muted);max-width:680px;line-height:1.6}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;border:1px solid transparent;font-weight:700;font-size:14px;text-decoration:none;cursor:pointer}
+    .btn-primary{background:var(--accent);color:#fff}
+    .btn-outline{background:#fff;color:var(--accent);border-color:var(--accent)}
+    .section{margin-top:24px}
+    .section h2{font-size:18px;margin-bottom:14px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:0 8px 24px rgba(15,23,42,.06)}
+    .card h3{font-size:16px;margin-bottom:12px}
+    .card p{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:16px}
+    .list{list-style:none;display:grid;gap:10px}
+    .list a{display:block;padding:12px 14px;border-radius:12px;background:#f8fbff;color:var(--accent);text-decoration:none;font-size:14px;border:1px solid #dbeafe;transition:background .2s,transform .2s}
+    .list a:hover{background:#eef4ff;transform:translateY(-1px)}
+    .note{margin-top:16px;font-size:13px;color:var(--muted);}
+    .small{font-size:13px;color:#6b7280}
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+    <div class="topbar">
+      <div>
+        <h1>SOP & Document Library</h1>
+        <p>คลังเอกสารสำหรับ SOP, Work Instruction, คู่มือการใช้งาน และเอกสารสำคัญที่มีอยู่ในระบบปัจจุบัน</p>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+        <a href="index.html" class="btn btn-outline">← กลับสู่ Dashboard</a>
+        <a href="reagent_msds.html" class="btn btn-primary">ดู Reagent / MSDS</a>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <h3>เอกสาร SOP และ Work Instruction</h3>
+        <p>รวบรวมเอกสารหลักสำหรับการทำงานในห้องปฏิบัติการและการบำรุงรักษา หากต้องการเอกสารเพิ่มเติมให้แจ้งเพื่อเพิ่มรายการต่อไป</p>
+        <ul class="list">
+          <li><a href="maintanance/pdf/Cobas_ServicePlan_2569.pdf" target="_blank">Cobas Service Plan 2569</a></li>
+          <li><a href="maintanance/pdf/Cobas_MaintenancePlan_2569.pdf" target="_blank">Cobas Maintenance Plan 2569</a></li>
+          <li><a href="maintanance/pdf/Cobas6800_27May2025_PMVisit.pdf" target="_blank">Cobas6800 27 May 2025 PM Visit</a></li>
+          <li><a href="maintanance/pdf/Cobas6800_20Mar2025_TeleRemoteDiag.pdf" target="_blank">Cobas6800 20 Mar 2025 Tele/Remote Diagnostic</a></li>
+          <li><a href="maintanance/pdf/Cobas6800_16Mar2026_ServiceVisit.pdf" target="_blank">Cobas6800 16 Mar 2026 Service Visit</a></li>
+        </ul>
+        <p class="note">หากเอกสารนี้ไม่ตรงตามที่ต้องการ สามารถเพิ่มลิงก์เอกสารใหม่ในหน้า SOP ได้ทันที</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="grid">
+        <div class="card">
+          <h3>Reagent / MSDS</h3>
+          <p>ไฟล์เอกสาร Reagent และ MSDS ที่มีอยู่ในระบบ ให้ใช้เป็นแหล่งข้อมูลเพื่ออ้างอิงสารเคมีและชุดตรวจต่าง ๆ</p>
+          <ul class="list">
+            <li><a href="reagenet%20%26%20MSDS/reagent%20and%20MSDS/cobas%20HPV.pdf" target="_blank">cobas HPV</a></li>
+            <li><a href="reagenet%20%26%20MSDS/reagent%20and%20MSDS/cobas%20HIV-1.pdf" target="_blank">cobas HIV-1</a></li>
+            <li><a href="reagenet%20%26%20MSDS/reagent%20and%20MSDS/MSDS_cobas%20HPV.pdf" target="_blank">MSDS cobas HPV</a></li>
+            <li><a href="reagenet%20%26%20MSDS/reagent%20and%20MSDS/MSDS_cobas%20HIV-1.pdf" target="_blank">MSDS cobas HIV-1</a></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>คู่มือเครื่องมือ / Manuals</h3>
+          <p>เลือกรายการคู่มืออุปกรณ์จากโฟลเดอร์เครื่องมือย่อยที่มีเอกสาร pdf พร้อมให้ดาวน์โหลด</p>
+          <ul class="list">
+            <li><a href="เครื่องมือย่อย/pdf/auto%20pipet-5081521.pdf" target="_blank">Auto Pipet Manual</a></li>
+            <li><a href="เครื่องมือย่อย/pdf/Centifuge-Special%20lab.pdf" target="_blank">Centrifuge Manual</a></li>
+            <li><a href="เครื่องมือย่อย/pdf/BSC-special%20lab1500.pdf" target="_blank">BSC Special Lab Manual</a></li>
+            <li><a href="เครื่องมือย่อย/pdf/digital%20thermomoter-SP-00450.pdf" target="_blank">Digital Thermometer Manual</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <h3>ค้นหาเอกสารเพิ่มเติม</h3>
+        <p class="small">ถ้ามีเอกสาร SOP หรือเอกสารมาตรฐานอื่นที่ต้องการให้เพิ่มเข้ามา แนะนำให้เก็บไว้ในโฟลเดอร์ที่เหมาะสมแล้วแจ้งผม เพื่อให้ผมอัปเดตหน้า SOP นี้ให้มีรายการครบถ้วน</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
