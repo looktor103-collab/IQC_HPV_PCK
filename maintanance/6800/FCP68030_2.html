@@ -569,7 +569,9 @@ async function syncKey(key, opts) {
   try {
     const r = await fetch(SHEETS_URL, {
       method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
+      // text/plain กัน CORS preflight (OPTIONS) ซึ่ง Apps Script ไม่รองรับ —
+      // ฝั่ง Apps Script อ่าน e.postData.contents เป็น raw string แล้ว JSON.parse เองอยู่แล้ว ไม่สนใจ header นี้
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body:    JSON.stringify(buildPayload(key)),
       signal:  ctrl.signal
     });
@@ -646,7 +648,7 @@ function flushDirtyBeacon() {
   if (!navigator.sendBeacon) return;
   dirtyKeys.forEach(key => {
     try {
-      const blob = new Blob([JSON.stringify(buildPayload(key))], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify(buildPayload(key))], { type: 'text/plain;charset=utf-8' });
       navigator.sendBeacon(SHEETS_URL, blob);
     } catch(e) {}
   });
