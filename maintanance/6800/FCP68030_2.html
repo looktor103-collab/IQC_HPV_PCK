@@ -553,6 +553,7 @@ function buildPayload(key) {
     tasks:       TASK_ROWS.map(t=>({key:t.key, label:t.label})),
     checks:      d.checks,
     notes:       d.notes || [],
+    sigs:        d.sigs || {},
     submittedAt: new Date().toISOString()
   };
 }
@@ -743,12 +744,29 @@ function doPost(e) {
       rowNum++;
     }
 
-    // Perform by row (ว่าง)
+    // Perform by row (ว่าง + แทรกรูปลายเซ็น)
     var performRow = ['Perform by (ลายเซ็น)'];
     for (var d4 = 1; d4 <= 31; d4++) { performRow.push(''); }
     sh.getRange(rowNum, 1, 1, 32).setValues([performRow]);
     sh.getRange(rowNum, 1, 1, 32).setBackground('#fef7e0');
     sh.getRange(rowNum, 1).setFontWeight('bold');
+    sh.setRowHeight(rowNum, 40);
+
+    var sigs = data.sigs || {};
+    for (var d5 = 1; d5 <= nDays; d5++) {
+      var sigData = sigs[d5];
+      if (sigData) {
+        try {
+          var commaIdx = sigData.indexOf(',');
+          var b64 = commaIdx >= 0 ? sigData.substring(commaIdx + 1) : sigData;
+          var sigBlob = Utilities.newBlob(Utilities.base64Decode(b64), 'image/png', 'sig_' + d5 + '.png');
+          var img = sh.insertImage(sigBlob, d5 + 1, rowNum);
+          img.setWidth(26).setHeight(36);
+        } catch (imgErr) {
+          // ข้ามรูปที่เสีย ไม่ให้กระทบข้อมูลแถวอื่น
+        }
+      }
+    }
     rowNum += 2;
 
     // Additional Note
