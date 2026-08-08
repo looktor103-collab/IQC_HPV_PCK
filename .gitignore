@@ -7,3 +7,6 @@ desktop.ini
 # Redundant archives (source files already extracted in "reagenet & MSDS/reagent and MSDS/")
 reagenet & MSDS/reagent and MSDS.rar
 reagenet & MSDS/reagent and MSDS.zip
+
+# Local JSON backups exported by FCP68030 form on failed/manual sync
+maintanance/6800/FCP68030_*.json

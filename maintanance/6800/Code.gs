@@ -19,12 +19,15 @@ function doPost(e) {
       sh.clearFormats();
     }
 
+    // เคลียร์เซลล์ที่ merge ไว้ทั้งหมดก่อนเขียนข้อมูล (ต้องทำก่อนเขียนค่า/สี เสมอ
+    // ไม่งั้น Sheets จะ error "ตรึงคอลัมน์ที่มีเฉพาะบางส่วนของเซลล์ที่ผสาน")
+    var maxR = Math.max(sh.getMaxRows(), 60);
+    var maxC = Math.max(sh.getMaxColumns(), 32);
+    sh.getRange(1, 1, maxR, maxC).breakApart();
+
     // แถวที่ 1: หัวข้อ
     sh.getRange(1, 1).setValue('F-CP-68030  แบบบันทึกตารางการบำรุงรักษาเครื่อง cobas 6800 V2.0 system');
     sh.getRange(1, 1, 1, 32).setBackground('#f8fafc').setFontWeight('bold');
-    for (var r = 0; r < sh.getMergedRanges().length; r++) {
-      sh.getRange(sh.getMergedRanges()[r]).breakApart();
-    }
 
     // แถวที่ 2: Serial No และเดือน
     sh.getRange(2, 1).setValue('Serial NO: ' + (data.serialNo || ''));
