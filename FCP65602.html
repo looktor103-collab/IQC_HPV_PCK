@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F-CP-65602 | แบบฟอร์มบันทึกการบำรุงรักษา Biological Safety Cabinet</title>
+<style>
+/* ===== RESET ===== */
+*{box-sizing:border-box;margin:0;padding:0}
+html{height:100%}
+body{
+  font-family:'Sarabun','TH Sarabun New',Tahoma,Arial,sans-serif;
+  font-size:14px;color:#1e293b;background:#eef2f7;
+  min-height:100vh;padding-bottom:50px
+}
+
+/* ===== TOPBAR ===== */
+.topbar{
+  position:sticky;top:0;z-index:200;
+  background:linear-gradient(135deg,#0f2d6b 0%,#1d4ed8 100%);
+  color:#fff;display:flex;align-items:center;
+  justify-content:space-between;padding:10px 18px;
+  box-shadow:0 3px 12px rgba(0,0,0,.25);flex-wrap:wrap;gap:8px
+}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.form-badge{
+  background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);
+  border-radius:5px;padding:2px 9px;font-size:12px;font-weight:700;
+  letter-spacing:.5px
+}
+.topbar-title{font-size:15px;font-weight:600;line-height:1.3}
+.topbar-sub{font-size:11px;opacity:.75}
+.btn-group{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+
+/* ===== BUTTONS ===== */
+.btn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:6px 13px;border-radius:7px;border:none;
+  cursor:pointer;font-size:13px;font-weight:500;
+  font-family:inherit;transition:all .18s;white-space:nowrap
+}
+.btn-white{background:#fff;color:#0f2d6b}
+.btn-white:hover{background:#dbeafe;transform:translateY(-1px)}
+.btn-green{background:#16a34a;color:#fff}
+.btn-green:hover{background:#15803d;transform:translateY(-1px)}
+.btn-teal{background:#0d9488;color:#fff}
+.btn-teal:hover{background:#0f766e;transform:translateY(-1px)}
+.btn-red{background:#dc2626;color:#fff}
+.btn-red:hover{background:#b91c1c;transform:translateY(-1px)}
+.btn-orange{background:#ea580c;color:#fff}
+.btn-orange:hover{background:#c2410c;transform:translateY(-1px)}
+.btn-icon{font-size:15px;line-height:1}
+
+/* ===== CONTAINER ===== */
+.container{max-width:1900px;margin:0 auto;padding:14px 14px}
+
+/* ===== CARD ===== */
+.card{
+  background:#fff;border-radius:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+  margin-bottom:14px;overflow:hidden
+}
+.card-header{
+  background:linear-gradient(135deg,#0f2d6b,#1d4ed8);
+  color:#fff;padding:10px 16px;font-size:15px;font-weight:700;
+  display:flex;align-items:center;gap:8px
+}
+.card-body{padding:16px}
+
+/* ===== FORM HEADER FIELDS ===== */
+.form-title-center{
+  text-align:center;font-size:17px;font-weight:700;
+  color:#0f2d6b;margin-bottom:14px;padding-bottom:10px;
+  border-bottom:2px solid #e2e8f0
+}
+.fields-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+  gap:12px
+}
+.field-item label{
+  display:block;font-size:11.5px;color:#64748b;
+  font-weight:600;margin-bottom:3px;text-transform:uppercase;
+  letter-spacing:.4px
+}
+.field-item input{
+  width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;
+  border-radius:7px;font-size:13.5px;font-family:inherit;
+  background:#f8fafc;transition:all .18s;color:#1e293b
+}
+.field-item input:focus{
+  outline:none;border-color:#1d4ed8;background:#fff;
+  box-shadow:0 0 0 3px rgba(29,78,216,.1)
+}
+
+/* ===== LEGEND ===== */
+.legend{
+  display:flex;align-items:center;gap:16px;
+  background:#f0f9ff;border:1px solid #bae6fd;
+  border-radius:9px;padding:9px 14px;
+  margin-bottom:14px;flex-wrap:wrap
+}
+.legend strong{color:#0369a1;margin-right:4px}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12.5px}
+.legend-mark{
+  width:26px;height:26px;border:1.5px solid #cbd5e1;
+  border-radius:5px;display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:800
+}
+.legend-mark.slash{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
+.legend-mark.holiday{background:#fef9c3;color:#92400e;border-color:#fde68a;font-size:11px}
+.legend-tip{font-size:11px;color:#94a3b8;font-style:italic}
+
+/* ===== TABLE WRAPPER ===== */
+.table-wrap{overflow-x:auto;border-radius:8px;border:1.5px solid #e2e8f0}
+
+/* ===== MAINTENANCE TABLE ===== */
+.maint-table{
+  width:100%;border-collapse:collapse;
+  font-size:12.5px;min-width:1000px
+}
+.maint-table th{
+  background:#0f2d6b;color:#fff;
+  font-weight:600;padding:7px 4px;
+  font-size:11.5px;text-align:center;
+  border:1px solid #1e40af;white-space:nowrap;
+  position:sticky;top:0
+}
+.maint-table th.item-th{
+  text-align:left;padding-left:10px;
+  min-width:230px;width:230px
+}
+.maint-table td{
+  border:1px solid #e2e8f0;text-align:center;
+  padding:0;
+}
+
+/* ===== SECTION ROWS ===== */
+.sec-daily td{
+  background:linear-gradient(90deg,#1d4ed8,#3b82f6);
+  color:#fff;font-weight:700;padding:6px 10px;
+  text-align:left;font-size:13px;letter-spacing:.2px
+}
+.sec-monthly td{
+  background:linear-gradient(90deg,#0f766e,#14b8a6);
+  color:#fff;font-weight:700;padding:6px 10px;
+  text-align:left;font-size:13px;letter-spacing:.2px
+}
+.sec-daily td span,.sec-monthly td span{
+  font-size:10px;opacity:.7;margin-left:8px;font-weight:400
+}
+
+/* ===== ITEM CELL ===== */
+.item-cell{
+  text-align:left;padding:6px 10px;
+  background:#f8fafc;font-size:12.5px;
+  border-right:2px solid #e2e8f0;
+  min-width:230px;max-width:230px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap
+}
+.item-cell.sub{
+  padding-left:22px;color:#475569;font-style:italic
+}
+
+/* ===== CHECK CELLS ===== */
+.check-cell{
+  cursor:pointer;width:34px;min-width:30px;height:34px;
+  font-size:16px;font-weight:800;color:#1e293b;
+  user-select:none;transition:background .12s,transform .08s;
+  position:relative;vertical-align:middle;line-height:34px
+}
+.check-cell:hover{background:#eff6ff}
+.check-cell:active{transform:scale(.9)}
+.check-cell.slash{
+  background:#d1fae5;color:#065f46;font-size:18px
+}
+.check-cell.holiday-col{
+  background:#fefce8 !important
+}
+.check-cell.slash.holiday-col{
+  background:#bbf7d0 !important
+}
+/* Day header holiday */
+.day-th{cursor:pointer;transition:background .18s,color .18s;user-select:none}
+.day-th:hover{background:#1e40af !important;opacity:.85}
+.day-th.holiday-day{
+  background:#f59e0b !important;color:#1c1917 !important;
+  font-weight:800
+}
+
+/* ===== INSPECTOR CELLS ===== */
+.insp-cell{
+  padding:2px;height:52px;vertical-align:middle;
+  cursor:pointer;position:relative;
+  min-width:32px;
+}
+.insp-cell:hover{background:#e0f2fe !important}
+.insp-empty-hint{
+  width:100%;height:46px;
+  display:flex;align-items:center;justify-content:center;
+  border:1.5px dashed #cbd5e1;border-radius:4px;
+  color:#94a3b8;font-size:11px;font-family:inherit;
+  background:transparent;cursor:pointer;
+  transition:all .15s;
+}
+.insp-cell:hover .insp-empty-hint{
+  border-color:#3b82f6;color:#3b82f6;background:#eff6ff;
+}
+.insp-sig-img{
+  width:100%;height:46px;
+  object-fit:contain;display:block;
+  border:1px solid #bfdbfe;border-radius:3px;
+  background:#fff;cursor:pointer;
+}
+.insp-cell.holiday-col{background:#fefce8 !important}
+.insp-cell.holiday-col:hover{background:#fde68a !important}
+
+/* ===== SIGNATURE MODAL ===== */
+.sig-overlay{
+  position:fixed;inset:0;z-index:2000;
+  background:rgba(0,0,0,.55);
+  display:flex;align-items:center;justify-content:center;
+}
+.sig-box{
+  background:#fff;border-radius:14px;
+  padding:22px 24px 18px;
+  width:480px;max-width:96vw;
+  box-shadow:0 24px 60px rgba(0,0,0,.35);
+}
+.sig-box-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:14px;
+}
+.sig-box-title{
+  font-size:15px;font-weight:700;color:#0f2d6b;
+}
+.sig-close{
+  width:30px;height:30px;border-radius:50%;border:none;
+  background:#f1f5f9;cursor:pointer;font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+}
+.sig-close:hover{background:#fee2e2;color:#dc2626}
+#sig-canvas{
+  display:block;width:100%;
+  height:160px;
+  border:2px solid #cbd5e1;border-radius:8px;
+  cursor:crosshair;background:#fff;
+  touch-action:none;
+  -ms-touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
+}
+.sig-hint{
+  font-size:11px;color:#94a3b8;margin-top:6px;text-align:center;
+}
+.sig-box-footer{
+  display:flex;gap:10px;margin-top:14px;justify-content:flex-end;
+}
+.sig-day-badge{
+  display:inline-block;
+  background:#dbeafe;color:#1d4ed8;
+  border-radius:999px;padding:1px 10px;
+  font-size:12px;font-weight:600;
+}
+
+/* ===== BOTTOM SECTIONS ===== */
+.instructions{
+  font-size:12.5px;color:#374151;line-height:2;
+  background:#f8fafc;border-radius:8px;padding:12px 14px;
+  border-left:4px solid #1d4ed8
+}
+.instructions li{margin-left:18px;margin-bottom:2px}
+.notes-area{
+  width:100%;height:90px;border:1.5px solid #e2e8f0;
+  border-radius:8px;padding:10px;font-size:13px;
+  resize:vertical;font-family:inherit;background:#f8fafc;
+  color:#374151;transition:border-color .18s;margin-top:8px
+}
+.notes-area:focus{outline:none;border-color:#1d4ed8;background:#fff}
+
+/* ===== SIGNATURES ===== */
+.sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:16px}
+.sig-box{
+  border:1.5px solid #e2e8f0;border-radius:10px;
+  padding:14px;background:#f8fafc
+}
+.sig-title{
+  font-weight:700;color:#0f2d6b;font-size:14px;
+  margin-bottom:10px;padding-bottom:8px;
+  border-bottom:1px solid #e2e8f0
+}
+.sig-row{margin-bottom:8px}
+.sig-row label{
+  display:block;font-size:11px;color:#94a3b8;
+  font-weight:600;margin-bottom:3px;text-transform:uppercase
+}
+.sig-row input{
+  width:100%;border:none;border-bottom:1.5px solid #cbd5e1;
+  padding:4px 2px;font-size:13px;font-family:inherit;
+  background:transparent;color:#1e293b;transition:border-color .18s
+}
+.sig-row input:focus{outline:none;border-bottom-color:#1d4ed8}
+
+/* ===== STATUS BAR ===== */
+.statusbar{
+  position:fixed;bottom:0;left:0;right:0;z-index:300;
+  background:#0f172a;color:#e2e8f0;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:5px 16px;font-size:12px;
+  box-shadow:0 -2px 8px rgba(0,0,0,.3)
+}
+.status-msg{opacity:.85}
+.drive-indicator{display:flex;align-items:center;gap:7px}
+.drive-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:#64748b;transition:background .3s
+}
+.drive-dot.on{background:#34d399}
+.drive-dot.saving{background:#fbbf24;animation:pulse .6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ===== MODAL ===== */
+.overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.55);z-index:500;
+  align-items:center;justify-content:center
+}
+.overlay.open{display:flex}
+.modal{
+  background:#fff;border-radius:14px;padding:26px;
+  max-width:500px;width:92%;
+  box-shadow:0 24px 64px rgba(0,0,0,.35);
+  position:relative
+}
+.modal-close{
+  position:absolute;top:14px;right:16px;
+  background:none;border:none;font-size:20px;
+  cursor:pointer;color:#94a3b8;line-height:1
+}
+.modal-close:hover{color:#1e293b}
+.modal h3{font-size:19px;font-weight:700;color:#0f2d6b;margin-bottom:6px}
+.modal-desc{font-size:13px;color:#6b7280;margin-bottom:18px;line-height:1.55}
+.modal-label{font-size:12px;font-weight:700;color:#374151;margin-bottom:4px;display:block}
+.modal-input{
+  width:100%;padding:9px 12px;border:1.5px solid #e2e8f0;
+  border-radius:8px;font-size:13px;font-family:inherit;
+  margin-bottom:8px;transition:border-color .18s
+}
+.modal-input:focus{outline:none;border-color:#1d4ed8}
+.modal-hint{font-size:11.5px;color:#94a3b8;margin-bottom:16px;line-height:1.5}
+.modal-hint a{color:#1d4ed8;text-decoration:none}
+.modal-hint a:hover{text-decoration:underline}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.btn-modal-primary{
+  background:#1d4ed8;color:#fff;padding:8px 20px;
+  border-radius:8px;border:none;cursor:pointer;
+  font-size:13.5px;font-weight:600;font-family:inherit;
+  transition:background .18s
+}
+.btn-modal-primary:hover{background:#1e40af}
+.btn-modal-secondary{
+  background:#f1f5f9;color:#475569;padding:8px 16px;
+  border-radius:8px;border:none;cursor:pointer;
+  font-size:13px;font-family:inherit;transition:background .18s
+}
+.btn-modal-secondary:hover{background:#e2e8f0}
+.modal-separator{height:1px;background:#e2e8f0;margin:16px 0}
+.modal-section-title{font-size:13px;font-weight:700;color:#374151;margin-bottom:10px}
+.drive-file-list{
+  max-height:180px;overflow-y:auto;
+  border:1px solid #e2e8f0;border-radius:8px;margin-bottom:12px
+}
+.drive-file-item{
+  padding:9px 12px;cursor:pointer;border-bottom:1px solid #f1f5f9;
+  font-size:13px;display:flex;align-items:center;gap:8px;
+  transition:background .12s
+}
+.drive-file-item:last-child{border-bottom:none}
+.drive-file-item:hover{background:#eff6ff}
+.drive-file-item .file-icon{font-size:16px}
+.drive-file-info{flex:1}
+.drive-file-name{font-weight:600;color:#0f2d6b}
+.drive-file-date{font-size:11px;color:#94a3b8;margin-top:1px}
+.alert-box{
+  padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px
+}
+.alert-success{background:#d1fae5;color:#065f46;border:1px solid #6ee7b7}
+.alert-error{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5}
+.alert-info{background:#dbeafe;color:#1e40af;border:1px solid #93c5fd}
+.spinner{
+  display:inline-block;width:14px;height:14px;
+  border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;
+  animation:spin .7s linear infinite;vertical-align:middle
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:700px){
+  .topbar-title{font-size:13px}
+  .fields-grid{grid-template-columns:1fr 1fr}
+  .sig-grid{grid-template-columns:1fr}
+  .legend{gap:10px}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="form-badge">F-CP-65602</span>
+    <div>
+      <div class="topbar-title">แบบฟอร์มบันทึกการบำรุงรักษาเครื่อง Biological Safety Cabinet Class II/A2</div>
+      <div class="topbar-sub">กลุ่มงานเทคนิคการแพทย์ โรงพยาบาลพระจอมเกล้า จังหวัดเพชรบุรี</div>
+    </div>
+  </div>
+  <div class="btn-group">
+    <button class="btn btn-white" onclick="newForm()" title="เริ่มฟอร์มใหม่">
+      <span class="btn-icon">📄</span> ฟอร์มใหม่
+    </button>
+    <button class="btn btn-white" onclick="saveLocal()" title="บันทึกในเครื่อง">
+      <span class="btn-icon">💾</span> บันทึก
+    </button>
+    <button class="btn btn-teal" onclick="exportExcel()" title="Export เป็น Excel">
+      <span class="btn-icon">📊</span> Export Excel
+    </button>
+    <button class="btn btn-green" onclick="saveAsGoogleSheets()" title="บันทึกลง Google Sheets">
+      <span class="btn-icon">🟢</span> Google Sheets
+    </button>
+    <button class="btn btn-green" onclick="openDriveModal()" title="Google Drive (JSON)" style="background:#1a73e8">
+      <span class="btn-icon">☁️</span> Google Drive
+    </button>
+  </div>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div class="container">
+
+  <!-- Form Info Card -->
+  <div class="card">
+    <div class="card-header">
+      <span>📋</span>
+      <div>
+        <div>ข้อมูลแบบฟอร์ม</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="form-title-center">
+        แบบฟอร์มบันทึกการบำรุงรักษาเครื่อง Biological Safety Cabinet Class II/A2
+        <div style="margin-top:4px;font-size:13px;font-weight:600;color:#64748b;letter-spacing:.5px">
+          เลขที่เอกสาร: <span style="color:#1d4ed8;font-weight:700">F-CP-65602</span>
+          &nbsp;|&nbsp; แก้ไขครั้งที่: 1/01/07/62
+        </div>
+      </div>
+      <div class="fields-grid">
+        <div class="field-item">
+          <label>งาน</label>
+          <input type="text" id="f-work" value="Molecular" readonly style="background:#f0f4ff;color:#0f2d6b;font-weight:600;cursor:default">
+        </div>
+        <div class="field-item" style="grid-column:span 3">
+          <label>เลือกเครื่อง BSC</label>
+          <select id="f-machine-select" onchange="onMachineSelect(this)" style="width:100%;padding:7px 10px;border:1.5px solid #1d4ed8;border-radius:7px;font-size:13.5px;font-family:inherit;background:#f0f4ff;color:#0f2d6b;font-weight:600;cursor:pointer;transition:all .18s">
+            <option value="">── เลือกเครื่องมือ ──</option>
+            <option value="1">เครื่องที่ 1 | BSC-1500IIA2-X | ครุภัณฑ์ 6525-003-5205-2/63</option>
+            <option value="2">เครื่องที่ 2 | BSC-1300IIA2-X | ครุภัณฑ์ 6525-003-5204-1/63</option>
+          </select>
+        </div>
+        <!-- info bar auto-filled from dropdown -->
+        <div class="field-item" style="grid-column:span 3">
+          <label>ข้อมูลเครื่องที่เลือก</label>
+          <div id="machine-info-bar" style="display:flex;gap:16px;padding:7px 12px;background:#f0f4ff;border:1.5px solid #1d4ed8;border-radius:7px;font-size:13px;color:#0f2d6b;font-weight:600;min-height:36px;align-items:center">
+            <span>─</span>
+          </div>
+        </div>
+        <!-- hidden inputs carry values for save/export -->
+        <input type="hidden" id="f-eq-no">
+        <input type="hidden" id="f-brand" value="Biobase">
+        <input type="hidden" id="f-model">
+        <div class="field-item">
+          <label>ยี่ห้อ</label>
+          <input type="text" value="Biobase" readonly style="background:#f0f4ff;color:#0f2d6b;font-weight:600;cursor:default;width:100%;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:13.5px">
+        </div>
+        <div class="field-item">
+          <label>ประจำเดือน</label>
+          <input type="month" id="f-month" onchange="onMonthChange()">
+        </div>
+        <div class="field-item">
+          <label>ผู้ดูแลเครื่อง</label>
+          <input type="text" id="f-custodian" placeholder="ชื่อผู้ดูแลเครื่อง">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <strong>สัญลักษณ์:</strong>
+    <div class="legend-item">
+      <div class="legend-mark slash">/</div>
+      <span>ปฏิบัติแล้ว <em style="color:#94a3b8;font-size:11px">(คลิกที่ช่อง)</em></span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-mark" style="background:#f8fafc;color:#94a3b8;border-color:#e2e8f0;font-size:11px">ว่าง</div>
+      <span>ยังไม่ปฏิบัติ <em style="color:#94a3b8;font-size:11px">(เว้นว่างไว้)</em></span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-mark holiday" style="background:#f59e0b;color:#1c1917;border-color:#d97706;font-weight:800">วัน</div>
+      <span>วันหยุดราชการ <em style="color:#94a3b8;font-size:11px">(คลิกที่หัวคอลัมน์วันที่)</em></span>
+    </div>
+    <span class="legend-tip">คลิกซ้ำเพื่อยกเลิกเครื่องหมาย</span>
+  </div>
+
+  <!-- Table Card -->
+  <div class="card">
+    <div class="card-header">
+      <span>✅</span>
+      <span>ตารางการดูแลรักษา</span>
+      <span id="month-display" style="margin-left:auto;font-size:13px;opacity:.85"></span>
+    </div>
+    <div class="card-body" style="padding:0">
+      <div class="table-wrap">
+        <table class="maint-table" id="maint-table">
+          <thead>
+            <tr id="header-row">
+              <th class="item-th">รายการ</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Instructions Card (ตามแบบฟอร์มต้นฉบับ F-CP-65602) -->
+  <div class="card">
+    <div class="card-header"><span>📝</span> วิธีการบันทึกข้อมูล</div>
+    <div class="card-body">
+      <ol class="instructions">
+        <li>ทำเครื่องหมาย ☑ ในช่องข้อมูลที่ปฏิบัติ และลงชื่อด้วยภาษาอังกฤษในช่องผู้ตรวจสอบทุกครั้ง</li>
+        <li>จดบันทึกข้อมูลในช่องข้อมูลที่ปฏิบัติ และลงชื่อด้วยภาษาอังกฤษในช่องผู้ตรวจสอบทุกครั้ง</li>
+        <li>บันทึกข้อมูลด้วยสัญลักษณ์ ☒ ในช่องข้อมูลเมื่อไม่ดำเนินการตามที่กำหนด หรือทั้งเขียนแบบฟอร์มบันทึกสิ่งไม่เป็นไปตามข้อกำหนด</li>
+        <li>วันหยุดราชการเสาร์-อาทิตย์ วันหยุดนักขัตฤกษ์ ให้ทำสัญลักษณ์ ○ ที่ด้านล่างวันที่ด้วยปากกาสีน้ำเงิน</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- Bottom Info Card -->
+  <div class="card">
+    <div class="card-header"><span>📌</span> หมายเหตุและลายเซ็น</div>
+    <div class="card-body">
+      <div style="margin-top:0">
+        <label style="font-size:13px;font-weight:700;color:#374151">หมายเหตุ</label>
+        <textarea class="notes-area" id="f-notes" placeholder="หมายเหตุ..."></textarea>
+      </div>
+
+      <div class="sig-grid">
+        <div class="sig-box">
+          <div class="sig-title">ผู้รับผิดชอบ</div>
+          <div class="sig-row">
+            <label>ลายเซ็น</label>
+            <input type="text" id="f-sig1" placeholder="ลายเซ็น / ชื่อย่อ">
+          </div>
+          <div class="sig-row">
+            <label>ชื่อ-นามสกุล</label>
+            <input type="text" id="f-name1" placeholder="ชื่อเต็ม">
+          </div>
+          <div class="sig-row">
+            <label>วันที่</label>
+            <input type="date" id="f-date1">
+          </div>
+        </div>
+        <div class="sig-box">
+          <div class="sig-title">หัวหน้างาน</div>
+          <div class="sig-row">
+            <label>ลายเซ็น</label>
+            <input type="text" id="f-sig2" placeholder="ลายเซ็น / ชื่อย่อ">
+          </div>
+          <div class="sig-row">
+            <label>ชื่อ-นามสกุล</label>
+            <input type="text" id="f-name2" placeholder="ชื่อเต็ม">
+          </div>
+          <div class="sig-row">
+            <label>วันที่</label>
+            <input type="date" id="f-date2">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- ===== STATUS BAR ===== -->
+<div class="statusbar">
+  <div class="status-msg" id="status-msg">พร้อมใช้งาน ✓ บันทึกอัตโนมัติทุกครั้ง</div>
+  <div class="drive-indicator">
+    <div class="drive-dot" id="drive-dot"></div>
+    <span id="drive-label">Google Drive: ยังไม่เชื่อมต่อ</span>
+  </div>
+</div>
+
+<!-- ===== GOOGLE DRIVE MODAL ===== -->
+<div class="overlay" id="overlay-drive">
+  <div class="modal">
+    <button class="modal-close" onclick="closeDriveModal()">✕</button>
+    <h3>☁️ Google Drive</h3>
+    <p class="modal-desc">เชื่อมต่อ Google Drive เพื่อบันทึกและโหลดข้อมูลอัตโนมัติ (ข้อมูลจะถูกบันทึกเป็นไฟล์ JSON ใน Drive ของคุณ)</p>
+
+    <!-- Setup form (shown when not connected) -->
+    <div id="drive-setup-section">
+      <label class="modal-label">Google OAuth 2.0 Client ID</label>
+      <input class="modal-input" type="text" id="client-id-input" placeholder="xxxxxx.apps.googleusercontent.com">
+      <div class="modal-hint">
+        วิธีสร้าง Client ID:<br>
+        1. ไปที่ <a href="https://console.cloud.google.com/apis/credentials" target="_blank">Google Cloud Console → Credentials</a><br>
+        2. คลิก <strong>Create Credentials → OAuth 2.0 Client IDs</strong><br>
+        3. เลือก <strong>Web application</strong><br>
+        4. เพิ่ม URL ของหน้านี้ใน <strong>Authorized JavaScript origins</strong><br>
+        5. คัดลอก Client ID มาวางด้านบน
+      </div>
+      <div class="modal-separator"></div>
+      <div class="modal-section-title">หรือใช้ Local JSON (ไม่ต้องตั้งค่าอะไร)</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px">
+        <button class="btn-modal-secondary" onclick="downloadJSON()" style="flex:1">
+          ⬇️ Download JSON
+        </button>
+        <label class="btn-modal-secondary" style="flex:1;cursor:pointer;text-align:center">
+          ⬆️ Upload JSON
+          <input type="file" id="json-upload" accept=".json" onchange="uploadJSON(event)" style="display:none">
+        </label>
+      </div>
+      <div class="modal-hint" style="margin-bottom:0">Download JSON แล้วนำไปอัปโหลดเข้า Google Drive ด้วยตนเอง</div>
+    </div>
+
+    <!-- Connected state -->
+    <div id="drive-connected-section" style="display:none">
+      <div class="alert-box alert-success">✓ เชื่อมต่อ Google Drive สำเร็จ</div>
+      <div id="drive-files-list"></div>
+    </div>
+
+    <div id="drive-alert"></div>
+
+    <div class="modal-actions" id="drive-modal-actions">
+      <button class="btn-modal-secondary" onclick="closeDriveModal()">ยกเลิก</button>
+      <button class="btn-modal-primary" id="btn-drive-connect" onclick="connectDrive()">
+        🔗 เชื่อมต่อ Google
+      </button>
+    </div>
+
+    <!-- Actions after connected -->
+    <div id="drive-actions-connected" style="display:none">
+      <div class="modal-actions" style="justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <button class="btn-modal-secondary" onclick="driveDisconnect()" style="color:#dc2626">
+          🔌 ยกเลิกการเชื่อมต่อ
+        </button>
+        <div style="display:flex;gap:8px">
+          <button class="btn-modal-primary" onclick="loadFromDrive()" style="background:#0d9488">
+            📥 โหลดจาก Drive
+          </button>
+          <button class="btn-modal-primary" onclick="saveToDrive()">
+            ☁️ บันทึกลง Drive
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SheetJS for Excel export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script>
+// ================================================================
+//  CONSTANTS & STATE
+// ================================================================
+const ROWS_DEF = [
+  { key:'sec-daily',    type:'section',   label:'การดูแลรักษาประจำวัน',    cls:'sec-daily' },
+  { key:'clean',        type:'check',     label:'1.  ทำความสะอาดทั่วไป' },
+  { key:'lamp',         type:'check',     label:'2.  ตรวจสอบ Lamp' },
+  { key:'uv',           type:'check',     label:'3.  ตรวจสอบหลอด UV' },
+  { key:'airflow',      type:'check',     label:'4.  ตรวจสอบระบบ Air flow' },
+  { key:'inflow',       type:'check',     label:'4.1  Inflow (0.425–0.475 m/s)', sub:true },
+  { key:'downflow',     type:'check',     label:'4.2  Downflow (0.27–0.36 m/s)', sub:true },
+  { key:'sec-month',    type:'section',   label:'การดูแลรักษาประจำเดือน',   cls:'sec-monthly' },
+  { key:'tray',         type:'check',     label:'ทำความสะอาด Stainless steel tray' },
+  { key:'inspector',    type:'inspector', label:'ผู้ตรวจสอบ' },
+];
+
+const MARKS = ['', '/'];
+const MARK_CYCLE = (v) => MARKS[(MARKS.indexOf(v) + 1) % MARKS.length];
+
+// ================================================================
+//  THAI PUBLIC HOLIDAYS DATABASE (ข้อมูลอ้างอิง — โปรดตรวจสอบกับปฏิทินราชการทุกปี)
+//  Key: "YYYY-MM-DD", Value: ชื่อวันหยุด
+// ================================================================
+const THAI_HOLIDAYS_DB = {
+  // ===== 2024 =====
+  "2024-01-01":"วันขึ้นปีใหม่",
+  "2024-02-26":"วันมาฆบูชา (ชดเชย)",
+  "2024-04-08":"วันจักรี (ชดเชย)",
+  "2024-04-12":"วันหยุดพิเศษ (สงกรานต์)",
+  "2024-04-13":"วันสงกรานต์",
+  "2024-04-15":"วันสงกรานต์",
+  "2024-04-16":"วันสงกรานต์ (ชดเชย)",
+  "2024-05-01":"วันแรงงานแห่งชาติ",
+  "2024-05-06":"วันฉัตรมงคล (ชดเชย)",
+  "2024-05-22":"วันวิสาขบูชา",
+  "2024-06-03":"วันเฉลิมพระชนมพรรษาสมเด็จพระราชินี",
+  "2024-07-22":"วันอาสาฬหบูชา (ชดเชย)",
+  "2024-07-23":"วันเข้าพรรษา (ชดเชย)",
+  "2024-07-29":"วันเฉลิมพระชนมพรรษา ร.10 (ชดเชย)",
+  "2024-08-12":"วันแม่แห่งชาติ",
+  "2024-10-14":"วันคล้ายวันสวรรคต ร.9 (ชดเชย)",
+  "2024-10-23":"วันปิยมหาราช",
+  "2024-12-05":"วันพ่อแห่งชาติ",
+  "2024-12-10":"วันรัฐธรรมนูญ",
+  "2024-12-31":"วันสิ้นปี",
+  // ===== 2025 =====
+  "2025-01-01":"วันขึ้นปีใหม่",
+  "2025-02-12":"วันมาฆบูชา",
+  "2025-04-07":"วันจักรี (ชดเชย)",
+  "2025-04-14":"วันสงกรานต์",
+  "2025-04-15":"วันสงกรานต์",
+  "2025-04-16":"วันสงกรานต์ (ชดเชย)",
+  "2025-05-01":"วันแรงงานแห่งชาติ",
+  "2025-05-05":"วันฉัตรมงคล (ชดเชย)",
+  "2025-05-12":"วันวิสาขบูชา",
+  "2025-06-03":"วันเฉลิมพระชนมพรรษาสมเด็จพระราชินี",
+  "2025-07-10":"วันอาสาฬหบูชา",
+  "2025-07-11":"วันเข้าพรรษา",
+  "2025-07-28":"วันเฉลิมพระชนมพรรษา ร.10",
+  "2025-08-12":"วันแม่แห่งชาติ",
+  "2025-10-13":"วันคล้ายวันสวรรคต ร.9",
+  "2025-10-23":"วันปิยมหาราช",
+  "2025-12-05":"วันพ่อแห่งชาติ",
+  "2025-12-10":"วันรัฐธรรมนูญ",
+  "2025-12-31":"วันสิ้นปี",
+  // ===== 2026 =====
+  "2026-01-01":"วันขึ้นปีใหม่",
+  "2026-03-03":"วันมาฆบูชา",
+  "2026-04-06":"วันจักรี",
+  "2026-04-13":"วันสงกรานต์",
+  "2026-04-14":"วันสงกรานต์",
+  "2026-04-15":"วันสงกรานต์",
+  "2026-05-01":"วันแรงงานแห่งชาติ",
+  "2026-05-04":"วันฉัตรมงคล",
+  "2026-06-01":"วันวิสาขบูชา (ชดเชย)",
+  "2026-06-03":"วันเฉลิมพระชนมพรรษาสมเด็จพระราชินี",
+  "2026-07-27":"วันอาสาฬหบูชา",
+  "2026-07-28":"วันเข้าพรรษา / วันเฉลิมพระชนมพรรษา ร.10",
+  "2026-08-12":"วันแม่แห่งชาติ",
+  "2026-10-13":"วันคล้ายวันสวรรคต ร.9",
+  "2026-10-23":"วันปิยมหาราช",
+  "2026-12-07":"วันพ่อแห่งชาติ (ชดเชย)",
+  "2026-12-10":"วันรัฐธรรมนูญ",
+  "2026-12-31":"วันสิ้นปี",
+  // ===== 2027 =====
+  "2027-01-01":"วันขึ้นปีใหม่",
+  "2027-02-22":"วันมาฆบูชา (ชดเชย)",
+  "2027-04-06":"วันจักรี",
+  "2027-04-13":"วันสงกรานต์",
+  "2027-04-14":"วันสงกรานต์",
+  "2027-04-15":"วันสงกรานต์",
+  "2027-05-03":"วันแรงงานแห่งชาติ (ชดเชย)",
+  "2027-05-04":"วันฉัตรมงคล",
+  "2027-05-20":"วันวิสาขบูชา",
+  "2027-06-03":"วันเฉลิมพระชนมพรรษาสมเด็จพระราชินี",
+  "2027-07-16":"วันอาสาฬหบูชา",
+  "2027-07-19":"วันเข้าพรรษา (ชดเชย)",
+  "2027-07-28":"วันเฉลิมพระชนมพรรษา ร.10",
+  "2027-08-12":"วันแม่แห่งชาติ",
+  "2027-10-13":"วันคล้ายวันสวรรคต ร.9",
+  "2027-10-25":"วันปิยมหาราช (ชดเชย)",
+  "2027-12-07":"วันพ่อแห่งชาติ (ชดเชย)",
+  "2027-12-10":"วันรัฐธรรมนูญ",
+  "2027-12-31":"วันสิ้นปี",
+  // ===== 2028 =====
+  "2028-01-01":"วันขึ้นปีใหม่",
+  "2028-02-11":"วันมาฆบูชา",
+  "2028-04-06":"วันจักรี",
+  "2028-04-13":"วันสงกรานต์",
+  "2028-04-14":"วันสงกรานต์",
+  "2028-04-17":"วันสงกรานต์ (ชดเชย)",
+  "2028-05-01":"วันแรงงานแห่งชาติ",
+  "2028-05-04":"วันฉัตรมงคล",
+  "2028-05-31":"วันวิสาขบูชา",
+  "2028-06-03":"วันเฉลิมพระชนมพรรษาสมเด็จพระราชินี",
+  "2028-07-05":"วันอาสาฬหบูชา",
+  "2028-07-06":"วันเข้าพรรษา",
+  "2028-07-28":"วันเฉลิมพระชนมพรรษา ร.10",
+  "2028-08-12":"วันแม่แห่งชาติ",
+  "2028-10-13":"วันคล้ายวันสวรรคต ร.9",
+  "2028-10-23":"วันปิยมหาราช",
+  "2028-12-05":"วันพ่อแห่งชาติ",
+  "2028-12-11":"วันรัฐธรรมนูญ (ชดเชย)",
+  "2028-12-31":"วันสิ้นปี",
+};
+
+// Get auto-holidays for a month: weekends + official public holidays
+// Returns {days: [1,2,...], names: {day: "ชื่อวันหยุด"}}
+function getAutoHolidays(year, month) {
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const days = [];
+  const names = {};
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dow = new Date(year, month - 1, d).getDay();
+    const isWeekend = dow === 0 || dow === 6;
+    const mm = String(month).padStart(2, '0');
+    const dd = String(d).padStart(2, '0');
+    const key = `${year}-${mm}-${dd}`;
+    const pubName = THAI_HOLIDAYS_DB[key];
+    if (isWeekend || pubName) {
+      days.push(d);
+      if (isWeekend && pubName)   names[d] = `${pubName} (${dow===0?'อา.':'ส.'})`;
+      else if (pubName)            names[d] = pubName;
+      else                         names[d] = dow === 0 ? 'วันอาทิตย์' : 'วันเสาร์';
+    }
+  }
+  return { days, names };
+}
+
+const state = {
+  cells: {},        // "rowKey_day" → '' | '/'
+  inspectors: {},   // day(1-31) → string
+  holidays: [],     // array of day numbers that are holidays
+  holidayNames: {}, // day → holiday name (for tooltip)
+};
+
+let currentMonth = '';   // "YYYY-MM"
+let numDays = 31;
+
+// Google Drive
+let tokenClient = null;
+let accessToken = null;
+let driveFileId = null;
+const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
+
+// ================================================================
+//  TABLE BUILD
+// ================================================================
+function buildTable(year, month, applyAuto = false) {
+  const daysInMonth = new Date(year, month, 0).getDate();
+  numDays = daysInMonth;
+
+  // Auto-populate holidays when building fresh
+  if (applyAuto) {
+    const auto = getAutoHolidays(year, month);
+    state.holidays   = auto.days;
+    state.holidayNames = auto.names;
+  } else {
+    // Still update names for saved holidays
+    const auto = getAutoHolidays(year, month);
+    // Merge names: auto names + keep manual extras without name
+    state.holidayNames = {};
+    state.holidays.forEach(d => {
+      state.holidayNames[d] = auto.names[d] || 'วันหยุด (กำหนดเอง)';
+    });
+  }
+
+  // Update display
+  const months = ['','มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
+                  'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  document.getElementById('month-display').textContent =
+    `เดือน ${months[month]} พ.ศ. ${year + 543}`;
+
+  // Header row
+  const headerRow = document.getElementById('header-row');
+  while (headerRow.children.length > 1) headerRow.removeChild(headerRow.lastChild);
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isHol = state.holidays.includes(d);
+    const th = document.createElement('th');
+    th.textContent = d;
+    th.dataset.day = d;
+    th.style.minWidth = '32px';
+    th.style.width = '32px';
+    th.classList.add('day-th');
+    if (isHol) th.classList.add('holiday-day');
+    th.addEventListener('click', () => toggleHolidayDay(d));
+    // Tooltip: show holiday name
+    const name = state.holidayNames[d];
+    th.title = name ? `${name}\n(คลิกเพื่อยกเลิก)` : `วันที่ ${d} — คลิกเพื่อทำสีเหลือง (วันหยุด)`;
+    headerRow.appendChild(th);
+  }
+
+  // Table body
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = '';
+
+  ROWS_DEF.forEach(rowDef => {
+    const tr = document.createElement('tr');
+
+    if (rowDef.type === 'section') {
+      tr.className = rowDef.cls;
+      const td = document.createElement('td');
+      td.colSpan = daysInMonth + 1;
+      td.innerHTML = `${rowDef.label} <span>คลิกช่องเพื่อทำเครื่องหมาย</span>`;
+      tr.appendChild(td);
+    }
+    else if (rowDef.type === 'check') {
+      const itemTd = document.createElement('td');
+      itemTd.className = 'item-cell' + (rowDef.sub ? ' sub' : '');
+      itemTd.textContent = rowDef.label;
+      tr.appendChild(itemTd);
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dayDate = new Date(year, month - 1, d);
+        const isWeekend = dayDate.getDay() === 0 || dayDate.getDay() === 6;
+        const td = document.createElement('td');
+        td.className = 'check-cell' + (isWeekend ? ' weekend' : '');
+        td.dataset.row = rowDef.key;
+        td.dataset.day = d;
+
+        td.addEventListener('click', () => cycleCellMark(td));
+        tr.appendChild(td);
+      }
+    }
+    else if (rowDef.type === 'inspector') {
+      const itemTd = document.createElement('td');
+      itemTd.className = 'item-cell';
+      itemTd.textContent = rowDef.label;
+      tr.appendChild(itemTd);
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const isHol = state.holidays.includes(d);
+        const td = document.createElement('td');
+        td.className = 'insp-cell' + (isHol ? ' holiday-col' : '');
+        td.dataset.day = d;
+        td.title = `คลิกเพื่อเซ็นชื่อ วันที่ ${d}`;
+        td.addEventListener('click', () => openSigModal(d));
+        renderInspCell(td, d);
+        tr.appendChild(td);
+      }
+    }
+
+    tbody.appendChild(tr);
+  });
+
+  // Re-render saved cell states
+  renderAllCells();
+}
+
+// ================================================================
+//  CELL INTERACTION
+// ================================================================
+function cycleCellMark(td) {
+  const key = `${td.dataset.row}_${td.dataset.day}`;
+  const cur = state.cells[key] || '';
+  state.cells[key] = MARK_CYCLE(cur);
+  applyCellStyle(td, state.cells[key]);
+  queueAutoSave();
+}
+
+// Toggle holiday on a day column (called from header click)
+function toggleHolidayDay(day) {
+  const idx = state.holidays.indexOf(day);
+  const isNowHoliday = idx < 0; // will become holiday
+  if (idx >= 0) {
+    state.holidays.splice(idx, 1);
+    delete state.holidayNames[day];
+  } else {
+    state.holidays.push(day);
+    // Check if it has an official name
+    if (!state.holidayNames[day]) {
+      state.holidayNames[day] = 'วันหยุด (กำหนดเอง)';
+    }
+  }
+  // Update header th
+  const th = document.querySelector(`.day-th[data-day="${day}"]`);
+  if (th) {
+    th.classList.toggle('holiday-day', isNowHoliday);
+    if (isNowHoliday) {
+      const name = state.holidayNames[day] || '';
+      th.title = `${name}\n(คลิกเพื่อยกเลิก)`;
+    } else {
+      th.title = `วันที่ ${day} — คลิกเพื่อทำสีเหลือง (วันหยุด)`;
+    }
+  }
+  // Update all cells in this column
+  document.querySelectorAll(`td[data-day="${day}"],.insp-cell[data-day="${day}"]`).forEach(td => {
+    td.classList.toggle('holiday-col', isNowHoliday);
+  });
+  queueAutoSave();
+}
+
+function applyCellStyle(td, val) {
+  const d = parseInt(td.dataset.day);
+  const isHol = state.holidays.includes(d);
+  td.className = 'check-cell';
+  if (isHol) td.classList.add('holiday-col');
+  if (val === '/') {
+    td.textContent = '/';
+    td.classList.add('slash');
+  } else {
+    td.textContent = '';
+  }
+}
+
+function renderAllCells() {
+  document.querySelectorAll('.check-cell[data-row]').forEach(td => {
+    const key = `${td.dataset.row}_${td.dataset.day}`;
+    applyCellStyle(td, state.cells[key] || '');
+  });
+  document.querySelectorAll('.insp-cell[data-day]').forEach(td => {
+    const d = parseInt(td.dataset.day);
+    renderInspCell(td, d);
+    td.classList.toggle('holiday-col', state.holidays.includes(d));
+  });
+  // Render holiday headers with names
+  document.querySelectorAll('.day-th[data-day]').forEach(th => {
+    const d = parseInt(th.dataset.day);
+    const isHol = state.holidays.includes(d);
+    th.classList.toggle('holiday-day', isHol);
+    const name = state.holidayNames[d];
+    th.title = isHol
+      ? `${name || 'วันหยุด'}\n(คลิกเพื่อยกเลิก)`
+      : `วันที่ ${d} — คลิกเพื่อทำสีเหลือง (วันหยุด)`;
+  });
+}
+
+// ================================================================
+//  INSPECTOR SIGNATURE CELL RENDER
+// ================================================================
+function renderInspCell(td, d) {
+  td.innerHTML = '';
+  const sig = state.inspectors[d];
+  if (sig) {
+    const img = document.createElement('img');
+    img.src = sig;
+    img.className = 'insp-sig-img';
+    img.title = `วันที่ ${d} — คลิกเพื่อเซ็นใหม่หรือลบ`;
+    td.appendChild(img);
+  } else {
+    const hint = document.createElement('div');
+    hint.className = 'insp-empty-hint';
+    hint.textContent = '✎';
+    td.appendChild(hint);
+  }
+}
+
+// ================================================================
+//  SIGNATURE PAD — helper functions (always query DOM fresh, no cached refs)
+// ================================================================
+let _sigDay = null;
+let _sigPainting = false;
+let _sigPX = 0, _sigPY = 0;
+
+function _sc()  { return document.getElementById('sig-canvas'); }
+function _sctx(){ return _sc().getContext('2d'); }
+function _sxy(e){
+  const c = _sc(), r = c.getBoundingClientRect();
+  return {
+    x: (e.clientX - r.left) * (c.width  / r.width),
+    y: (e.clientY - r.top)  * (c.height / r.height)
+  };
+}
+
+// Called by onpointerdown on the canvas element
+function sigDown(e) {
+  e.preventDefault();
+  const c = _sc();
+  c.setPointerCapture(e.pointerId);
+  _sigPainting = true;
+  const {x, y} = _sxy(e);
+  _sigPX = x; _sigPY = y;
+  const ctx = _sctx();
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.strokeStyle = '#1e293b';
+  ctx.lineWidth = e.pointerType === 'touch' ? 2.8
+                : e.pointerType === 'pen'   ? Math.max(1.5, 3*(e.pressure||0.5))
+                : 2.2;
+  ctx.beginPath();
+  ctx.arc(x, y, ctx.lineWidth/2, 0, Math.PI*2);
+  ctx.fillStyle = '#1e293b'; ctx.fill();
+}
+
+// Called by onpointermove on the canvas element
+function sigMove(e) {
+  e.preventDefault();
+  if (!_sigPainting) return;
+  const {x, y} = _sxy(e);
+  const ctx = _sctx();
+  if (e.pointerType === 'pen') ctx.lineWidth = Math.max(1.5, 3*(e.pressure||0.5));
+  ctx.beginPath();
+  ctx.moveTo(_sigPX, _sigPY);
+  ctx.lineTo(x, y);
+  ctx.stroke();
+  _sigPX = x; _sigPY = y;
+}
+
+// Called by onpointerup / onpointercancel on the canvas element
+function sigUp(e) { _sigPainting = false; }
+
+function openSigModal(day) {
+  _sigDay = day;
+  _sigPainting = false;
+  document.getElementById('sig-day-label').textContent = `วันที่ ${day}`;
+  document.getElementById('sig-overlay').style.display = 'flex';
+
+  // Reset canvas synchronously (dimensions already set in HTML attribute)
+  const c = _sc(), ctx = _sctx();
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, c.width, c.height);
+
+  // Restore existing signature
+  const existing = state.inspectors[day];
+  if (existing) {
+    const img = new Image();
+    img.onload = () => _sctx().drawImage(img, 0, 0, c.width, c.height);
+    img.src = existing;
+  }
+}
+
+function closeSigModal() {
+  document.getElementById('sig-overlay').style.display = 'none';
+  _sigDay = null; _sigPainting = false;
+}
+
+function clearSigCanvas() {
+  const c = _sc();
+  _sctx().fillStyle = '#fff';
+  _sctx().fillRect(0, 0, c.width, c.height);
+}
+
+function deleteSig() {
+  if (_sigDay === null) return;
+  state.inspectors[_sigDay] = '';
+  const td = document.querySelector(`.insp-cell[data-day="${_sigDay}"]`);
+  if (td) renderInspCell(td, _sigDay);
+  queueAutoSave();
+  closeSigModal();
+}
+
+function saveSig() {
+  if (_sigDay === null) return;
+  const c = _sc(), ctx = _sctx();
+  const px = ctx.getImageData(0,0,c.width,c.height).data;
+  let hasInk = false;
+  for (let i=0; i<px.length; i+=4) {
+    if (px[i]<240 || px[i+1]<240 || px[i+2]<240) { hasInk=true; break; }
+  }
+  if (!hasInk) { showStatus('กรุณาวาดลายเซ็นก่อนบันทึก'); return; }
+  state.inspectors[_sigDay] = c.toDataURL('image/jpeg', 0.75);
+  const td = document.querySelector(`.insp-cell[data-day="${_sigDay}"]`);
+  if (td) renderInspCell(td, _sigDay);
+  queueAutoSave();
+  showStatus(`บันทึกลายเซ็นวันที่ ${_sigDay} ✓`);
+  closeSigModal();
+}
+
+function attachSigEvents() {
+  // Only need to wire the overlay backdrop-click here;
+  // canvas draw events are inline (onpointerdown/move/up) in HTML
+  document.getElementById('sig-overlay').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeSigModal();
+  });
+}
+
+// ================================================================
+//  MONTH CHANGE
+// ================================================================
+function onMonthChange() {
+  const val = document.getElementById('f-month').value; // "YYYY-MM"
+  if (!val) return;
+  currentMonth = val;
+  const [y, m] = val.split('-').map(Number);
+  // Try load saved data first
+  const saved = localStorage.getItem(`bsc-${val}`);
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      state.cells      = {...(data.cells || {})};
+      state.inspectors = {...(data.inspectors || {})};
+      state.holidays   = [...(data.holidays || [])];
+      buildTable(y, m, false); // use saved holidays
+      applyData(data);
+      showStatus('โหลดข้อมูลที่บันทึกไว้แล้ว');
+    } catch(e) {
+      buildTable(y, m, true); // auto-holidays on error
+    }
+  } else {
+    buildTable(y, m, true); // fresh — auto-populate holidays
+    showStatus('ตั้งวันหยุดราชการอัตโนมัติตามปฏิทินไทย ✓');
+  }
+}
+
+// ================================================================
+//  DATA COLLECTION / APPLY
+// ================================================================
+function collectData() {
+  const fields = {};
+  ['f-work','f-eq-no','f-brand','f-model','f-month','f-custodian',
+   'f-notes','f-sig1','f-name1','f-date1','f-sig2','f-name2','f-date2'
+  ].forEach(id => { fields[id] = document.getElementById(id)?.value || ''; });
+  fields['f-machine-select'] = document.getElementById('f-machine-select')?.value || '';
+
+  return {
+    v: 3,
+    month: currentMonth,
+    fields,
+    cells: {...state.cells},
+    inspectors: {...state.inspectors},
+    holidays: [...state.holidays],
+    savedAt: new Date().toISOString()
+  };
+}
+
+function applyData(data) {
+  if (!data) return;
+  const f = data.fields || {};
+  const setVal = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.value = v; };
+  Object.entries(f).forEach(([id, v]) => setVal(id, v));
+  // Restore machine dropdown
+  if (f['f-machine-select']) setMachineByValue(f['f-machine-select']);
+
+  state.cells      = {...(data.cells || {})};
+  state.inspectors = {...(data.inspectors || {})};
+  state.holidays   = [...(data.holidays || [])];
+
+  const m = f['f-month'] || data.month || '';
+  if (m && m !== currentMonth) {
+    currentMonth = m;
+    setVal('f-month', m);
+    const [y, mo] = m.split('-').map(Number);
+    buildTable(y, mo);
+  }
+  renderAllCells();
+}
+
+// ================================================================
+//  LOCAL STORAGE
+// ================================================================
+let autoSaveTimer = null;
+function queueAutoSave() {
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(saveLocal, 1000);
+}
+
+function saveLocal() {
+  try {
+    const data = collectData();
+    const key = `bsc-${currentMonth || 'nomonth'}`;
+    localStorage.setItem(key, JSON.stringify(data));
+    // Keep index of saved months
+    const idx = JSON.parse(localStorage.getItem('bsc-index') || '[]');
+    if (!idx.includes(currentMonth)) { idx.push(currentMonth); localStorage.setItem('bsc-index', JSON.stringify(idx)); }
+    showStatus('บันทึกในเครื่องแล้ว ✓');
+  } catch(e) { showStatus('บันทึกไม่สำเร็จ: ' + e.message); }
+}
+
+function newForm() {
+  if (!confirm('เริ่มฟอร์มใหม่? ข้อมูลปัจจุบันจะถูกบันทึกไว้ในเครื่องอัตโนมัติก่อน')) return;
+  saveLocal();
+  state.cells      = {};
+  state.inspectors = {};
+  state.holidays   = [];
+  ['f-eq-no','f-model','f-custodian',
+   'f-notes','f-sig1','f-name1','f-date1','f-sig2','f-name2','f-date2'
+  ].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  applyFixed(); // คืนค่าคงที่เสมอ
+  const now = new Date();
+  const m = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  document.getElementById('f-month').value = m;
+  currentMonth = m;
+  const [y, mo] = m.split('-').map(Number);
+  buildTable(y, mo);
+  driveFileId = null;
+  showStatus('เริ่มฟอร์มใหม่แล้ว');
+}
+
+// ================================================================
+//  EXPORT EXCEL
+// ================================================================
+function exportExcel() {
+  const data = collectData();
+  const f = data.fields;
+  const [y, m] = (f['f-month'] || '2024-01').split('-').map(Number);
+  const daysInMonth = new Date(y, m, 0).getDate();
+
+  const aoa = [];
+  const push = (...args) => aoa.push(args.flat());
+
+  // Title
+  push(['แบบฟอร์มบันทึกการบำรุงรักษาเครื่อง Biological Safety Cabinet Class II/A2', ...Array(daysInMonth), 'F-CP-65602']);
+  push(['กลุ่มงานเทคนิคการแพทย์ โรงพยาบาลพระจอมเกล้า จังหวัดเพชรบุรี']);
+  push([`งาน: ${f['f-work'] || ''}`]);
+  push([`หมายเลขครุภัณฑ์: ${f['f-eq-no'] || ''}   ยี่ห้อ: ${f['f-brand'] || ''}   รุ่น: ${f['f-model'] || ''}`]);
+  push([`ประจำเดือน: ${f['f-month'] || ''}   ผู้ดูแลเครื่อง: ${f['f-custodian'] || ''}`]);
+  push([]);
+
+  // Table header (วันหยุดมีดาว *)
+  const hdr = ['รายการ'];
+  for (let d = 1; d <= daysInMonth; d++) hdr.push(data.holidays?.includes(d) ? `${d}*` : d);
+  push(hdr);
+
+  // Table rows
+  ROWS_DEF.forEach(row => {
+    if (row.type === 'section') {
+      push([row.label, ...Array(daysInMonth).fill('')]);
+    } else if (row.type === 'check') {
+      const r = [row.label];
+      for (let d = 1; d <= daysInMonth; d++) r.push(data.cells[`${row.key}_${d}`] || '');
+      push(r);
+    } else if (row.type === 'inspector') {
+      const r = ['ผู้ตรวจสอบ'];
+      for (let d = 1; d <= daysInMonth; d++) r.push(data.inspectors[d] || '');
+      push(r);
+    }
+  });
+
+  push([]);
+  push([`หมายเหตุ: ${f['f-notes'] || ''}`]);
+  push([]);
+
+  const blanks = Array(Math.floor(daysInMonth / 2) - 1).fill('');
+  push(['ผู้รับผิดชอบ', ...blanks, '', 'หัวหน้างาน']);
+  push([`ลายเซ็น: ${f['f-sig1'] || ''}`, ...blanks, '', `ลายเซ็น: ${f['f-sig2'] || ''}`]);
+  push([`(${f['f-name1'] || ''})`, ...blanks, '', `(${f['f-name2'] || ''})`]);
+  push([`วันที่: ${f['f-date1'] || ''}`, ...blanks, '', `วันที่: ${f['f-date2'] || ''}`]);
+
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+
+  // Column widths
+  ws['!cols'] = [{ wch: 35 }, ...Array(daysInMonth).fill({ wch: 5 })];
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'BSC Maintenance');
+  XLSX.writeFile(wb, `BSC_Maintenance_${f['f-month'] || 'export'}.xlsx`);
+  showStatus('Export Excel สำเร็จ ✓');
+}
+
+// ================================================================
+//  JSON DOWNLOAD / UPLOAD (manual Drive alternative)
+// ================================================================
+function downloadJSON() {
+  const data = collectData();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `BSC_Maintenance_${currentMonth || 'data'}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showStatus('Download JSON สำเร็จ');
+}
+
+function uploadJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      applyData(data);
+      showStatus('โหลด JSON สำเร็จ ✓');
+      closeDriveModal();
+    } catch(err) {
+      showDriveAlert('ไฟล์ JSON ไม่ถูกต้อง: ' + err.message, 'error');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ================================================================
+//  GOOGLE SHEETS EXPORT (create/update sheet in Drive)
+// ================================================================
+const SHEETS_SCOPE = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file';
+let sheetsToken = null;
+let sheetsTokenClient = null;
+let sheetsFileId = null;
+
+function saveAsGoogleSheets() {
+  const cid = localStorage.getItem('bsc-client-id') || '';
+  if (!cid) {
+    const input = prompt('กรุณาใส่ Google OAuth 2.0 Client ID\n(สร้างได้ที่ console.cloud.google.com/apis/credentials)');
+    if (!input) return;
+    localStorage.setItem('bsc-client-id', input.trim());
+  }
+  const clientId = localStorage.getItem('bsc-client-id');
+  if (!clientId) return;
+
+  if (sheetsToken) { doSaveSheets(); return; }
+
+  const loadAndAuth = () => {
+    sheetsTokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: clientId,
+      scope: SHEETS_SCOPE,
+      callback: (resp) => {
+        if (resp.error) { alert('เชื่อมต่อไม่สำเร็จ: ' + resp.error_description); return; }
+        sheetsToken = resp.access_token;
+        doSaveSheets();
+      }
+    });
+    sheetsTokenClient.requestAccessToken({ prompt: '' });
+  };
+
+  if (typeof google === 'undefined') {
+    const s = document.createElement('script');
+    s.src = 'https://accounts.google.com/gsi/client';
+    s.onload = loadAndAuth;
+    document.head.appendChild(s);
+  } else { loadAndAuth(); }
+}
+
+async function doSaveSheets() {
+  const data = collectData();
+  const f = data.fields;
+  const [y, mo] = (f['f-month'] || '2024-01').split('-').map(Number);
+  const daysInMonth = new Date(y, mo, 0).getDate();
+  const months = ['','มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
+                  'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  const sheetTitle = `BSC_Maintenance_${f['f-month'] || 'data'}`;
+  showStatus('⏳ กำลังบันทึกลง Google Sheets...');
+
+  // Build rows
+  const values = [];
+  values.push(['แบบฟอร์มบันทึกการบำรุงรักษาเครื่อง Biological Safety Cabinet Class II/A2', ...Array(daysInMonth+1).fill(''), 'F-CP-65602']);
+  values.push(['กลุ่มงานเทคนิคการแพทย์ โรงพยาบาลพระจอมเกล้า จังหวัดเพชรบุรี']);
+  values.push([`งาน: ${f['f-work']||''}   หมายเลขครุภัณฑ์: ${f['f-eq-no']||''}   ยี่ห้อ: ${f['f-brand']||''}   รุ่น: ${f['f-model']||''}`]);
+  values.push([`ประจำเดือน: ${months[mo]} พ.ศ. ${y+543}   ผู้ดูแลเครื่อง: ${f['f-custodian']||''}`]);
+  values.push([]);
+
+  // Header row: รายการ + 1..N
+  const hdr = ['รายการ'];
+  for (let d = 1; d <= daysInMonth; d++) {
+    hdr.push(data.holidays?.includes(d) ? `${d}★` : d);
+  }
+  values.push(hdr);
+
+  // Data rows
+  ROWS_DEF.forEach(row => {
+    if (row.type === 'section') {
+      values.push([row.label, ...Array(daysInMonth).fill('')]);
+    } else if (row.type === 'check') {
+      const r = [row.label];
+      for (let d = 1; d <= daysInMonth; d++) r.push(data.cells[`${row.key}_${d}`] || '');
+      values.push(r);
+    } else if (row.type === 'inspector') {
+      const r = ['ผู้ตรวจสอบ'];
+      for (let d = 1; d <= daysInMonth; d++) r.push(data.inspectors[d] || '');
+      values.push(r);
+    }
+  });
+
+  values.push([]);
+  values.push([`หมายเหตุ: ${f['f-notes']||''}`]);
+  values.push([]);
+  values.push([`ผู้รับผิดชอบ: ${f['f-sig1']||''} (${f['f-name1']||''})  วันที่: ${f['f-date1']||''}`,
+               ...Array(daysInMonth-2).fill(''),
+               `หัวหน้างาน: ${f['f-sig2']||''} (${f['f-name2']||''})  วันที่: ${f['f-date2']||''}`]);
+
+  try {
+    let spreadsheetId = sheetsFileId;
+
+    if (!spreadsheetId) {
+      // Search for existing sheet
+      const q = encodeURIComponent(`name='${sheetTitle}' and trashed=false and mimeType='application/vnd.google-apps.spreadsheet'`);
+      const search = await fetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name)`,
+        { headers: { Authorization: `Bearer ${sheetsToken}` } });
+      const sd = await search.json();
+      if (sd.files?.length) spreadsheetId = sd.files[0].id;
+    }
+
+    if (spreadsheetId) {
+      // Clear and update
+      await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/A1:AJ200:clear`,
+        { method: 'POST', headers: { Authorization: `Bearer ${sheetsToken}` } });
+      await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/A1?valueInputOption=RAW`,
+        { method: 'PUT',
+          headers: { Authorization: `Bearer ${sheetsToken}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ values }) });
+    } else {
+      // Create new spreadsheet
+      const res = await fetch('https://sheets.googleapis.com/v4/spreadsheets',
+        { method: 'POST',
+          headers: { Authorization: `Bearer ${sheetsToken}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ properties: { title: sheetTitle },
+            sheets: [{ properties: { title: 'BSC Maintenance' } }] }) });
+      const created = await res.json();
+      spreadsheetId = created.spreadsheetId;
+      sheetsFileId = spreadsheetId;
+      // Write data
+      await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/A1?valueInputOption=RAW`,
+        { method: 'PUT',
+          headers: { Authorization: `Bearer ${sheetsToken}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ values }) });
+    }
+    sheetsFileId = spreadsheetId;
+    showStatus(`✓ บันทึกลง Google Sheets: "${sheetTitle}" สำเร็จ`);
+    // Open in new tab
+    if (confirm('บันทึกลง Google Sheets สำเร็จ!\nเปิดไปดูที่ Google Sheets?')) {
+      window.open(`https://docs.google.com/spreadsheets/d/${spreadsheetId}`, '_blank');
+    }
+  } catch(e) {
+    console.error(e);
+    showStatus('✗ บันทึก Sheets ไม่สำเร็จ: ' + e.message);
+  }
+}
+
+// ================================================================
+//  GOOGLE DRIVE
+// ================================================================
+function openDriveModal() {
+  const cid = localStorage.getItem('bsc-client-id') || '';
+  document.getElementById('client-id-input').value = cid;
+  if (accessToken) {
+    showDriveConnected();
+  } else {
+    showDriveSetup();
+  }
+  document.getElementById('overlay-drive').classList.add('open');
+}
+
+function closeDriveModal() {
+  document.getElementById('overlay-drive').classList.remove('open');
+}
+
+function showDriveSetup() {
+  document.getElementById('drive-setup-section').style.display = 'block';
+  document.getElementById('drive-connected-section').style.display = 'none';
+  document.getElementById('drive-modal-actions').style.display = 'flex';
+  document.getElementById('drive-actions-connected').style.display = 'none';
+  document.getElementById('btn-drive-connect').style.display = 'inline-block';
+  document.getElementById('drive-alert').innerHTML = '';
+}
+
+function showDriveConnected() {
+  document.getElementById('drive-setup-section').style.display = 'none';
+  document.getElementById('drive-connected-section').style.display = 'block';
+  document.getElementById('drive-modal-actions').style.display = 'none';
+  document.getElementById('drive-actions-connected').style.display = 'block';
+  document.getElementById('drive-alert').innerHTML = '';
+}
+
+function showDriveAlert(msg, type = 'info') {
+  const cls = type === 'error' ? 'alert-error' : type === 'success' ? 'alert-success' : 'alert-info';
+  document.getElementById('drive-alert').innerHTML = `<div class="alert-box ${cls}">${msg}</div>`;
+}
+
+function connectDrive() {
+  const cid = document.getElementById('client-id-input').value.trim();
+  if (!cid) { showDriveAlert('กรุณาใส่ Client ID', 'error'); return; }
+  localStorage.setItem('bsc-client-id', cid);
+
+  const btn = document.getElementById('btn-drive-connect');
+  btn.innerHTML = '<span class="spinner"></span> กำลังเชื่อมต่อ...';
+  btn.disabled = true;
+
+  if (typeof google === 'undefined') {
+    const s = document.createElement('script');
+    s.src = 'https://accounts.google.com/gsi/client';
+    s.onload = () => initTokenClient(cid);
+    s.onerror = () => {
+      showDriveAlert('โหลด Google API ไม่สำเร็จ ตรวจสอบการเชื่อมต่ออินเทอร์เน็ต', 'error');
+      btn.innerHTML = '🔗 เชื่อมต่อ Google';
+      btn.disabled = false;
+    };
+    document.head.appendChild(s);
+  } else {
+    initTokenClient(cid);
+  }
+}
+
+function initTokenClient(cid) {
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: cid,
+    scope: DRIVE_SCOPE,
+    callback: (resp) => {
+      const btn = document.getElementById('btn-drive-connect');
+      if (resp.error) {
+        showDriveAlert('เกิดข้อผิดพลาด: ' + resp.error_description, 'error');
+        btn.innerHTML = '🔗 เชื่อมต่อ Google';
+        btn.disabled = false;
+        return;
+      }
+      accessToken = resp.access_token;
+      document.getElementById('drive-dot').classList.add('on');
+      document.getElementById('drive-label').textContent = 'Google Drive: เชื่อมต่อแล้ว';
+      showStatus('เชื่อมต่อ Google Drive สำเร็จ ✓');
+      showDriveConnected();
+    }
+  });
+  tokenClient.requestAccessToken({ prompt: '' });
+}
+
+function driveDisconnect() {
+  if (accessToken && typeof google !== 'undefined') {
+    google.accounts.oauth2.revoke(accessToken, () => {});
+  }
+  accessToken = null;
+  driveFileId = null;
+  document.getElementById('drive-dot').classList.remove('on');
+  document.getElementById('drive-label').textContent = 'Google Drive: ยังไม่เชื่อมต่อ';
+  showDriveSetup();
+  showStatus('ยกเลิกการเชื่อมต่อ Google Drive แล้ว');
+}
+
+// Save current form to Drive
+async function saveToDrive() {
+  if (!accessToken) { showDriveAlert('กรุณาเชื่อมต่อ Google Drive ก่อน', 'error'); return; }
+  const data = collectData();
+  const filename = `BSC_Maintenance_${currentMonth || 'data'}.json`;
+  const content = JSON.stringify(data, null, 2);
+
+  showDriveAlert('⏳ กำลังบันทึก...', 'info');
+  try {
+    if (driveFileId) {
+      // Patch existing
+      const res = await driveAPI(`https://www.googleapis.com/upload/drive/v3/files/${driveFileId}?uploadType=media`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: content
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    } else {
+      // Search first
+      const searchRes = await driveAPI(
+        `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(`name='${filename}' and trashed=false`)}&fields=files(id,name,modifiedTime)`
+      );
+      const searchData = await searchRes.json();
+
+      if (searchData.files?.length > 0) {
+        driveFileId = searchData.files[0].id;
+        const res = await driveAPI(`https://www.googleapis.com/upload/drive/v3/files/${driveFileId}?uploadType=media`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: content
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      } else {
+        // Create new
+        const boundary = 'bsc_mpart_001';
+        const meta = JSON.stringify({ name: filename, mimeType: 'application/json' });
+        const multipart = `--${boundary}\r\nContent-Type: application/json\r\n\r\n${meta}\r\n--${boundary}\r\nContent-Type: application/json\r\n\r\n${content}\r\n--${boundary}--`;
+        const res = await driveAPI(
+          'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',
+          { method: 'POST', headers: { 'Content-Type': `multipart/related; boundary=${boundary}` }, body: multipart }
+        );
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const created = await res.json();
+        driveFileId = created.id;
+      }
+    }
+    showDriveAlert(`✓ บันทึกลง Drive สำเร็จ: <strong>${filename}</strong>`, 'success');
+    showStatus('บันทึกลง Google Drive สำเร็จ ✓');
+  } catch(e) {
+    showDriveAlert('✗ บันทึกไม่สำเร็จ: ' + e.message, 'error');
+  }
+}
+
+// Load from Drive (search for current month's file)
+async function loadFromDrive() {
+  if (!accessToken) { showDriveAlert('กรุณาเชื่อมต่อ Google Drive ก่อน', 'error'); return; }
+  showDriveAlert('⏳ กำลังค้นหาไฟล์...', 'info');
+  try {
+    // Search for BSC files
+    const q = encodeURIComponent(`name contains 'BSC_Maintenance' and trashed=false and mimeType='application/json'`);
+    const res = await driveAPI(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name,modifiedTime)&orderBy=modifiedTime+desc`);
+    const data = await res.json();
+
+    if (!data.files?.length) {
+      showDriveAlert('ไม่พบไฟล์ BSC Maintenance ใน Drive', 'error');
+      return;
+    }
+
+    // Show file list
+    const listEl = document.getElementById('drive-files-list');
+    listEl.innerHTML = '<div class="modal-section-title">เลือกไฟล์ที่ต้องการโหลด:</div><div class="drive-file-list">' +
+      data.files.map(f => {
+        const date = new Date(f.modifiedTime).toLocaleString('th-TH');
+        return `<div class="drive-file-item" onclick="loadDriveFile('${f.id}','${f.name}')">
+          <span class="file-icon">📄</span>
+          <div class="drive-file-info">
+            <div class="drive-file-name">${f.name}</div>
+            <div class="drive-file-date">แก้ไขล่าสุด: ${date}</div>
+          </div>
+        </div>`;
+      }).join('') + '</div>';
+    document.getElementById('drive-alert').innerHTML = '';
+  } catch(e) {
+    showDriveAlert('✗ โหลดไม่สำเร็จ: ' + e.message, 'error');
+  }
+}
+
+async function loadDriveFile(fileId, filename) {
+  showDriveAlert(`⏳ กำลังโหลด ${filename}...`, 'info');
+  try {
+    const res = await driveAPI(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    driveFileId = fileId;
+    applyData(data);
+    showStatus(`โหลดจาก Drive สำเร็จ: ${filename} ✓`);
+    closeDriveModal();
+  } catch(e) {
+    showDriveAlert('✗ โหลดไม่สำเร็จ: ' + e.message, 'error');
+  }
+}
+
+function driveAPI(url, opts = {}) {
+  return fetch(url, {
+    ...opts,
+    headers: { 'Authorization': `Bearer ${accessToken}`, ...(opts.headers || {}) }
+  });
+}
+
+// ================================================================
+//  STATUS BAR
+// ================================================================
+let statusTimer = null;
+function showStatus(msg) {
+  document.getElementById('status-msg').textContent = msg;
+  clearTimeout(statusTimer);
+  statusTimer = setTimeout(() => {
+    document.getElementById('status-msg').textContent =
+      'พร้อมใช้งาน ✓ บันทึกอัตโนมัติทุกครั้ง';
+  }, 4000);
+}
+
+// ================================================================
+//  FIXED DEFAULTS (ค่าคงที่)
+// ================================================================
+const FIXED = {
+  'f-work':  'Molecular',
+  'f-brand': 'Biobase',
+};
+function applyFixed() {
+  Object.entries(FIXED).forEach(([id, v]) => {
+    const el = document.getElementById(id);
+    if (el) el.value = v;
+  });
+}
+
+// ================================================================
+//  MACHINE SELECTOR
+// ================================================================
+const MACHINES = {
+  '1': { no: '6525-003-5205-2/63', model: 'BSC-1500IIA2-X' },
+  '2': { no: '6525-003-5204-1/63', model: 'BSC-1300IIA2-X' },
+};
+
+function onMachineSelect(sel) {
+  const machine  = MACHINES[sel.value];
+  const noEl     = document.getElementById('f-eq-no');
+  const mdlEl    = document.getElementById('f-model');
+  const infoBar  = document.getElementById('machine-info-bar');
+
+  if (machine) {
+    noEl.value  = machine.no;
+    mdlEl.value = machine.model;
+    if (infoBar) infoBar.innerHTML =
+      `<span>🏷 หมายเลขครุภัณฑ์:</span>
+       <strong style="color:#1d4ed8">${machine.no}</strong>
+       <span style="margin-left:16px">🔧 รุ่น:</span>
+       <strong style="color:#1d4ed8">${machine.model}</strong>`;
+  } else {
+    noEl.value  = '';
+    mdlEl.value = '';
+    if (infoBar) infoBar.innerHTML = '<span style="color:#94a3b8">── กรุณาเลือกเครื่อง BSC ──</span>';
+  }
+  queueAutoSave();
+}
+
+function setMachineByValue(val) {
+  const sel = document.getElementById('f-machine-select');
+  if (!sel) return;
+  sel.value = val || '';
+  onMachineSelect(sel);
+}
+
+// ================================================================
+//  INIT
+// ================================================================
+(function init() {
+  // Set default month to current
+  const now = new Date();
+  const m = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  document.getElementById('f-month').value = m;
+  currentMonth = m;
+
+  // Build table + auto or saved holidays
+  const saved = localStorage.getItem(`bsc-${m}`);
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      state.cells      = {...(data.cells || {})};
+      state.inspectors = {...(data.inspectors || {})};
+      state.holidays   = [...(data.holidays || [])];
+      buildTable(now.getFullYear(), now.getMonth() + 1, false);
+      applyData(data);
+      showStatus('โหลดข้อมูลที่บันทึกไว้แล้ว');
+    } catch(e) {
+      buildTable(now.getFullYear(), now.getMonth() + 1, true);
+    }
+  } else {
+    buildTable(now.getFullYear(), now.getMonth() + 1, true);
+    showStatus('ตั้งวันหยุดราชการอัตโนมัติตามปฏิทินไทย ✓');
+  }
+
+  // Re-apply fixed values
+  applyFixed();
+  setMachineByValue('1');
+  const selEl = document.getElementById('f-machine-select');
+  if (selEl && !selEl.value) setMachineByValue('1');
+
+  // Auto-save on field changes
+  ['f-work','f-eq-no','f-brand','f-model','f-custodian',
+   'f-notes','f-sig1','f-name1','f-date1','f-sig2','f-name2','f-date2'
+  ].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', queueAutoSave);
+  });
+
+  // Attach signature pad events
+  attachSigEvents();
+})();
+</script>
+
+<!-- ===== SIGNATURE MODAL ===== -->
+<div id="sig-overlay" class="sig-overlay" style="display:none">
+  <div class="sig-box">
+    <div class="sig-box-header">
+      <span class="sig-box-title">
+        ✍️ ลายเซ็นผู้ตรวจสอบ
+        <span id="sig-day-label" class="sig-day-badge"></span>
+      </span>
+      <button class="sig-close" onclick="closeSigModal()">✕</button>
+    </div>
+    <canvas id="sig-canvas" width="430" height="150"
+      onpointerdown="sigDown(event)"
+      onpointermove="sigMove(event)"
+      onpointerup="sigUp(event)"
+      onpointercancel="sigUp(event)"></canvas>
+    <div class="sig-hint">วาดลายเซ็นด้วยนิ้ว/เมาส์ในกรอบด้านบน (รองรับเมาส์ / ปากกา stylus / นิ้วสัมผัส)</div>
+    <div class="sig-box-footer">
+      <button class="btn btn-red" onclick="deleteSig()">🗑 ลบลายเซ็น</button>
+      <button class="btn btn-white" style="border:1px solid #e2e8f0" onclick="clearSigCanvas()">ล้าง</button>
+      <button class="btn btn-green" onclick="saveSig()">✓ บันทึก</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
