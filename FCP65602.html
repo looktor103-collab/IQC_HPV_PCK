@@ -672,6 +672,42 @@ body{
 
 <script>
 // ================================================================
+//  PRELOAD GOOGLE IDENTITY SERVICES (GIS)
+//  โหลดสคริปต์นี้ตั้งแต่หน้าเว็บเปิดเลย ไม่รอให้กดปุ่มก่อน — ถ้าโหลดแบบ lazy
+//  (โหลดตอนคลิกปุ่ม แล้วเปิด popup ใน .onload) เบราว์เซอร์บางตัว (โดยเฉพาะ
+//  Chrome) จะมองว่า popup นั้นไม่ได้มาจาก user gesture โดยตรง แล้วบล็อก
+//  popup เงียบๆ โดยไม่ error ปุ่มเลยค้างที่ "กำลังเชื่อมต่อ..." ตลอดไป
+// ================================================================
+let gisReady = false;
+let gisLoadFailed = false;
+(function preloadGIS(){
+  const s = document.createElement('script');
+  s.src = 'https://accounts.google.com/gsi/client';
+  s.async = true;
+  s.onload = () => { gisReady = true; };
+  s.onerror = () => { gisLoadFailed = true; };
+  document.head.appendChild(s);
+})();
+
+// เรียกก่อนใช้ google.accounts ทุกครั้ง — คืนค่า true ถ้าพร้อมใช้ทันที,
+// false ถ้ายังไม่พร้อม (ผู้เรียกต้อง handle เอง เช่นแจ้งให้รอแล้วลองใหม่)
+function ensureGIS(onReady, onFail) {
+  if (typeof google !== 'undefined' && google.accounts) { onReady(); return; }
+  if (gisLoadFailed) { onFail('โหลด Google API ไม่สำเร็จ ตรวจสอบการเชื่อมต่ออินเทอร์เน็ตแล้วลองใหม่'); return; }
+  // ยังโหลดไม่เสร็จ (เน็ตช้า/เพิ่งเปิดหน้า) — รอสักครู่แล้วเช็คซ้ำ แทนที่จะ
+  // สร้าง <script> ซ้อนที่จะทำให้ popup ถูกบล็อกอีก
+  let waited = 0;
+  const iv = setInterval(() => {
+    waited += 200;
+    if (typeof google !== 'undefined' && google.accounts) {
+      clearInterval(iv); onReady();
+    } else if (gisLoadFailed || waited >= 8000) {
+      clearInterval(iv); onFail('Google API ยังโหลดไม่เสร็จ กรุณารอสักครู่แล้วกดปุ่มนี้อีกครั้ง');
+    }
+  }, 200);
+}
+
+// ================================================================
 //  CONSTANTS & STATE
 // ================================================================
 const ROWS_DEF = [
@@ -1387,26 +1423,32 @@ function saveAsGoogleSheets() {
 
   if (sheetsToken) { doSaveSheets(); return; }
 
-  const loadAndAuth = () => {
-    sheetsTokenClient = google.accounts.oauth2.initTokenClient({
-      client_id: clientId,
-      scope: SHEETS_SCOPE,
-      callback: (resp) => {
-        if (resp.error) { alert('เชื่อมต่อไม่สำเร็จ: ' + resp.error_description); return; }
-        sheetsToken = resp.access_token;
-        doSaveSheets();
-      }
-    });
-    sheetsTokenClient.requestAccessToken({ prompt: '' });
-  };
-
-  if (typeof google === 'undefined') {
-    const s = document.createElement('script');
-    s.src = 'https://accounts.google.com/gsi/client';
-    s.onload = loadAndAuth;
-    document.head.appendChild(s);
-  } else { loadAndAuth(); }
+  ensureGIS(
+    () => requestSheetsToken(clientId),
+    (msg) => showStatus('✗ ' + msg)
+  );
 }
+
+function requestSheetsToken(clientId) {
+  sheetsTokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: clientId,
+    scope: SHEETS_SCOPE,
+    callback: (resp) => {
+      clearTimeout(sheetsAuthWatchdog);
+      if (resp.error) { alert('เชื่อมต่อไม่สำเร็จ: ' + resp.error_description); return; }
+      sheetsToken = resp.access_token;
+      doSaveSheets();
+    }
+  });
+  showStatus('⏳ กำลังเปิดหน้าต่างล็อกอิน Google...');
+  sheetsTokenClient.requestAccessToken({ prompt: '' });
+  // ถ้า 10 วินาทีแล้ว callback ยังไม่ทำงาน แปลว่า popup ถูกเบราว์เซอร์บล็อกเงียบๆ
+  clearTimeout(sheetsAuthWatchdog);
+  sheetsAuthWatchdog = setTimeout(() => {
+    if (!sheetsToken) showStatus('✗ ไม่มีหน้าต่างล็อกอินเด้งขึ้น — เบราว์เซอร์อาจบล็อก popup กรุณาอนุญาต popup สำหรับเว็บนี้แล้วลองใหม่');
+  }, 10000);
+}
+let sheetsAuthWatchdog = null;
 
 async function doSaveSheets() {
   const data = collectData();
@@ -1546,26 +1588,23 @@ function connectDrive() {
   btn.innerHTML = '<span class="spinner"></span> กำลังเชื่อมต่อ...';
   btn.disabled = true;
 
-  if (typeof google === 'undefined') {
-    const s = document.createElement('script');
-    s.src = 'https://accounts.google.com/gsi/client';
-    s.onload = () => initTokenClient(cid);
-    s.onerror = () => {
-      showDriveAlert('โหลด Google API ไม่สำเร็จ ตรวจสอบการเชื่อมต่ออินเทอร์เน็ต', 'error');
+  ensureGIS(
+    () => initTokenClient(cid),
+    (msg) => {
+      showDriveAlert(msg, 'error');
       btn.innerHTML = '🔗 เชื่อมต่อ Google';
       btn.disabled = false;
-    };
-    document.head.appendChild(s);
-  } else {
-    initTokenClient(cid);
-  }
+    }
+  );
 }
 
+let driveAuthWatchdog = null;
 function initTokenClient(cid) {
   tokenClient = google.accounts.oauth2.initTokenClient({
     client_id: cid,
     scope: DRIVE_SCOPE,
     callback: (resp) => {
+      clearTimeout(driveAuthWatchdog);
       const btn = document.getElementById('btn-drive-connect');
       if (resp.error) {
         showDriveAlert('เกิดข้อผิดพลาด: ' + resp.error_description, 'error');
@@ -1581,6 +1620,17 @@ function initTokenClient(cid) {
     }
   });
   tokenClient.requestAccessToken({ prompt: '' });
+  // ถ้า 10 วินาทีแล้ว callback ยังไม่ทำงาน แปลว่า popup ถูกเบราว์เซอร์บล็อกเงียบๆ —
+  // เลิกหมุนปุ่มค้าง แล้วบอกวิธีแก้ที่ตรงจุดแทน
+  clearTimeout(driveAuthWatchdog);
+  driveAuthWatchdog = setTimeout(() => {
+    if (!accessToken) {
+      const btn = document.getElementById('btn-drive-connect');
+      showDriveAlert('ไม่มีหน้าต่างล็อกอิน Google เด้งขึ้น — เบราว์เซอร์บล็อก popup ไว้ ให้กดไอคอน 🚫 ที่แถบที่อยู่ (ขวาบนของ Chrome) แล้วเลือก "อนุญาต popup เสมอสำหรับเว็บนี้" จากนั้นกดปุ่มนี้อีกครั้ง', 'error');
+      btn.innerHTML = '🔗 เชื่อมต่อ Google';
+      btn.disabled = false;
+    }
+  }, 10000);
 }
 
 function driveDisconnect() {
