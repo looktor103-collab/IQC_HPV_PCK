@@ -1365,7 +1365,9 @@ function uploadJSON(event) {
 // ================================================================
 //  GOOGLE SHEETS EXPORT (create/update sheet in Drive)
 // ================================================================
-const SHEETS_SCOPE = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file';
+// เฉพาะสิทธิ์ Google Sheets เท่านั้น — ปุ่มนี้ไม่แตะ Google Drive API เลย
+// (เปิดใช้งานแค่ "Google Sheets API" ใน Google Cloud Console ก็พอ ไม่ต้องเปิด Drive API)
+const SHEETS_SCOPE = 'https://www.googleapis.com/auth/spreadsheets';
 // ไฟล์ Google Sheets จริงของหน่วยงาน (F-CP-65602 แบบฟอร์มบันทึกการบำรุงรักษาเครื่อง Biological Safety.xlsx)
 // ปุ่ม "Google Sheets" จะบันทึกข้อมูลเป็นแท็บใหม่ในไฟล์นี้โดยตรง ไม่สร้างไฟล์ใหม่แยกต่างหาก
 const TARGET_SPREADSHEET_ID = '14emeYCC3xQ9UdGp3xuz6nYPy29fPEUET';
