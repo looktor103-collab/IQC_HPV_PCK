@@ -425,7 +425,7 @@ body{
     <button class="btn btn-teal" onclick="exportExcel()" title="Export เป็น Excel">
       <span class="btn-icon">📊</span> Export Excel
     </button>
-    <button class="btn btn-green" onclick="saveAsGoogleSheets()" title="บันทึกลง Google Sheets">
+    <button class="btn btn-green" onclick="saveAsGoogleSheets()" title="บันทึกลงไฟล์ Google Sheets จริง (แท็บตามเดือน)">
       <span class="btn-icon">🟢</span> Google Sheets
     </button>
     <button class="btn btn-green" onclick="openDriveModal()" title="Google Drive (JSON)" style="background:#1a73e8">
@@ -1366,6 +1366,9 @@ function uploadJSON(event) {
 //  GOOGLE SHEETS EXPORT (create/update sheet in Drive)
 // ================================================================
 const SHEETS_SCOPE = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file';
+// ไฟล์ Google Sheets จริงของหน่วยงาน (F-CP-65602 แบบฟอร์มบันทึกการบำรุงรักษาเครื่อง Biological Safety.xlsx)
+// ปุ่ม "Google Sheets" จะบันทึกข้อมูลเป็นแท็บใหม่ในไฟล์นี้โดยตรง ไม่สร้างไฟล์ใหม่แยกต่างหาก
+const TARGET_SPREADSHEET_ID = '14emeYCC3xQ9UdGp3xuz6nYPy29fPEUET';
 let sheetsToken = null;
 let sheetsTokenClient = null;
 let sheetsFileId = null;
@@ -1410,7 +1413,7 @@ async function doSaveSheets() {
   const daysInMonth = new Date(y, mo, 0).getDate();
   const months = ['','มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
                   'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-  const sheetTitle = `BSC_Maintenance_${f['f-month'] || 'data'}`;
+  const tabTitle = `BSC_${f['f-month'] || 'data'}`;
   showStatus('⏳ กำลังบันทึกลง Google Sheets...');
 
   // Build rows
@@ -1451,46 +1454,40 @@ async function doSaveSheets() {
                `หัวหน้างาน: ${f['f-sig2']||''} (${f['f-name2']||''})  วันที่: ${f['f-date2']||''}`]);
 
   try {
-    let spreadsheetId = sheetsFileId;
+    const spreadsheetId = TARGET_SPREADSHEET_ID;
+    sheetsFileId = spreadsheetId;
 
-    if (!spreadsheetId) {
-      // Search for existing sheet
-      const q = encodeURIComponent(`name='${sheetTitle}' and trashed=false and mimeType='application/vnd.google-apps.spreadsheet'`);
-      const search = await fetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name)`,
-        { headers: { Authorization: `Bearer ${sheetsToken}` } });
-      const sd = await search.json();
-      if (sd.files?.length) spreadsheetId = sd.files[0].id;
-    }
+    // Look up existing tabs in the workbook (ตาม tab ที่มีอยู่แล้ว เช่น BSC, C6800)
+    const metaRes = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?fields=sheets.properties`,
+      { headers: { Authorization: `Bearer ${sheetsToken}` } });
+    if (!metaRes.ok) throw new Error(`HTTP ${metaRes.status} — ตรวจสอบว่าบัญชี Google ที่ล็อกอินมีสิทธิ์แก้ไขไฟล์นี้`);
+    const meta = await metaRes.json();
+    let sheetProps = (meta.sheets || []).map(s => s.properties).find(p => p.title === tabTitle);
 
-    if (spreadsheetId) {
-      // Clear and update
-      await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/A1:AJ200:clear`,
-        { method: 'POST', headers: { Authorization: `Bearer ${sheetsToken}` } });
-      await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/A1?valueInputOption=RAW`,
-        { method: 'PUT',
-          headers: { Authorization: `Bearer ${sheetsToken}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ values }) });
-    } else {
-      // Create new spreadsheet
-      const res = await fetch('https://sheets.googleapis.com/v4/spreadsheets',
+    if (!sheetProps) {
+      // ยังไม่มีแท็บของเดือนนี้ — สร้างแท็บใหม่ในไฟล์เดิม
+      const addRes = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}:batchUpdate`,
         { method: 'POST',
           headers: { Authorization: `Bearer ${sheetsToken}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ properties: { title: sheetTitle },
-            sheets: [{ properties: { title: 'BSC Maintenance' } }] }) });
-      const created = await res.json();
-      spreadsheetId = created.spreadsheetId;
-      sheetsFileId = spreadsheetId;
-      // Write data
-      await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/A1?valueInputOption=RAW`,
-        { method: 'PUT',
-          headers: { Authorization: `Bearer ${sheetsToken}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ values }) });
+          body: JSON.stringify({ requests: [{ addSheet: { properties: { title: tabTitle } } }] }) });
+      if (!addRes.ok) throw new Error(`HTTP ${addRes.status}`);
+      const added = await addRes.json();
+      sheetProps = added.replies[0].addSheet.properties;
+    } else {
+      // มีแท็บของเดือนนี้อยู่แล้ว — ล้างข้อมูลเดิมก่อนเขียนทับ
+      await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(tabTitle)}!A1:AJ200:clear`,
+        { method: 'POST', headers: { Authorization: `Bearer ${sheetsToken}` } });
     }
-    sheetsFileId = spreadsheetId;
-    showStatus(`✓ บันทึกลง Google Sheets: "${sheetTitle}" สำเร็จ`);
-    // Open in new tab
-    if (confirm('บันทึกลง Google Sheets สำเร็จ!\nเปิดไปดูที่ Google Sheets?')) {
-      window.open(`https://docs.google.com/spreadsheets/d/${spreadsheetId}`, '_blank');
+
+    await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(tabTitle)}!A1?valueInputOption=RAW`,
+      { method: 'PUT',
+        headers: { Authorization: `Bearer ${sheetsToken}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ values }) });
+
+    showStatus(`✓ บันทึกลงแท็บ "${tabTitle}" ในไฟล์ Google Sheets สำเร็จ`);
+    // Open in new tab, jump straight to this month's sheet
+    if (confirm(`บันทึกลงแท็บ "${tabTitle}" สำเร็จ!\nเปิดไปดูที่ Google Sheets?`)) {
+      window.open(`https://docs.google.com/spreadsheets/d/${spreadsheetId}/edit#gid=${sheetProps.sheetId}`, '_blank');
     }
   } catch(e) {
     console.error(e);
