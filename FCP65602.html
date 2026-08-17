@@ -1497,33 +1497,46 @@ async function doSaveSheets() {
                ...Array(daysInMonth-2).fill(''),
                `หัวหน้างาน: ${f['f-sig2']||''} (${f['f-name2']||''})  วันที่: ${f['f-date2']||''}`]);
 
+  // เรียก Sheets API แล้วโยน Error ที่มีข้อความจริงจาก Google (ไม่ใช่แค่เลข HTTP status)
+  // เพื่อให้วินิจฉัยปัญหาได้ตรงจุด แทนที่จะต้องเดา
+  async function sheetsFetch(url, opts) {
+    const res = await fetch(url, opts);
+    if (!res.ok) {
+      let detail = '';
+      try {
+        const body = await res.json();
+        detail = body.error?.message || body.error?.status || '';
+      } catch(e) { /* response ไม่ใช่ JSON */ }
+      throw new Error(`HTTP ${res.status}` + (detail ? ` — ${detail}` : ''));
+    }
+    return res;
+  }
+
   try {
     const spreadsheetId = TARGET_SPREADSHEET_ID;
     sheetsFileId = spreadsheetId;
 
     // Look up existing tabs in the workbook (ตาม tab ที่มีอยู่แล้ว เช่น BSC, C6800)
-    const metaRes = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?fields=sheets.properties`,
+    const metaRes = await sheetsFetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?fields=sheets.properties`,
       { headers: { Authorization: `Bearer ${sheetsToken}` } });
-    if (!metaRes.ok) throw new Error(`HTTP ${metaRes.status} — ตรวจสอบว่าบัญชี Google ที่ล็อกอินมีสิทธิ์แก้ไขไฟล์นี้`);
     const meta = await metaRes.json();
     let sheetProps = (meta.sheets || []).map(s => s.properties).find(p => p.title === tabTitle);
 
     if (!sheetProps) {
       // ยังไม่มีแท็บของเดือนนี้ — สร้างแท็บใหม่ในไฟล์เดิม
-      const addRes = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}:batchUpdate`,
+      const addRes = await sheetsFetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}:batchUpdate`,
         { method: 'POST',
           headers: { Authorization: `Bearer ${sheetsToken}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({ requests: [{ addSheet: { properties: { title: tabTitle } } }] }) });
-      if (!addRes.ok) throw new Error(`HTTP ${addRes.status}`);
       const added = await addRes.json();
       sheetProps = added.replies[0].addSheet.properties;
     } else {
       // มีแท็บของเดือนนี้อยู่แล้ว — ล้างข้อมูลเดิมก่อนเขียนทับ
-      await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(tabTitle)}!A1:AJ200:clear`,
+      await sheetsFetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(`'${tabTitle}'!A1:AJ200`)}:clear`,
         { method: 'POST', headers: { Authorization: `Bearer ${sheetsToken}` } });
     }
 
-    await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(tabTitle)}!A1?valueInputOption=RAW`,
+    await sheetsFetch(`https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(`'${tabTitle}'!A1`)}?valueInputOption=RAW`,
       { method: 'PUT',
         headers: { Authorization: `Bearer ${sheetsToken}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ values }) });
