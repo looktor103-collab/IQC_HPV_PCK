@@ -1,0 +1,75 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   pck-compat.css — ชั้นแปลงชื่อตัวแปรเก่า
+   ───────────────────────────────────────────────────────────────────────────
+   หน้าเก่าบางหน้าใช้ชื่อตัวแปรคนละชุดกับ index.html
+   ไฟล์นี้ "แปลชื่อเก่า → token ใหม่" เพื่อให้เปลี่ยนธีมได้โดยไม่ต้องแก้ CSS ในหน้านั้นเลย
+
+   วิธีใช้ : ใส่ attribute หนึ่งตัวที่ <html>  เช่น
+             <html lang="th" data-legacy="blue">
+   แล้วโหลดไฟล์นี้ต่อจาก pck.css
+
+   ⚠️ ต้องโหลด "หลัง" pck.css เสมอ และต้องลบ :root{...} เดิมในหน้านั้นออก
+      ไม่งั้นตัวแปรในหน้าจะทับตัวแปรจากไฟล์กลาง
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── HPV_IQC_Dashboard.html · EQA_Summary.html · sop.html ────────────────────
+   ชุดสีน้ำเงิน #2563eb เดิม                                                */
+[data-legacy="blue"]{
+  --primary:var(--sky-dark);
+  --primary-light:var(--sky-mid);
+  --accent:var(--rose);
+  --muted:var(--text2);
+  --success:var(--pass);
+  --warning:var(--warn);
+  --danger:var(--fail);
+  --accent-light:var(--sky);
+}
+
+/* ── IQC/IQC_HIV_VL_Generator.html ───────────────────────────────────────── */
+[data-legacy="hiv"]{
+  --navy:var(--sky-dark);
+  --hpc:var(--rose);
+  --gray50:var(--surface-2);
+  --gray400:var(--text3);
+  --green:var(--pass);
+  --orange:var(--warn);
+}
+
+/* ── maintanance/6800/FCP68030_2.html ────────────────────────────────────── */
+[data-legacy="6800"]{
+  --blue:var(--sky-dark);
+  --gold:var(--gold-dark);
+  --gray:var(--text2);
+  --green:var(--pass);
+  --red:var(--fail);
+}
+
+/* ── EQA/covid/EQA_SARS-CoV-2_Dashboard.html ─────────────────────────────── */
+[data-legacy="covid"]{
+  --navy:var(--sky-dark);
+  --amber:var(--gold-dark);
+  --gold:var(--gold-dark);
+  --lgray:var(--surface-2);
+  --dgray:var(--text2);
+  --white:var(--card);
+  --green:var(--pass);
+  --red:var(--fail);
+  --orange:var(--peach-dark);
+  --purple:var(--purple-dark);
+  --teal:var(--teal-dark);
+  --mint:var(--mint-dark);
+  --sky:var(--sky-dark);
+}
+
+/* ── หน้าที่ใช้ชุดสีเดียวกับ index.html อยู่แล้ว ─────────────────────────────
+   (index.html, IQC/IQC_cobas_HPV.html, Inventory/inventory.html ฯลฯ)
+   ไม่ต้องใส่ data-legacy อะไรเลย เพราะชื่อตัวแปรตรงกับ pck.css ทุกตัว
+   แค่ลบ :root{...} เดิมออก แล้วเพิ่ม <link> ก็เปลี่ยนธีมทันที
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* ── สีที่ hardcode ไว้ในหน้าเก่า (ไม่ได้ใช้ตัวแปร) ─────────────────────────
+   ตัวช่วยสำหรับกรณีที่ยังไม่มีเวลาแก้ทีละจุด                                 */
+[data-legacy] body{background:var(--bg);color:var(--text)}
+[data-legacy] .card,[data-legacy] .panel,[data-legacy] .box{
+  background:var(--card);border-color:var(--border);
+}
