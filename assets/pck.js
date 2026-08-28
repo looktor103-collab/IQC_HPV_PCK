@@ -121,7 +121,8 @@ window.PCK = (function () {
       rail.innerHTML =
         '<a class="pck-brand" href="' + BASE + '/index.html">' +
           '<span class="pck-brand-mark" aria-hidden="true">🏥</span>' +
-          '<span class="pck-brand-txt"><strong>Molecular Lab</strong><span>Phrachomklao Hospital</span></span>' + nav;
+           '<span class="pck-brand-txt"><strong>Molecular Lab</strong><span>Phrachomklao Hospital</span></span>' +
+        '</a>' + nav;
 
       var main = document.createElement('div');
       main.className = 'pck-main';
