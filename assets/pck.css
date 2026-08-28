@@ -364,3 +364,27 @@ button,input,select,textarea{font:inherit;color:inherit}
   .pck-card,.pck-chart,.pck-kpi{box-shadow:none;border-color:#ccc}
   body{background:#fff;color:#000}
 }
+
+/* ── ชั้น 9 · ขยายตัวอักษร — ปรับ --fs ตัวเดียว ── */
+:root{--fs:1.15; --rail-w:256px}
+body{font-size:calc(14px*var(--fs))}
+.pck-navitem{font-size:calc(13px*var(--fs))}
+.pck-navgroup{font-size:calc(10px*var(--fs))}
+.pck-brand-txt strong{font-size:calc(13px*var(--fs))}
+.pck-brand-txt span{font-size:calc(10.5px*var(--fs))}
+.pck-crumb,.pck-clock,.pck-btn{font-size:calc(12px*var(--fs))}
+.pck-section{font-size:calc(10.5px*var(--fs))}
+.pck-kpi-l{font-size:calc(10.5px*var(--fs))}
+.pck-kpi-v{font-size:calc(26px*var(--fs))}
+.pck-kpi-s{font-size:calc(11px*var(--fs))}
+.pck-module-t{font-size:calc(13.5px*var(--fs))}
+.pck-module-d{font-size:calc(11.5px*var(--fs))}
+.pck-module-f{font-size:calc(10.5px*var(--fs))}
+.pck-tag{font-size:calc(10px*var(--fs))}
+.pck-table{font-size:calc(12px*var(--fs))}
+.pck-table th{font-size:calc(10px*var(--fs))}
+.pck-note{font-size:calc(12.5px*var(--fs))}
+.pck-chart-t{font-size:calc(12.5px*var(--fs))}
+.pck-chart-s{font-size:calc(10.5px*var(--fs))}
+body .statline,body .legend,body .status,body .tip{font-size:calc(11px*var(--fs))}
+body .fld input,body .fld select{font-size:calc(12px*var(--fs))}
