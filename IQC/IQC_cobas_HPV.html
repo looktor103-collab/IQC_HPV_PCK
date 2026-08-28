@@ -456,7 +456,7 @@ async function saveForm(){
     lotNC:       document.querySelectorAll('.g3 input[type=text]')[1]?.value || '',
     expNC:       document.querySelectorAll('.g3 input[type=date]')[1]?.value || '',
     lotKit:      document.querySelectorAll('.g2 input[type=text]')[0]?.value || '',
-    expKit:      document.querySelectorAll('.g2 input[type=date]')[2]?.value || '',
+    expKit:      document.querySelectorAll('.g2 input[type=date]')[0]?.value || '',
     pcT1Ct:      getVal('pc-t1-ct'),
     pcT1Result:  getTxt('pc-t1-rb'),
     pcT2Ct:      getVal('pc-t2-ct'),
@@ -473,8 +473,8 @@ async function saveForm(){
     ncOverall:   getTxt('nc-result'),
     batchResult: getTxt('sum-ov'),
     remark:      document.querySelector('textarea')?.value || '',
-    verifier:    document.querySelectorAll('input[placeholder="ชื่อ-สกุล"]')[1]?.value || '',
-    verifyDate:  document.querySelectorAll('.g3 input[type=date]')[0]?.value || '',
+    verifier:    document.querySelectorAll('input[placeholder="ชื่อ-สกุล"]')[2]?.value || '',
+    verifyDate:  document.querySelectorAll('.g3 input[type=date]')[2]?.value || '',
   };
 
   // Validate required fields
@@ -486,22 +486,40 @@ async function saveForm(){
   btn.disabled = true;
   btn.textContent = '⏳ กำลังบันทึก...';
 
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwA7DDStd0JHsziyPO-czN6OeNUr5ang9soWxPdVpW4dnmCjHa9TZFFGwqENDART8Ul/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzcWl6q_L_TjJ34r8enZufcCAllMf8inHZvl4BuCv6U-0FaT2rKN0svvKKBe9sd1PBP/exec';
 
   try {
+    // text/plain = simple request -> ไม่มี preflight OPTIONS ที่ Apps Script ไม่รองรับ
+    // ทำให้อ่าน response ได้จริง ไม่ต้องเดาว่าสำเร็จเหมือน mode:'no-cors' เดิม
     const res = await fetch(SCRIPT_URL, {
       method: 'POST',
-      mode: 'no-cors',
-      headers: {'Content-Type':'application/json'},
+      redirect: 'follow',
+      headers: {'Content-Type':'text/plain;charset=utf-8'},
       body: JSON.stringify(data)
     });
-    // no-cors means we can't read response, assume success
-    toast.style.display = 'block';
-    setTimeout(() => toast.style.display='none', 4000);
+    const out = await res.json();
+
+    if (out.status === 'duplicate') {
+      toastErr.style.display = 'block';
+      toastErr.style.background = '#fff8e0';
+      toastErr.style.color = '#8a6000';
+      toastErr.style.borderColor = '#f0d060';
+      toastErr.textContent = '⚠️ ข้อมูลชุดนี้บันทึกไว้แล้ว (แถว ' + out.row + ') ไม่ได้บันทึกซ้ำ';
+      setTimeout(() => toastErr.style.display='none', 6000);
+    } else if (out.status === 'success') {
+      toast.textContent = '✅ บันทึกเข้า Google Sheet แล้ว (แถว ' + out.row + ')';
+      toast.style.display = 'block';
+      setTimeout(() => toast.style.display='none', 4000);
+    } else {
+      throw new Error(out.message || 'ไม่ทราบสาเหตุ');
+    }
   } catch(err) {
     toastErr.style.display = 'block';
+    toastErr.style.background = '';
+    toastErr.style.color = '';
+    toastErr.style.borderColor = '';
     toastErr.textContent = '❌ บันทึกไม่สำเร็จ: ' + err.message;
-    setTimeout(() => toastErr.style.display='none', 5000);
+    setTimeout(() => toastErr.style.display='none', 6000);
   } finally {
     btn.disabled = false;
     btn.textContent = '💾 บันทึกข้อมูล';
