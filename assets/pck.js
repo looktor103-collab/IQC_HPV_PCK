@@ -110,7 +110,7 @@ window.PCK = (function () {
                  (it.id === page ? ' aria-current="page"' : '') + '>' +
                  '<span class="pck-navicon" aria-hidden="true">' + it.icon + '</span>' +
                  '<span class="pck-navlabel">' + it.label + '</span>' +
-                 (it.live ? '<span class="pck-live" id="pck-live-dot" data-state="off" title="สถานะการเชื่อมต่อข้อมูลสด"></span>' : '') +
+                 (it.live ? '<span class="pck-live" id="pck-live-dot" data-state="off" title="สถานะการเชื่อมต่อข้อมูลสด"></span>' : '') + '</a>' + nav;
                  '</a>';
         });
       });
@@ -120,9 +120,8 @@ window.PCK = (function () {
       rail.setAttribute('aria-label', 'เมนูหลัก');
       rail.innerHTML =
         '<a class="pck-brand" href="' + BASE + '/index.html">' +
-          '<span class="pck-brand-mark" aria-hidden="true">🏥</span>' +
-           '<span class="pck-brand-txt"><strong>Molecular Lab</strong><span>Phrachomklao Hospital</span></span>' +
-        '</a>' + nav;
+                   '<img src="' + BASE + '/assets/logo.png" alt="" width="34" height="34" style="flex-shrink:0;display:block">' +
+          '<span class="pck-brand-txt" style="min-width:0"><img src="' + BASE + '/assets/logo-text.png" alt="Molecular Lab PCK" style="width:100%;max-width:152px;height:auto;display:block"></span>' +
 
       var main = document.createElement('div');
       main.className = 'pck-main';
