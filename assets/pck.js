@@ -1,6 +1,6 @@
-   /* ═══════════════════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════════════════
    pck.js — App shell, theme, เมนู, ตัวช่วยรูปแบบ, และ client คุยกับ Google Sheet
-   ห้องปฏิบัติการเทคนิคการแพทย์ · โรงพยาบาลพระจอมเกล้า เพชรบุรี
+   Molecular Lab · Phrachomklao Hospital
    ═══════════════════════════════════════════════════════════════════════════ */
 window.PCK = (function () {
   'use strict';
@@ -110,7 +110,7 @@ window.PCK = (function () {
                  (it.id === page ? ' aria-current="page"' : '') + '>' +
                  '<span class="pck-navicon" aria-hidden="true">' + it.icon + '</span>' +
                  '<span class="pck-navlabel">' + it.label + '</span>' +
-                 (it.live ? '<span class="pck-live" id="pck-live-dot" data-state="off" title="สถานะการเชื่อมต่อข้อมูลสด"></span>' : '') + '</a>' + nav;
+                 (it.live ? '<span class="pck-live" id="pck-live-dot" data-state="off" title="สถานะการเชื่อมต่อข้อมูลสด"></span>' : '') +
                  '</a>';
         });
       });
@@ -120,9 +120,9 @@ window.PCK = (function () {
       rail.setAttribute('aria-label', 'เมนูหลัก');
       rail.innerHTML =
         '<a class="pck-brand" href="' + BASE + '/index.html">' +
-                   '<img src="' + BASE + '/assets/logo.png" alt="" width="34" height="34" style="flex-shrink:0;display:block">' +
+          '<img src="' + BASE + '/assets/logo.png" alt="" width="34" height="34" style="flex-shrink:0;display:block">' +
           '<span class="pck-brand-txt" style="min-width:0"><img src="' + BASE + '/assets/logo-text.png" alt="Molecular Lab PCK" style="width:100%;max-width:152px;height:auto;display:block"></span>' +
-                 '</a>' + nav;
+          '</a>' + nav;
 
       var main = document.createElement('div');
       main.className = 'pck-main';
