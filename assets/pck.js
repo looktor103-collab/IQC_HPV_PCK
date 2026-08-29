@@ -122,6 +122,7 @@ window.PCK = (function () {
         '<a class="pck-brand" href="' + BASE + '/index.html">' +
                    '<img src="' + BASE + '/assets/logo.png" alt="" width="34" height="34" style="flex-shrink:0;display:block">' +
           '<span class="pck-brand-txt" style="min-width:0"><img src="' + BASE + '/assets/logo-text.png" alt="Molecular Lab PCK" style="width:100%;max-width:152px;height:auto;display:block"></span>' +
+                 '</a>' + nav;
 
       var main = document.createElement('div');
       main.className = 'pck-main';
