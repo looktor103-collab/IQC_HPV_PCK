@@ -144,8 +144,6 @@
         '<label for="pck-pw">รหัสผ่าน</label>' +
         '<input id="pck-pw" type="password" autocomplete="current-password" required placeholder="••••••••">' +
         '<button class="go" type="submit">เข้าสู่ระบบ</button>' +
-        '<div class="note">⚠️ หน้านี้เป็นการกั้นเบื้องต้นเท่านั้น ไม่ใช่ระบบรักษาความปลอดภัย ' +
-        'ห้ามใช้รหัสผ่านเดียวกับบัญชีอื่น และห้ามบันทึกข้อมูลผู้ป่วยลงในระบบนี้</div>' +
       '</form>';
     document.body.appendChild(g);
 
