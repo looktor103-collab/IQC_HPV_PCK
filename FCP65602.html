@@ -17,7 +17,7 @@
      ★ ถ้า Deploy Apps Script ใหม่จนได้ URL ใหม่ ให้แก้ที่บรรทัด FORM_URL เท่านั้น
      ============================================================ -->
 <script>
-  const FORM_URL = 'https://script.google.com/macros/s/AKfycbxJWPZKjnyO17vfm1U63xZWDvIxQ9iy-TtFSEEoHFGhWl4QKyVmkKCB8dwC8p_CtQhk/exec';
+  const FORM_URL = 'https://script.google.com/macros/s/AKfycbzAbuRPQs_ALqxlFLJIWyEuKRJy3my7DQNc31egCHoE4lFw7OqJmtxRVtTiYJB6szG-7A/exec';
 </script>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
@@ -77,10 +77,31 @@
     </div>
   </div>
 <script>
-  document.getElementById('go').href = FORM_URL;
-  // replace() แทน assign() เพื่อไม่ให้หน้านี้ค้างอยู่ใน history
-  // (กด Back แล้วจะได้ไม่เด้งกลับมาที่หน้านี้วนไปมา)
-  setTimeout(function () { window.location.replace(FORM_URL); }, 600);
+  // ----- กันวางไฟล์ผิดที่ -----
+  // ถ้าไฟล์นี้ถูกเอาไปวางใน Apps Script มันจะ redirect ไปหาตัวเอง กลายเป็นวนไม่รู้จบ
+  // จึงตรวจจับไว้ แล้วแจ้งเตือนแทนการเด้ง
+  var host = window.location.hostname || '';
+  var wrongPlace = host.indexOf('script.google') >= 0 ||
+                   host.indexOf('googleusercontent') >= 0;
+
+  if (wrongPlace) {
+    document.querySelector('.spinner').style.display = 'none';
+    document.querySelector('h1').textContent = 'วางไฟล์ผิดที่';
+    document.querySelector('.sub').innerHTML =
+      'ไฟล์นี้เป็น <b>หน้าทางผ่าน สำหรับวางใน GitHub เท่านั้น</b><br>' +
+      'ไม่ใช่ตัวแบบฟอร์ม จึงเอามาวางใน Apps Script ไม่ได้<br><br>' +
+      'กรุณาเปิด Apps Script แล้ววาง<b>ไฟล์ตัวแบบฟอร์ม</b> (ไฟล์ใหญ่ ประมาณ 1,700 บรรทัด)<br>' +
+      'ทับในไฟล์ FCP65602.html แทน แล้ว Deploy เวอร์ชันใหม่';
+    document.getElementById('go').style.display = 'none';
+    document.querySelector('.btn-ghost').style.display = 'none';
+    document.querySelector('.note').textContent =
+      'ไฟล์ตัวแบบฟอร์มจะขึ้นต้นด้วย <!DOCTYPE html> และมีคำว่า google.script.run อยู่ข้างใน';
+  } else {
+    document.getElementById('go').href = FORM_URL;
+    // replace() แทน assign() เพื่อไม่ให้หน้านี้ค้างอยู่ใน history
+    // (กด Back แล้วจะได้ไม่เด้งกลับมาที่หน้านี้วนไปมา)
+    setTimeout(function () { window.location.replace(FORM_URL); }, 600);
+  }
 </script>
 </body>
 </html>
